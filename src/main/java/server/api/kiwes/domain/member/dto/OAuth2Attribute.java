@@ -22,6 +22,8 @@ public class OAuth2Attribute {
         switch (provider) {
             case "kakao":
                 return ofKakao("id", attributes);
+            case "google":
+                return ofGoogle("id", attributes);
             default:
                 throw new RuntimeException();
         }
@@ -40,7 +42,15 @@ public class OAuth2Attribute {
                 .attributeKey(attributeKey)
                 .build();
     }
-
+    private static OAuth2Attribute ofGoogle(String attributeKey,
+                                           Map<String, Object> attributes) {
+        return OAuth2Attribute.builder()
+                .email((String) attributes.get("email"))
+                .picture((String)attributes.get("profile_image_url"))
+                .attributes(attributes)
+                .attributeKey(attributeKey)
+                .build();
+    }
 
     public Member toEntity() {
         return Member.builder()

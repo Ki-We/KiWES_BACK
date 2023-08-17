@@ -18,14 +18,14 @@ public enum MemberResponseType implements BaseResponseType {
     NICKNAME_DUPLICATE_SUCCESS(20005, "닉네임 중복체크 완료", HttpStatus.OK),
     INTRODUCTION_UPDATE_SUCCESS(20006, "자기소개 수정 완료", HttpStatus.OK),
     MYPAGE_LOAD_SUCCESS(20007, "마이페이지 정보 조회 완료", HttpStatus.OK),
-    KAKAO_CALL_BACK_SUCCESS(20008,"카카오 로그인 진행중",HttpStatus.OK),
+    CALL_BACK_SUCCESS(20008,"카카오 로그인 진행중",HttpStatus.OK),
     LOGOUT_SUCCESS(20009,"로그아웃 성공",HttpStatus.OK),
     QUIT_SUCCESS(20010,"회원 탈퇴 성공", HttpStatus.OK),
 
 
     SIGN_UP_ING(40003,"회원가입 진행중", HttpStatus.BAD_REQUEST),
 
-    KAKAO_CONNECT_ERROR(40001, "카카오 연결 에러", HttpStatus.BAD_REQUEST),
+    CONNECT_ERROR(40001, "연결 에러", HttpStatus.BAD_REQUEST),
     NOT_FOUND_EMAIL(40002,"이메일을 찾을 수 없습니다.", HttpStatus.BAD_REQUEST),
     EXISTED_NICKNAME(40003, "이미 존재하는 닉네임입니다", HttpStatus.BAD_REQUEST),
     NOT_LOGGED_IN_USER(40004, "사용자 정보를 알 수 없습니다.", HttpStatus.BAD_REQUEST),

@@ -5,6 +5,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,16 +18,18 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import server.api.kiwes.domain.club.entity.Club;
-import server.api.kiwes.domain.club_language.entity.ClubLanguage;
+import org.springframework.web.client.RestTemplate;
 import server.api.kiwes.domain.language.entity.Language;
 import server.api.kiwes.domain.language.language.LanguageRepository;
 import server.api.kiwes.domain.language.type.LanguageType;
+import server.api.kiwes.domain.member.constant.SocialLoginType;
 import server.api.kiwes.domain.member.dto.*;
 import server.api.kiwes.domain.member.entity.Member;
 import server.api.kiwes.domain.member.repository.MemberRepository;
 import server.api.kiwes.domain.member.repository.RefreshTokenRepository;
-import server.api.kiwes.domain.member.service.kakao.MemberKakaoService;
+import server.api.kiwes.domain.member.service.login.MemberGoogleService;
+import server.api.kiwes.domain.member.service.login.MemberKakaoService;
+import server.api.kiwes.domain.member.service.login.MemberLoginService;
 import server.api.kiwes.domain.member.service.validate.MemberValidationService;
 import server.api.kiwes.domain.member_language.entity.MemberLanguage;
 import server.api.kiwes.domain.member_language.repository.MemberLanguageRepository;
@@ -34,7 +40,6 @@ import server.api.kiwes.response.BizException;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,11 +62,82 @@ public class MemberAuthenticationService {
 
     private final RefreshTokenRepository refreshTokenRepository;
 
-    private final MemberKakaoService kakaoService;
+    private final List<MemberLoginService> loginServiceList;
+//    private final MemberKakaoService kakaoService;
+//    private final MemberGoogleService googleService;
+
     private final MemberValidationService validateService;
     private final TokenProvider tokenProvider;
 
+    private MemberLoginService loginService;
 
+
+    /**
+     * 카카오 연결해서 엑세스 토큰 발급 받기
+     */
+    public String getAccessToken(SocialLoginType socialLoginType, String code) {
+        loginService = this.findSocialOauthByType(socialLoginType);
+        String access_Token="";
+        String refresh_Token ="";
+        String reqURL = "https://kauth.kakao.com/oauth/token";
+        if(socialLoginType.equals(SocialLoginType.KAKAO)){
+            System.out.println("KAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaa");
+            System.out.println(socialLoginType);
+
+        }else if(socialLoginType.equals(SocialLoginType.GOOGLE)){
+             reqURL = "https://oauth2.googleapis.com/token";
+        }
+
+
+        try{
+            URL url = new URL(reqURL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            //POST 요청을 위해 기본값이 false인 setDoOutput을 true로
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+
+            //POST 요청에 필요로 요구하는 파라미터 스트림을 통해 전송
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
+            StringBuilder sb = new StringBuilder();
+            sb.append("grant_type=authorization_code");
+            sb.append("&client_id=93df5ea9a1445313343f4bb0f1d362ce"); // TODO REST_API_KEY 입력
+            sb.append("&redirect_uri=http://43.200.185.205:8080/oauth/kakao"); // TODO 인가코드 받은 redirect_uri 입력
+            sb.append("&code=" + code);
+            bw.write(sb.toString());
+            bw.flush();
+
+            //결과 코드가 200이라면 성공
+            int responseCode = conn.getResponseCode();
+            System.out.println("responseCode : " + responseCode);
+            //요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String line = "";
+            String result = "";
+
+            while ((line = br.readLine()) != null) {
+                result += line;
+            }
+            System.out.println("response body : " + result);
+
+            //Gson 라이브러리에 포함된 클래스로 JSON파싱 객체 생성
+            JsonParser parser = new JsonParser();
+            JsonElement element = parser.parse(result);
+
+            access_Token = element.getAsJsonObject().get("access_token").getAsString();
+            refresh_Token = element.getAsJsonObject().get("refresh_token").getAsString();
+
+            System.out.println("access_token : " + access_Token);
+            System.out.println("refresh_token : " + refresh_Token);
+
+            br.close();
+            bw.close();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return access_Token;
+    }
     /**
      *
      * @param token
@@ -69,17 +145,18 @@ public class MemberAuthenticationService {
      * 카카오 로그인
      *
      */
-    public LoginResponse login(String token) {
-
+    public LoginResponse login(SocialLoginType socialLoginType, String token) {
+        loginService = this.findSocialOauthByType(socialLoginType);
         // access token 으로 사용자 정보 가져오기
-        JsonObject memberInfo = kakaoService.connectKakao(LOGIN_URL.getValue(), token);
+        JsonObject memberInfo = loginService.connect(KAKAO_LOGIN_URL.getValue(), token);
+
         System.out.println(memberInfo.toString());
-        Member member = saveMember(kakaoService.getEmail(memberInfo), kakaoService.getProfileUrl(memberInfo),kakaoService.getGender(memberInfo));
+        Member member = saveMember(loginService.getEmail(memberInfo), loginService.getProfileUrl(memberInfo),loginService.getGender(memberInfo));
         boolean isSignedUp = member.getEmail() != null;
 
         //2. 스프링 시큐리티 처리
         List<GrantedAuthority> authorities = initAuthorities();
-        OAuth2User userDetails = createOAuth2UserByJson(authorities, memberInfo, kakaoService.getEmail(memberInfo));
+        OAuth2User userDetails = createOAuth2UserByJson(authorities, memberInfo, loginService.getEmail(memberInfo));
         OAuth2AuthenticationToken auth = configureAuthentication(userDetails, authorities);
 
         //3. JWT 토큰 생성
@@ -179,8 +256,8 @@ public class MemberAuthenticationService {
     private OAuth2User createOAuth2UserByJson(List<GrantedAuthority> authorities, JsonObject userInfo, String email) {
         Map<String, Object> memberMap = new HashMap<>();
         memberMap.put("email", email);
-        memberMap.put("profileUrl", kakaoService.getProfileUrl(userInfo));
-        memberMap.put("gender", kakaoService.getGender(userInfo));
+        memberMap.put("profileUrl", loginService.getProfileUrl(userInfo));
+        memberMap.put("gender", loginService.getGender(userInfo));
         authorities.add(new SimpleGrantedAuthority(String.valueOf(ROLE_USER)));
         return new DefaultOAuth2User(authorities, memberMap, "email");
     }
@@ -215,64 +292,7 @@ public class MemberAuthenticationService {
     }
 
 
-    /**
-     *
-     * 카카오 연결해서 엑세스 토큰 발급 받기
-     */
-    public String getAccessToken(String code) {
-            String access_Token="";
-            String refresh_Token ="";
-            String reqURL = "https://kauth.kakao.com/oauth/token";
 
-            try{
-                URL url = new URL(reqURL);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-                //POST 요청을 위해 기본값이 false인 setDoOutput을 true로
-                conn.setRequestMethod("POST");
-                conn.setDoOutput(true);
-
-                //POST 요청에 필요로 요구하는 파라미터 스트림을 통해 전송
-                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
-                StringBuilder sb = new StringBuilder();
-                sb.append("grant_type=authorization_code");
-                sb.append("&client_id=93df5ea9a1445313343f4bb0f1d362ce"); // TODO REST_API_KEY 입력
-                sb.append("&redirect_uri=http://43.200.185.205:8080/oauth/kakao"); // TODO 인가코드 받은 redirect_uri 입력
-                sb.append("&code=" + code);
-                bw.write(sb.toString());
-                bw.flush();
-
-                //결과 코드가 200이라면 성공
-                int responseCode = conn.getResponseCode();
-                System.out.println("responseCode : " + responseCode);
-                //요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
-                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                String line = "";
-                String result = "";
-
-                while ((line = br.readLine()) != null) {
-                    result += line;
-                }
-                System.out.println("response body : " + result);
-
-                //Gson 라이브러리에 포함된 클래스로 JSON파싱 객체 생성
-                JsonParser parser = new JsonParser();
-                JsonElement element = parser.parse(result);
-
-                access_Token = element.getAsJsonObject().get("access_token").getAsString();
-                refresh_Token = element.getAsJsonObject().get("refresh_token").getAsString();
-
-                System.out.println("access_token : " + access_Token);
-                System.out.println("refresh_token : " + refresh_Token);
-
-                br.close();
-                bw.close();
-            }catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return access_Token;
-    }
 
     public String logout() {
 
@@ -286,7 +306,12 @@ public class MemberAuthenticationService {
         memberRepository.delete(user);
         return "bye";
     }
-
+    private MemberLoginService findSocialOauthByType(SocialLoginType socialLoginType) {
+        return loginServiceList.stream()
+                .filter(x -> x.type() == socialLoginType)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("알 수 없는 SocialLoginType 입니다."));
+    }
 
 }
 

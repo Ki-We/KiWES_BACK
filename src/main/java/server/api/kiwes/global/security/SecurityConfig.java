@@ -61,6 +61,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/v1/members/nickname/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/members/auth/refresh").permitAll()
                 .antMatchers("/oauth/kakao/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/auth/google").permitAll()
+                .antMatchers("/login/oauth2/code/google").permitAll()
+                .antMatchers("/oauth/google/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider));

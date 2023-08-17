@@ -1,4 +1,4 @@
-package server.api.kiwes.domain.member.service.kakao;
+package server.api.kiwes.domain.member.service.login;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -14,7 +14,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import static server.api.kiwes.domain.member.constant.MemberResponseType.KAKAO_CONNECT_ERROR;
+import static server.api.kiwes.domain.member.constant.MemberResponseType.CONNECT_ERROR;
 import static server.api.kiwes.domain.member.constant.MemberResponseType.NOT_FOUND_EMAIL;
 import static server.api.kiwes.domain.member.constant.MemberServiceMessage.KAKAO_ACOUNT;
 
@@ -22,13 +22,13 @@ import static server.api.kiwes.domain.member.constant.MemberServiceMessage.KAKAO
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
-public class MemberKakaoService {
+public class MemberAppleService implements  MemberLoginService{
 
     /**
      *
      * 카카오 연결
      */
-    public JsonObject connectKakao(String reqURL, String token) {
+    public JsonObject connect(String reqURL, String token) {
         try {
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -52,8 +52,8 @@ public class MemberKakaoService {
             JsonObject json = JsonParser.parseString(response.toString()).getAsJsonObject();
             return json;
         } catch (IOException e) {
-            log.info(KAKAO_CONNECT_ERROR.getMessage());
-            throw new BizException(KAKAO_CONNECT_ERROR);
+            log.info(CONNECT_ERROR.getMessage());
+            throw new BizException(CONNECT_ERROR);
         }
 
     }
@@ -61,6 +61,7 @@ public class MemberKakaoService {
     /**
      * saveMember() 할 때
      */
+    @Override
     public String getEmail(JsonObject userInfo) {
         if (userInfo.getAsJsonObject(KAKAO_ACOUNT.getValue()).get("has_email").getAsBoolean()) {
             return userInfo.getAsJsonObject(KAKAO_ACOUNT.getValue()).get("email").getAsString();
@@ -70,6 +71,7 @@ public class MemberKakaoService {
     /**
      * saveMember() 할 때
      */
+    @Override
     public String getProfileUrl(JsonObject userInfo) {
         return userInfo.getAsJsonObject("properties").get("profile_image").getAsString();
     }
@@ -77,6 +79,7 @@ public class MemberKakaoService {
     /**
      * saveMember() 할 때
      */
+    @Override
     public String getGender(JsonObject userInfo) {
         if (userInfo.getAsJsonObject(KAKAO_ACOUNT.getValue()).get("has_gender").getAsBoolean() &&
                 !userInfo.getAsJsonObject(KAKAO_ACOUNT.getValue()).get("gender_needs_agreement").getAsBoolean()) {

@@ -6,28 +6,22 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.api.kiwes.domain.member.constant.MemberResponseType;
+import server.api.kiwes.domain.member.constant.SocialLoginType;
 import server.api.kiwes.domain.member.dto.AdditionInfoRequest;
 import server.api.kiwes.domain.member.dto.RefreshTokenRequest;
 import server.api.kiwes.domain.member.service.MemberService;
 import server.api.kiwes.domain.member.service.auth.MemberAuthenticationService;
 import server.api.kiwes.global.aws.PreSignedUrlService;
-import server.api.kiwes.global.dto.ResponseDto;
 import server.api.kiwes.global.jwt.TokenProvider;
-import server.api.kiwes.global.security.util.SecurityUtils;
 import server.api.kiwes.response.BizException;
 import server.api.kiwes.response.ApiResponse;
 import server.api.kiwes.response.foo.FooResponseType;
 
-import javax.validation.Valid;
-
 import java.text.ParseException;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY;
-import static server.api.kiwes.domain.member.constant.MemberResponseType.LOGOUT_SUCCESS;
 
 @RestController
 @AllArgsConstructor
@@ -41,36 +35,33 @@ public class MemberController {
     private final PreSignedUrlService preSignedUrlService;
     private final TokenProvider tokenProvider;
 
-    @ApiOperation(value = "accessToken 값 위한 API", notes = "https://kauth.kakao.com/oauth/authorize?client_id=93df5ea9a1445313343f4bb0f1d362ce&redirect_uri=http://localhost:8080/oauth/kakao&response_type=code 요청 시 리다이렉트 됨")
-    @GetMapping("/oauth/kakao")
-    public ApiResponse<Object> kakaoCallBack(
-            @RequestParam String code
-    ){
+//    @ApiOperation(value = "accessToken 값 위한 API", notes = "https://kauth.kakao.com/oauth/authorize?client_id=93df5ea9a1445313343f4bb0f1d362ce&redirect_uri=http://localhost:8080/oauth/kakao&response_type=code 요청 시 리다이렉트 됨")
+    @ApiOperation(value = "accessToken 값 위한 API", notes = "테스트")
+    @GetMapping("/auth/{socialLoginType}")
+    public ApiResponse<Object> CallBack(@PathVariable(name="socialLoginType") SocialLoginType socialLoginType,
+                                              @RequestParam String code){
+        System.out.println(socialLoginType+"     1212321312312321321321321");
         System.out.println(code);
-
-        return ApiResponse.of(MemberResponseType.KAKAO_CALL_BACK_SUCCESS,authenticationService.getAccessToken(code));
+        return ApiResponse.of(MemberResponseType.CALL_BACK_SUCCESS,
+                authenticationService.getAccessToken(socialLoginType, code));
     }
-
-
     /**
      * API
      *
      * @return ApiResponse
      * @Author Seungyeon, Jeong
      */
-    @ApiOperation(value = "카카오 로그인", notes = "카카오 로그인 API")
+    @ApiOperation(value = "외부 로그인", notes = "외부 로그인 API")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20001, message = "로그인 객체 정상 리턴 (200 OK)"),
             @io.swagger.annotations.ApiResponse(code = 40001, message = "parameter 누락 (400 BAD_REQUEST)")
     })
-    @PostMapping("/auth/kakao")
-    public ApiResponse<Object> login(
-            @RequestHeader(name = "Authorization") String token
-    ) {
-
-        return ApiResponse.of(MemberResponseType.LOGIN_SUCCESS, authenticationService.login(token));
+    @PostMapping("/auth/{socialLoginType}")
+    public ApiResponse<Object> login(@PathVariable(name="socialLoginType") SocialLoginType socialLoginType,
+                                     @RequestHeader(name = "Authorization") String token) {
+        return ApiResponse.of(MemberResponseType.LOGIN_SUCCESS,
+                authenticationService.login(socialLoginType,token));
     }
-
     /**
      * API
      *
@@ -131,7 +122,6 @@ public class MemberController {
     }
 
     @ApiOperation(value = "프로필 이미지 수정", notes = "프로필 이미지 변경을 위한 presigned-url 을 받아옵니다.")
-
     @GetMapping("mypage/profileImg")
     public ApiResponse<Object> profileImg(
 
