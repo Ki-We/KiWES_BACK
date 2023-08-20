@@ -8,9 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import server.api.kiwes.response.BizException;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -23,6 +21,16 @@ import static server.api.kiwes.domain.member.constant.MemberServiceMessage.KAKAO
 @RequiredArgsConstructor
 @Slf4j
 public class MemberKakaoService implements  MemberLoginService{
+    @Override
+    public String getOauthRedirectURL(String code) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("grant_type=authorization_code");
+        sb.append("&client_id=93df5ea9a1445313343f4bb0f1d362ce"); // TODO REST_API_KEY 입력
+        sb.append("&redirect_uri=http://43.200.185.205:8080/oauth/kakao"); // TODO 인가코드 받은 redirect_uri 입력
+        sb.append("&code=" + code);
+
+        return sb.toString();
+    }
 
     /**
      *

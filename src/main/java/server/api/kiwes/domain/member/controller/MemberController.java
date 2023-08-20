@@ -14,6 +14,7 @@ import server.api.kiwes.domain.member.dto.RefreshTokenRequest;
 import server.api.kiwes.domain.member.service.MemberService;
 import server.api.kiwes.domain.member.service.auth.MemberAuthenticationService;
 import server.api.kiwes.global.aws.PreSignedUrlService;
+import server.api.kiwes.global.converter.SocialLoginTypeConverter;
 import server.api.kiwes.global.jwt.TokenProvider;
 import server.api.kiwes.response.BizException;
 import server.api.kiwes.response.ApiResponse;
@@ -35,12 +36,17 @@ public class MemberController {
     private final PreSignedUrlService preSignedUrlService;
     private final TokenProvider tokenProvider;
 
-//    @ApiOperation(value = "accessToken 값 위한 API", notes = "https://kauth.kakao.com/oauth/authorize?client_id=93df5ea9a1445313343f4bb0f1d362ce&redirect_uri=http://localhost:8080/oauth/kakao&response_type=code 요청 시 리다이렉트 됨")
-    @ApiOperation(value = "accessToken 값 위한 API", notes = "테스트")
-    @GetMapping("/auth/{socialLoginType}")
-    public ApiResponse<Object> CallBack(@PathVariable(name="socialLoginType") SocialLoginType socialLoginType,
+    @ApiOperation(value = "accessToken 값 위한 API",
+            notes = "https://kauth.kakao.com/oauth/authorize?client_id=93df5ea9a1445313343f4bb0f1d362ce&redirect_uri=http://43.200.185.205:8080/oauth/kakao&response_type=code  카카오 요청 ///" +
+                    "  https://accounts.google.com/o/oauth2/v2/auth?scope=profile&response_type=code&redirect_uri=http://ec2-43-200-185-205.ap-northeast-2.compute.amazonaws.com:8080/login/oauth2/code/google&client_id=156388466486-i9b6usmht9jkmmtc7bpvmrmfks5489bp.apps.googleusercontent.com" +
+                    " 구글 로그인 ///")
+    @GetMapping(value = {"/oauth/{socialLoginType}","/login/oauth2/code/{socialLoginType}"})
+
+    public ApiResponse<Object> CallBack(
+            @PathVariable(name="socialLoginType") SocialLoginType socialLoginType,
                                               @RequestParam String code){
-        System.out.println(socialLoginType+"     1212321312312321321321321");
+        log.info(">> 사용자로부터 accessToken 요청을 받음 :: {} Social Login", socialLoginType);
+        System.out.println(socialLoginType);
         System.out.println(code);
         return ApiResponse.of(MemberResponseType.CALL_BACK_SUCCESS,
                 authenticationService.getAccessToken(socialLoginType, code));
@@ -56,12 +62,13 @@ public class MemberController {
             @io.swagger.annotations.ApiResponse(code = 20001, message = "로그인 객체 정상 리턴 (200 OK)"),
             @io.swagger.annotations.ApiResponse(code = 40001, message = "parameter 누락 (400 BAD_REQUEST)")
     })
-    @PostMapping("/auth/{socialLoginType}")
+    @PostMapping(value = {"/oauth/{socialLoginType}","/login/oauth2/code/{socialLoginType}"})
     public ApiResponse<Object> login(@PathVariable(name="socialLoginType") SocialLoginType socialLoginType,
                                      @RequestHeader(name = "Authorization") String token) {
         return ApiResponse.of(MemberResponseType.LOGIN_SUCCESS,
                 authenticationService.login(socialLoginType,token));
     }
+
     /**
      * API
      *

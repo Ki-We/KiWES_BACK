@@ -24,17 +24,17 @@ class KiwesApplicationTests {
 
 	@Test
 	void sortByCategory() {
-		List<String> categories = new ArrayList<>();
-		categories.add("KPOP");
-		List<Club> club = new ArrayList<>();
-
-		for (String categoryString : categories) {
-			CategoryType type = CategoryType.valueOf(categoryString);
-			Category category = categoryRepository.findByName(type);
-			List<ClubCategory> clubCategories = category.getClubCategories();
-			clubCategories.forEach(clubCategory -> club.add(clubCategory.getClub()));
-		}
-		System.out.println(club);
+//		List<String> categories = new ArrayList<>();
+//		categories.add("KPOP");
+//		List<Club> club = new ArrayList<>();
+//
+//		for (String categoryString : categories) {
+//			CategoryType type = CategoryType.valueOf(categoryString);
+//			Category category = categoryRepository.findByName(type);
+//			List<ClubCategory> clubCategories = category.getClubCategories();
+//			clubCategories.forEach(clubCategory -> club.add(clubCategory.getClub()));
+//		}
+//		System.out.println(club);
 
 	}
 

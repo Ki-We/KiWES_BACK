@@ -37,10 +37,9 @@ import java.util.stream.Collectors;
 
 import static server.api.kiwes.domain.member.constant.MemberResponseType.NOT_FOUND_EMAIL;
 import static server.api.kiwes.global.jwt.exception.JwtExceptionList.*;
-
-@Slf4j
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class TokenProvider implements InitializingBean {
 
 

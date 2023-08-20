@@ -63,8 +63,6 @@ public class MemberAuthenticationService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     private final List<MemberLoginService> loginServiceList;
-//    private final MemberKakaoService kakaoService;
-//    private final MemberGoogleService googleService;
 
     private final MemberValidationService validateService;
     private final TokenProvider tokenProvider;
@@ -76,20 +74,25 @@ public class MemberAuthenticationService {
      * 카카오 연결해서 엑세스 토큰 발급 받기
      */
     public String getAccessToken(SocialLoginType socialLoginType, String code) {
-        loginService = this.findSocialOauthByType(socialLoginType);
+        loginService = findSocialOauthByType(socialLoginType);
         String access_Token="";
         String refresh_Token ="";
-        String reqURL = "https://kauth.kakao.com/oauth/token";
-        if(socialLoginType.equals(SocialLoginType.KAKAO)){
-            System.out.println("KAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaa");
-            System.out.println(socialLoginType);
-
-        }else if(socialLoginType.equals(SocialLoginType.GOOGLE)){
-             reqURL = "https://oauth2.googleapis.com/token";
+        String reqURL = null;
+        try{
+        switch (socialLoginType){
+            case kakao:
+                reqURL = "https://kauth.kakao.com/oauth/token";
+                break;
+            case google:
+//                reqURL = "https://www.googleapis.com/oauth2/v4/token";
+                reqURL = loginService.getOauthRedirectURL(code);
+                break;
+            case apple:
+                break;
+            default:
+                break;
         }
 
-
-        try{
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
@@ -99,12 +102,7 @@ public class MemberAuthenticationService {
 
             //POST 요청에 필요로 요구하는 파라미터 스트림을 통해 전송
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
-            StringBuilder sb = new StringBuilder();
-            sb.append("grant_type=authorization_code");
-            sb.append("&client_id=93df5ea9a1445313343f4bb0f1d362ce"); // TODO REST_API_KEY 입력
-            sb.append("&redirect_uri=http://43.200.185.205:8080/oauth/kakao"); // TODO 인가코드 받은 redirect_uri 입력
-            sb.append("&code=" + code);
-            bw.write(sb.toString());
+            bw.write(loginService.getOauthRedirectURL(code));
             bw.flush();
 
             //결과 코드가 200이라면 성공
@@ -146,9 +144,23 @@ public class MemberAuthenticationService {
      *
      */
     public LoginResponse login(SocialLoginType socialLoginType, String token) {
-        loginService = this.findSocialOauthByType(socialLoginType);
+        loginService = findSocialOauthByType(socialLoginType);
+
         // access token 으로 사용자 정보 가져오기
-        JsonObject memberInfo = loginService.connect(KAKAO_LOGIN_URL.getValue(), token);
+        JsonObject memberInfo = null;
+        switch (socialLoginType){
+            case kakao:
+                memberInfo = loginService.connect(KAKAO_LOGIN_URL.getValue(), token);
+                break;
+            case google:
+                memberInfo = loginService.connect(GOOGLE_LOGIN_URL.getValue(), token);
+                break;
+            case apple:
+                memberInfo = loginService.connect(APPLE_LOGIN_URL.getValue(), token);
+                break;
+            default:
+                break;
+        }
 
         System.out.println(memberInfo.toString());
         Member member = saveMember(loginService.getEmail(memberInfo), loginService.getProfileUrl(memberInfo),loginService.getGender(memberInfo));
@@ -290,9 +302,6 @@ public class MemberAuthenticationService {
 
         return memberLanguages;
     }
-
-
-
 
     public String logout() {
 

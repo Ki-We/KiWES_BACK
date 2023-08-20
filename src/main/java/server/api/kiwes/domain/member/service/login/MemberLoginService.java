@@ -5,9 +5,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import server.api.kiwes.domain.member.constant.SocialLoginType;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+
 @Service
 @Transactional
 public interface MemberLoginService {
+
+    public String getOauthRedirectURL(String code) throws IOException;
 
     public JsonObject connect(String reqURL, String token);
 
@@ -27,11 +32,11 @@ public interface MemberLoginService {
 
     default SocialLoginType type() {
         if (this instanceof MemberGoogleService) {
-            return SocialLoginType.GOOGLE;
+            return SocialLoginType.google;
         } else if (this instanceof MemberKakaoService) {
-            return SocialLoginType.KAKAO;
+            return SocialLoginType.kakao;
         } else if (this instanceof MemberAppleService) {
-            return SocialLoginType.APPLE;
+            return SocialLoginType.apple;
         }  else {
             return null;
         }

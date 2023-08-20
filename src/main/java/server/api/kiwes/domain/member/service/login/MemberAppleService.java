@@ -24,6 +24,11 @@ import static server.api.kiwes.domain.member.constant.MemberServiceMessage.KAKAO
 @Slf4j
 public class MemberAppleService implements  MemberLoginService{
 
+    @Override
+    public String getOauthRedirectURL(String code) throws IOException {
+        return null;
+    }
+
     /**
      *
      * 카카오 연결

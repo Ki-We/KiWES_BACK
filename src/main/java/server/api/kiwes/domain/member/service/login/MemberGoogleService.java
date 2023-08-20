@@ -9,11 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import server.api.kiwes.response.BizException;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static server.api.kiwes.domain.member.constant.MemberResponseType.CONNECT_ERROR;
 import static server.api.kiwes.domain.member.constant.MemberResponseType.NOT_FOUND_EMAIL;
@@ -25,18 +26,55 @@ import static server.api.kiwes.domain.member.constant.MemberServiceMessage.KAKAO
 @RequiredArgsConstructor
 @Slf4j
 public class MemberGoogleService implements MemberLoginService{
+    @Value("${spring.security.oauth2.client.provider.google.authorization-uri}")
+    private String GOOGLE_SNS_BASE_URL;
+    @Value("${spring.security.oauth2.client.registration.google.client-id}")
+    private String GOOGLE_SNS_CLIENT_ID;
+    @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
+    private String GOOGLE_SNS_REDIRECT_URL;
+
+    @Override
+    public String getOauthRedirectURL(String code) throws IOException {
+        Map<String, Object> params = new HashMap<>();
+        params.put("scope", "profile");
+        params.put("response_type", "code");
+        params.put("client_id", GOOGLE_SNS_CLIENT_ID);
+        params.put("redirect_uri", GOOGLE_SNS_REDIRECT_URL);
+
+        String parameterString = params.entrySet().stream()
+                .map(x -> x.getKey() + "=" + x.getValue())
+                .collect(Collectors.joining("&"));
+        return GOOGLE_SNS_BASE_URL + "?" + parameterString;
+    }
 
     @Override
     public JsonObject connect(String reqURL, String token) {
         try {
+            System.out.println(reqURL);
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
             conn.setRequestMethod("POST");
-            conn.setRequestProperty("Authorization", "Bearer " + token); //전송할 header 작성, access_token전송
+            conn.setRequestProperty("Authorization", "Bearer " + token);
+//            conn.setDoOutput(true);
 
             int responseCode = conn.getResponseCode();
             System.out.println("responseCode : " + responseCode);
+
+//            Map<String, Object> params = new HashMap<>();
+//            params.put("code", token);
+//            params.put("client_id", GOOGLE_SNS_CLIENT_ID);
+//            params.put("client_secret", GOOGLE_SNS_CLIENT_SECRET);
+//            params.put("redirect_uri", GOOGLE_SNS_REDIRECT_URL);
+//            params.put("grant_type", "authorization_code");
+//
+//            String parameterString = params.entrySet().stream()
+//                    .map(x -> x.getKey() + "=" + x.getValue())
+//                    .collect(Collectors.joining("&"));
+//
+//            BufferedOutputStream bous = new BufferedOutputStream(conn.getOutputStream());
+//            bous.write(parameterString.getBytes());
+//            bous.flush();
+//            bous.close();
 
             BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String inputLine;
