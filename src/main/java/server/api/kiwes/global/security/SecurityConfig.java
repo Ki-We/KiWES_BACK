@@ -2,6 +2,7 @@ package server.api.kiwes.global.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import server.api.kiwes.global.jwt.JwtAccessDeniedHandler;
 import server.api.kiwes.global.jwt.JwtAuthenticationEntryPoint;
 import server.api.kiwes.global.jwt.JwtSecurityConfig;
@@ -83,5 +85,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/v3/api-docs/**",
                 "/swagger-ui/**");
     }
+//    @Bean
+//    @Order(1)
+//    public SecurityFilterChain exceptionSecurityFilterChain(HttpSecurity http) throws Exception {
+//        http
+//                .requestMatchers((matchers) -> matchers.antMatchers(
+//                        /* swagger v2 */
+//                        "/v2/api-docs",
+//                        "/swagger-resources",
+//                        "/swagger-resources/**",
+//                        "/configuration/ui",
+//                        "/configuration/security",
+//                        "/swagger-ui.html",
+//                        "/webjars/**",
+//                        /* swagger v3 */
+//                        "/v3/api-docs/**",
+//                        "/swagger-ui/**"))
+//                .authorizeHttpRequests((authorize) -> authorize.anyRequest().permitAll())
+//                .requestCache().disable()
+//                .securityContext().disable()
+//                .sessionManagement().disable();
+//
+//        return http.build();
+//    }
 
 }

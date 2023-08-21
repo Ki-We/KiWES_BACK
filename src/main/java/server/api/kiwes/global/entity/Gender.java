@@ -9,6 +9,7 @@ public enum Gender {
     MALE("MALE","male"),
     FEMALE("FEMALE","female"),
     ALL("ALL","all"),
+    NOTAGREE("NOTAGREE","notagree"),
     ;
 
     private final String name;

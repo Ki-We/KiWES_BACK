@@ -69,7 +69,6 @@ public class MemberAuthenticationService {
 
     private MemberLoginService loginService;
 
-
     /**
      * 카카오 연결해서 엑세스 토큰 발급 받기
      */
@@ -78,16 +77,17 @@ public class MemberAuthenticationService {
         String access_Token="";
         String refresh_Token ="";
         String reqURL = null;
+
         try{
         switch (socialLoginType){
             case kakao:
                 reqURL = "https://kauth.kakao.com/oauth/token";
                 break;
             case google:
-//                reqURL = "https://www.googleapis.com/oauth2/v4/token";
-                reqURL = loginService.getOauthRedirectURL(code);
+                reqURL = "https://oauth2.googleapis.com/token";
                 break;
             case apple:
+                reqURL = "";
                 break;
             default:
                 break;
@@ -148,9 +148,11 @@ public class MemberAuthenticationService {
 
         // access token 으로 사용자 정보 가져오기
         JsonObject memberInfo = null;
+        String account= null;
         switch (socialLoginType){
             case kakao:
                 memberInfo = loginService.connect(KAKAO_LOGIN_URL.getValue(), token);
+                account=KAKAO_ACOUNT.getValue();
                 break;
             case google:
                 memberInfo = loginService.connect(GOOGLE_LOGIN_URL.getValue(), token);
@@ -163,6 +165,7 @@ public class MemberAuthenticationService {
         }
 
         System.out.println(memberInfo.toString());
+        System.out.println(loginService.getEmail(memberInfo));
         Member member = saveMember(loginService.getEmail(memberInfo), loginService.getProfileUrl(memberInfo),loginService.getGender(memberInfo));
         boolean isSignedUp = member.getEmail() != null;
 

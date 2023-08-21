@@ -30,21 +30,45 @@ public class MemberGoogleService implements MemberLoginService{
     private String GOOGLE_SNS_BASE_URL;
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
     private String GOOGLE_SNS_CLIENT_ID;
+    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
+    private String GOOGLE_SNS_CLIENT_SECRET;
     @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
     private String GOOGLE_SNS_REDIRECT_URL;
 
     @Override
     public String getOauthRedirectURL(String code) throws IOException {
-        Map<String, Object> params = new HashMap<>();
-        params.put("scope", "profile");
-        params.put("response_type", "code");
-        params.put("client_id", GOOGLE_SNS_CLIENT_ID);
-        params.put("redirect_uri", GOOGLE_SNS_REDIRECT_URL);
+//        Map<String, Object> params = new HashMap<>();
+//        params.put("scope", "profile");
+//        params.put("response_type", "code");
+//        params.put("client_id", GOOGLE_SNS_CLIENT_ID);
+//        params.put("redirect_uri", GOOGLE_SNS_REDIRECT_URL);
+//
+//        String parameterString = params.entrySet().stream()
+//                .map(x -> x.getKey() + "=" + x.getValue())
+//                .collect(Collectors.joining("&"));
+//        return GOOGLE_SNS_BASE_URL + "?" + parameterString;
 
-        String parameterString = params.entrySet().stream()
-                .map(x -> x.getKey() + "=" + x.getValue())
-                .collect(Collectors.joining("&"));
-        return GOOGLE_SNS_BASE_URL + "?" + parameterString;
+//        Map<String, Object> params = new HashMap<>();
+//        params.put("code", code);
+//        params.put("client_id", GOOGLE_SNS_CLIENT_ID);
+//        params.put("client_secret", GOOGLE_SNS_CLIENT_SECRET);
+//        params.put("redirect_uri", GOOGLE_SNS_REDIRECT_URL);
+//        params.put("grant_type", "authorization_code");
+//
+//        String parameterString = params.entrySet().stream()
+//                .map(x -> x.getKey() + "=" + x.getValue())
+//                .collect(Collectors.joining("&"));
+//
+//        return parameterString;
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("grant_type=authorization_code");
+        sb.append("&client_id="+GOOGLE_SNS_CLIENT_ID); // TODO REST_API_KEY 입력
+        sb.append("&redirect_uri="+GOOGLE_SNS_REDIRECT_URL); // TODO 인가코드 받은 redirect_uri 입력
+        sb.append("&client_secret="+GOOGLE_SNS_CLIENT_SECRET);
+        sb.append("&code=" + code);
+
+        return sb.toString();
     }
 
     @Override
@@ -54,32 +78,34 @@ public class MemberGoogleService implements MemberLoginService{
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
-            conn.setRequestProperty("Authorization", "Bearer " + token);
-//            conn.setDoOutput(true);
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+//            conn.setRequestProperty("Authorization", "Bearer " + token);
+            conn.setDoOutput(true);
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("code", token);
+            params.put("client_id", GOOGLE_SNS_CLIENT_ID);
+            params.put("client_secret", GOOGLE_SNS_CLIENT_SECRET);
+            params.put("redirect_uri", GOOGLE_SNS_REDIRECT_URL);
+            params.put("grant_type", "authorization_code");
+
+            String parameterString = params.entrySet().stream()
+                    .map(x -> x.getKey() + "=" + x.getValue())
+                    .collect(Collectors.joining("&"));
+
+            BufferedOutputStream bous = new BufferedOutputStream(conn.getOutputStream());
+            bous.write(parameterString.getBytes());
+            bous.flush();
+            bous.close();
 
             int responseCode = conn.getResponseCode();
             System.out.println("responseCode : " + responseCode);
 
-//            Map<String, Object> params = new HashMap<>();
-//            params.put("code", token);
-//            params.put("client_id", GOOGLE_SNS_CLIENT_ID);
-//            params.put("client_secret", GOOGLE_SNS_CLIENT_SECRET);
-//            params.put("redirect_uri", GOOGLE_SNS_REDIRECT_URL);
-//            params.put("grant_type", "authorization_code");
-//
-//            String parameterString = params.entrySet().stream()
-//                    .map(x -> x.getKey() + "=" + x.getValue())
-//                    .collect(Collectors.joining("&"));
-//
-//            BufferedOutputStream bous = new BufferedOutputStream(conn.getOutputStream());
-//            bous.write(parameterString.getBytes());
-//            bous.flush();
-//            bous.close();
-
             BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String inputLine;
 
             StringBuffer response = new StringBuffer();
+            String inputLine;
+
             while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine);
             }

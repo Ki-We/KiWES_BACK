@@ -38,5 +38,5 @@ public class MemberValidationService {
      */
     public Member validateEmail(String email) {
         return this.memberRepository.findNotDeletedByEmail(email).orElseThrow(() -> new BizException(NOT_FOUND_EMAIL));
-    }
+    } // TODO: 2023-08-22 이메일 중복?
 }
