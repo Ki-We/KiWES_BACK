@@ -57,15 +57,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/webjars/**").permitAll()
                 .antMatchers("/v3/api-docs").permitAll()
+                
+                // 카카오
                 .antMatchers(HttpMethod.POST, "/auth/kakao").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/v1/members/additional-info").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/v1/members/nickname/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/members/nickname/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/members/auth/refresh").permitAll()
                 .antMatchers("/oauth/kakao/**").permitAll()
+
+                // 구글
                 .antMatchers(HttpMethod.POST, "/oauth/google").permitAll()
                 .antMatchers("/login/oauth2/code/google").permitAll()
                 .antMatchers("/oauth/google/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/auth/userinfo.email").permitAll()
+                .antMatchers(HttpMethod.GET, "/auth/userinfo.profile").permitAll()
+                .antMatchers(HttpMethod.POST, "/auth/userinfo.profile").permitAll()
+//                .antMatchers("openid").permitAll()
+
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider));

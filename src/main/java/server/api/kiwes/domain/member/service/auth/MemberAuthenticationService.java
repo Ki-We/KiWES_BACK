@@ -148,11 +148,9 @@ public class MemberAuthenticationService {
 
         // access token 으로 사용자 정보 가져오기
         JsonObject memberInfo = null;
-        String account= null;
         switch (socialLoginType){
             case kakao:
                 memberInfo = loginService.connect(KAKAO_LOGIN_URL.getValue(), token);
-                account=KAKAO_ACOUNT.getValue();
                 break;
             case google:
                 memberInfo = loginService.connect(GOOGLE_LOGIN_URL.getValue(), token);
