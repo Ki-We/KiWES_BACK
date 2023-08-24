@@ -5,10 +5,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,7 +14,6 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 import server.api.kiwes.domain.language.entity.Language;
 import server.api.kiwes.domain.language.language.LanguageRepository;
 import server.api.kiwes.domain.language.type.LanguageType;
@@ -27,8 +22,6 @@ import server.api.kiwes.domain.member.dto.*;
 import server.api.kiwes.domain.member.entity.Member;
 import server.api.kiwes.domain.member.repository.MemberRepository;
 import server.api.kiwes.domain.member.repository.RefreshTokenRepository;
-import server.api.kiwes.domain.member.service.login.MemberGoogleService;
-import server.api.kiwes.domain.member.service.login.MemberKakaoService;
 import server.api.kiwes.domain.member.service.login.MemberLoginService;
 import server.api.kiwes.domain.member.service.validate.MemberValidationService;
 import server.api.kiwes.domain.member_language.entity.MemberLanguage;
@@ -77,7 +70,7 @@ public class MemberAuthenticationService {
         String access_Token="";
         String refresh_Token ="";
         String reqURL = null;
-
+        String refreshTokenName="refresh_token";
         try{
         switch (socialLoginType){
             case kakao:
@@ -85,6 +78,7 @@ public class MemberAuthenticationService {
                 break;
             case google:
                 reqURL = "https://oauth2.googleapis.com/token";
+                refreshTokenName ="id_token";
                 break;
             case apple:
                 reqURL = "";
@@ -123,7 +117,8 @@ public class MemberAuthenticationService {
             JsonElement element = parser.parse(result);
 
             access_Token = element.getAsJsonObject().get("access_token").getAsString();
-            refresh_Token = element.getAsJsonObject().get("refresh_token").getAsString();
+
+            refresh_Token = element.getAsJsonObject().get(refreshTokenName).getAsString();
 
             System.out.println("access_token : " + access_Token);
             System.out.println("refresh_token : " + refresh_Token);
@@ -163,7 +158,6 @@ public class MemberAuthenticationService {
         }
 
         System.out.println(memberInfo.toString());
-        System.out.println(loginService.getEmail(memberInfo));
         Member member = saveMember(loginService.getEmail(memberInfo), loginService.getProfileUrl(memberInfo),loginService.getGender(memberInfo));
         boolean isSignedUp = member.getEmail() != null;
 
@@ -228,7 +222,6 @@ public class MemberAuthenticationService {
     }
 
     public Member saveMember(String email,String profileImg, String gender) {
-
         Member member = new Member(email,profileImg, Gender.valueOf(gender.toUpperCase()));
         // 가입 여부 확인
         if (!memberRepository.existsByEmail(member.getEmail())) {

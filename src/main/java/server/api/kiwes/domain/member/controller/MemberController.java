@@ -38,7 +38,7 @@ public class MemberController {
 
     @ApiOperation(value = "accessToken 값 위한 API",
             notes = "https://kauth.kakao.com/oauth/authorize?client_id=93df5ea9a1445313343f4bb0f1d362ce&redirect_uri=http://43.200.185.205:8080/oauth/kakao&response_type=code  카카오 요청 ///" +
-                    " ###   https://accounts.google.com/o/oauth2/v2/auth?scope=profile&response_type=code&redirect_uri=http://ec2-43-200-185-205.ap-northeast-2.compute.amazonaws.com:8080/login/oauth2/code/google&client_id=156388466486-i9b6usmht9jkmmtc7bpvmrmfks5489bp.apps.googleusercontent.com" +
+                    "|r|n"+"https://accounts.google.com/o/oauth2/v2/auth?scope=profile%20email&response_type=code&redirect_uri=http://ec2-43-200-185-205.ap-northeast-2.compute.amazonaws.com:8080/login/oauth2/code/google&client_id=156388466486-i9b6usmht9jkmmtc7bpvmrmfks5489bp.apps.googleusercontent.com" +
                     " 구글 로그인 ///")
     @GetMapping(value = {"/oauth/{socialLoginType}","/login/oauth2/code/{socialLoginType}"})
 

@@ -12,7 +12,7 @@ public enum MemberServiceMessage {
     KAKAO_DELETE_URL("https://kapi.kakao.com/v1/user/unlink"),
     KAKAO_ACOUNT("kakao_account"),
 
-    GOOGLE_LOGIN_URL("https://accounts.google.com"),
+    GOOGLE_LOGIN_URL("https://www.googleapis.com/oauth2/v1/userinfo"),// https://accounts.google.com
     GOOGLE_LOGOUT_URL(""),
     GOOGLE_DELETE_URL(""),
     GOOGLE_ACOUNT("google_account"),

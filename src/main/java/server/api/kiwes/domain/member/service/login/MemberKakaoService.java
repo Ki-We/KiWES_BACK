@@ -44,7 +44,7 @@ public class MemberKakaoService implements  MemberLoginService{
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Authorization", "Bearer " + token); //전송할 header 작성, access_token전송
 //            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
-            conn.setRequestMethod("GET");
+
             int responseCode = conn.getResponseCode();
             System.out.println("responseCode : " + responseCode);
 
