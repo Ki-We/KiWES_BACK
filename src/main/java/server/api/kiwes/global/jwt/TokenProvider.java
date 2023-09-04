@@ -44,7 +44,7 @@ public class TokenProvider implements InitializingBean {
 
 
     private static final String AUTHORITIES_KEY = "auth";
-    private static final String ADDITIONAL_INFO="isAdditionalInfoProvided";
+    private static final String ADDITIONAL_INFO = "isAdditionalInfoProvided";
 
     private final MemberRepository memberRepository;
     private final RefreshTokenRepository refreshTokenRepository;

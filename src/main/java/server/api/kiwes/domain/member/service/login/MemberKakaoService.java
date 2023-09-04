@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import server.api.kiwes.response.BizException;
@@ -20,13 +21,20 @@ import static server.api.kiwes.domain.member.constant.MemberServiceMessage.KAKAO
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
-public class MemberKakaoService implements  MemberLoginService{
+public class MemberKakaoService implements MemberLoginService{
+    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
+    private String KAKAO_SNS_CLIENT_ID;
+    @Value("${spring.security.oauth2.client.registration.kakao.client-secret}")
+    private String KAKAO_SNS_SECRET_URL;
+    @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
+    private String KAKAO_SNS_REDIRECT_URL;
     @Override
-    public String getOauthRedirectURL(String code) throws IOException {
+    public String getOauthRedirectURL(String code) {
         StringBuilder sb = new StringBuilder();
         sb.append("grant_type=authorization_code");
-        sb.append("&client_id=93df5ea9a1445313343f4bb0f1d362ce"); // TODO REST_API_KEY 입력
-        sb.append("&redirect_uri=http://43.200.185.205:8080/oauth/kakao"); // TODO 인가코드 받은 redirect_uri 입력
+        sb.append("&client_id="+KAKAO_SNS_CLIENT_ID);
+        sb.append("&redirect_uri="+KAKAO_SNS_REDIRECT_URL);
+        sb.append("&client_secret="+KAKAO_SNS_SECRET_URL);
         sb.append("&code=" + code);
 
         return sb.toString();

@@ -13,6 +13,7 @@ import server.api.kiwes.domain.member.dto.AdditionInfoRequest;
 import server.api.kiwes.domain.member.dto.RefreshTokenRequest;
 import server.api.kiwes.domain.member.service.MemberService;
 import server.api.kiwes.domain.member.service.auth.MemberAuthenticationService;
+import server.api.kiwes.domain.member.service.email.EmailService;
 import server.api.kiwes.global.aws.PreSignedUrlService;
 import server.api.kiwes.global.converter.SocialLoginTypeConverter;
 import server.api.kiwes.global.jwt.TokenProvider;
@@ -34,11 +35,12 @@ public class MemberController {
     private final MemberAuthenticationService authenticationService;
     private final MemberService memberService;
     private final PreSignedUrlService preSignedUrlService;
-    private final TokenProvider tokenProvider;
+//    private final TokenProvider tokenProvider;
+    private final EmailService emailService;
 
     @ApiOperation(value = "accessToken 값 위한 API",
-            notes = "https://kauth.kakao.com/oauth/authorize?client_id=93df5ea9a1445313343f4bb0f1d362ce&redirect_uri=http://43.200.185.205:8080/oauth/kakao&response_type=code  카카오 요청 ///" +
-                    "|r|n"+"https://accounts.google.com/o/oauth2/v2/auth?scope=profile%20email&response_type=code&redirect_uri=http://ec2-43-200-185-205.ap-northeast-2.compute.amazonaws.com:8080/login/oauth2/code/google&client_id=156388466486-i9b6usmht9jkmmtc7bpvmrmfks5489bp.apps.googleusercontent.com" +
+            notes = "https://kauth.kakao.com/oauth/authorize?client_id=6f0216bfb31177fe4956e6a1a17bb5c6&redirect_uri=http://43.200.185.205:8080/oauth/kakao&response_type=code  카카오 요청 ~~~~~~~~~///~~~~" +
+                     "https://accounts.google.com/o/oauth2/v2/auth?scope=profile%20email&response_type=code&redirect_uri=http://ec2-43-200-185-205.ap-northeast-2.compute.amazonaws.com:8080/login/oauth2/code/google&client_id=156388466486-i9b6usmht9jkmmtc7bpvmrmfks5489bp.apps.googleusercontent.com" +
                     " 구글 로그인 ///")
     @GetMapping(value = {"/oauth/{socialLoginType}","/login/oauth2/code/{socialLoginType}"})
 
@@ -82,17 +84,12 @@ public class MemberController {
     })
     @PostMapping("/additional-info")
     public ApiResponse<Object> signUp(
-            @Parameter(name = "추가 정보 입력 객체", description = "회원가입시 추가정보 입력 위한 객체", in = QUERY, required = false) @RequestBody(required = false) AdditionInfoRequest additionInfoRequest
-    ) {
-
-
+            @Parameter(name = "추가 정보 입력 객체", description = "회원가입시 추가정보 입력 위한 객체", in = QUERY, required = false) @RequestBody(required = false) AdditionInfoRequest additionInfoRequest) {
         if (additionInfoRequest == null || additionInfoRequest.equals("error")) {
             log.error(FooResponseType.INVALID_PARAMETER.getMessage());
             throw new BizException(FooResponseType.INVALID_PARAMETER);
         }
-
         authenticationService.signUp(additionInfoRequest);
-
         return ApiResponse.of(MemberResponseType.SIGN_UP_SUCCESS);
     }
 
@@ -100,13 +97,8 @@ public class MemberController {
     @ApiOperation(value = "토큰 재발급", notes = "토큰을 재발급합니다.")
     @PostMapping("/auth/refresh")
     public ApiResponse<Object> tokenRefresh(
-
-            @RequestBody RefreshTokenRequest refreshTokenRequest
-
-    ) {
-
+            @RequestBody RefreshTokenRequest refreshTokenRequest) {
         return ApiResponse.of(MemberResponseType.TOKEN_REFRESH_SUCCESS,authenticationService.refreshToken(refreshTokenRequest));
-
     }
 
 
@@ -157,14 +149,12 @@ public class MemberController {
         return ApiResponse.of(MemberResponseType.LOGOUT_SUCCESS,authenticationService.quit());
     }
 
-
-
-
-//    @GetMapping("/login")
-//    public String showLoginPage() {
-//        // 로그인 페이지를 보여주는 코드 작성
-//        return "login"; // 예시로 "login"을 리턴하면 "login.jsp" 등의 뷰를 템플릿 엔진으로 렌더링합니다.
-//    }
-
-
+    @PostMapping("/auth/email")
+    @ApiOperation(value = "이메일 인증", notes = "이메일 인증을 합니다.")
+    @ResponseBody
+    public String mailConfirm(@RequestParam String email) throws Exception {
+        String code = emailService.sendSimpleMessage(email);
+        log.info("인증코드 : " + code);
+        return code;
+    }
 }

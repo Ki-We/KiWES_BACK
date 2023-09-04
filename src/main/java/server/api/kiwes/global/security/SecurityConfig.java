@@ -2,7 +2,6 @@ package server.api.kiwes.global.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,7 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
 import server.api.kiwes.global.jwt.JwtAccessDeniedHandler;
 import server.api.kiwes.global.jwt.JwtAuthenticationEntryPoint;
 import server.api.kiwes.global.jwt.JwtSecurityConfig;
