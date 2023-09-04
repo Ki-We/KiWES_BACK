@@ -1,7 +1,6 @@
 package server.api.kiwes.domain.club.dto;
 
 import lombok.*;
-import server.api.kiwes.domain.heart.constant.HeartStatus;
 
 @Getter
 @Setter
