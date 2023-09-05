@@ -138,7 +138,7 @@ public class ClubController {
 
         ClubJoinedResponseDto response = clubService.approveMember(clubMember, club);
 
-        alarmService.postAlarm(applicant, club, AlarmType.CHAT, AlarmContent.CHATTING.getContent());
+        alarmService.postAlarm(applicant, club, AlarmType.CHAT, AlarmContent.APPROVE.getContent());
 
         return ApiResponse.of(ClubResponseType.APPROVE_SUCCESS, response);
     }
@@ -164,6 +164,8 @@ public class ClubController {
         }
 
         clubService.denyMember(clubMember);
+
+        alarmService.postAlarm(applicant, club, AlarmType.CLUB, AlarmContent.DENY.getContent());
 
         return ApiResponse.of(ClubResponseType.DENY_SUCCESS);
     }

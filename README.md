@@ -15,6 +15,6 @@ storgy : S3
 - [x] 누군가가 모임에 문의를 남겼을 때 ( CLUB, AlarmContent.QUESTION )
 - [x] 누군가가 모임에 후기를 남겼을 때 ( CLUB, AlarmContent.REVIEW )
 - [x] 누군가가 내 문의에 답변을 달았을 때 ( CLUB, AlarmContent.ANSWER )
-- [x] 내 모임 신청이 승인되었을 때 ( CHATTING, AlarmContent.CHATTING )
+- [x] 내 모임 신청이 승인되었을 때 ( CHAT, AlarmContent.APPROVE )
 - [x] 내가 모임에서 강퇴당했을 때 ( CLUB, AlarmContent.KICKOUT )
 
