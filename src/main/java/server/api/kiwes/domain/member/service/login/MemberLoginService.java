@@ -12,23 +12,23 @@ import java.io.IOException;
 @Transactional
 public interface MemberLoginService {
 
-    public String getOauthRedirectURL(String code) throws IOException;
+    String getOauthRedirectURL(String code) throws IOException;
 
-    public JsonObject connect(String reqURL, String token);
-
-    /**
-     * saveMember() 할 때
-     */
-    public String getEmail(JsonObject userInfo);
-    /**
-     * saveMember() 할 때
-     */
-    public String getProfileUrl(JsonObject userInfo);
+    JsonObject connect(String reqURL, String token);
 
     /**
      * saveMember() 할 때
      */
-    public String getGender(JsonObject userInfo);
+    String getEmail(JsonObject userInfo);
+    /**
+     * saveMember() 할 때
+     */
+    String getProfileUrl(JsonObject userInfo);
+
+    /**
+     * saveMember() 할 때
+     */
+    String getGender(JsonObject userInfo);
 
     default SocialLoginType type() {
         if (this instanceof MemberGoogleService) {

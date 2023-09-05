@@ -51,7 +51,6 @@ public class MemberKakaoService implements MemberLoginService{
 
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Authorization", "Bearer " + token); //전송할 header 작성, access_token전송
-//            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
 
             int responseCode = conn.getResponseCode();
             System.out.println("responseCode : " + responseCode);
@@ -81,7 +80,6 @@ public class MemberKakaoService implements MemberLoginService{
     public String getEmail(JsonObject userInfo) {
         if (userInfo.getAsJsonObject(KAKAO_ACOUNT.getValue()).has("email")) {
             return userInfo.getAsJsonObject(KAKAO_ACOUNT.getValue()).get("email").getAsString();
-        // TODO 카카오 비즈 전환 해야하는?
         }
         throw new BizException(NOT_FOUND_EMAIL);
     }
