@@ -34,6 +34,14 @@ public class ClubMemberService {
     }
 
     /**
+     * 모임의 정보로, 해당 모임의 호스트 ClubMember 객체 반환
+     */
+    public ClubMember findByClubHost(Club club) {
+        ClubMember clubMember = clubMemberRepository.findByClubHost(club).orElse(null);
+        return clubMember;
+    }
+
+    /**
      * 모임과 멤버 정보로, 해당 사용자가 모임에 승인된 멤버인지 여부를 반환
      */
     public Boolean getIsApproved(Club club, Member member){
