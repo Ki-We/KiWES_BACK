@@ -1,17 +1,20 @@
 # 진짜 서버 KiWES_BACKEND
-<<<<<<< HEAD
 
-=======
->>>>>>> 145fb22ce9341d38c31c530e1de1dbb393272d95
 java 19
 spring boot 2.7.11
 gradle-7.6.1
 
 서버 : EC2
-<<<<<<< HEAD
 DB : Redis + (RDS)MySQL
 storgy : S3
-=======
-DB : RDS + MySQL
 
->>>>>>> 145fb22ce9341d38c31c530e1de1dbb393272d95
+### 알림 TO-DO LIST
+
+- [x] 알림 가져오기
+- [x] 누군가가 모임에 참여 신청을 했을 때 ( ACCESS, AlarmContent.PARTICIPATE )
+- [] 누군가가 모임에 문의를 남겼을 때 ( CLUB, AlarmContent.QUESTION )
+- [] 누군가가 모임에 후기를 남겼을 때 ( CLUB, AlarmContent.REVIEW )
+- [] 누군가가 내 문의에 답변을 달았을 때 ( CLUB, AlarmContent.ANSWER )
+- [] 내 모임 신청이 승인되었을 때 ( CHATTING, AlarmContent.CHATTING )
+- [] 내가 모임에서 강퇴당했을 때 ( CLUB, AlarmContent.KICKOUT )
+

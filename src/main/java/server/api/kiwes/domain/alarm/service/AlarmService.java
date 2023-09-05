@@ -3,6 +3,7 @@ package server.api.kiwes.domain.alarm.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import server.api.kiwes.domain.alarm.constant.AlarmType;
 import server.api.kiwes.domain.alarm.dto.AlarmResponseDto;
 import server.api.kiwes.domain.alarm.entity.Alarm;
 import server.api.kiwes.domain.alarm.repository.AlarmRepository;
@@ -34,5 +35,10 @@ public class AlarmService {
             response.add(AlarmResponseDto.of(alarm));
         }
         return response;
+    }
+
+    public void postAlarm(Member member, Club club, AlarmType type, String content) {
+        Alarm alarm = Alarm.builder().club(club).member(member).type(type).content(content).build();
+        alarmRepository.save(alarm);
     }
 }
