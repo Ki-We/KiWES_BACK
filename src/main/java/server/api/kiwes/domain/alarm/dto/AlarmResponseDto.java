@@ -18,15 +18,13 @@ public class AlarmResponseDto {
     @Setter
     private AlarmType type;
     private String content;
-    private Club club;
-    private Member member;
+    private Long club_id;
 
     public static AlarmResponseDto of(Alarm alarm){
         return AlarmResponseDto.builder()
                 .content(alarm.getContent())
                 .type(alarm.getType())
-                .club(alarm.getClub())
-                .member(alarm.getMember())
+                .club_id(alarm.getClub().getId())
                 .build();
     }
 }

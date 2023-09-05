@@ -18,11 +18,13 @@ import server.api.kiwes.response.ApiResponse;
 @RequestMapping("/api/v1/alarm")
 public class AlarmController {
     private final AlarmService alarmService;
+    private final MemberService memberService;
 
     @ApiOperation(value = "알림 가져오기", notes = "")
     @GetMapping("/")
     public ApiResponse<Object> alarmList(){
-        return ApiResponse.of(AlarmResponseType.ALARMS, alarmService.getAlarmAll());
+        Member member = memberService.getLoggedInMember();
+        return ApiResponse.of(AlarmResponseType.ALARMS, alarmService.getAlarmAll(member));
     }
 
 }
