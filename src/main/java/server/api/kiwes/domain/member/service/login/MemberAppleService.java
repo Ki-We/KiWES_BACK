@@ -1,38 +1,200 @@
 package server.api.kiwes.domain.member.service.login;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.*;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.JWSSigner;
+import com.nimbusds.jose.crypto.ECDSASigner;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.util.io.pem.PemObject;
+import org.bouncycastle.util.io.pem.PemReader;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import server.api.kiwes.domain.member.dto.AppleDTO;
 import server.api.kiwes.response.BizException;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.KeyFactory;
+import java.security.interfaces.ECPrivateKey;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.Date;
 
 import static server.api.kiwes.domain.member.constant.MemberResponseType.CONNECT_ERROR;
 import static server.api.kiwes.domain.member.constant.MemberResponseType.NOT_FOUND_EMAIL;
-import static server.api.kiwes.domain.member.constant.MemberServiceMessage.KAKAO_ACOUNT;
+import static server.api.kiwes.domain.member.constant.MemberServiceMessage.APPLE_ACOUNT;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
 public class MemberAppleService implements  MemberLoginService{
+    @Value("${apple.aud}")
+    private String APPLE_CLIENT_ID;
+    @Value("${apple.redirect-uri}")
+    private String APPLE_REDIRECT_URL;
+    @Value("${apple.team-id}")
+    private String APPLE_TEAM_ID;
+    @Value("${apple.key.id}")
+    private String APPLE_LOGIN_KEY;
+    @Value("${apple.key.path}")
+    private String APPLE_KEY_PATH;
 
+    private final static String APPLE_AUTH_URL = "https://appleid.apple.com";
     @Override
-    public String getOauthRedirectURL(String code) throws IOException {
-        return null;
+    public String getOauthRedirectURL(String code) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("grant_type=authorization_code");
+        sb.append("&client_id="+APPLE_CLIENT_ID);
+        sb.append("&redirect_uri="+APPLE_REDIRECT_URL);
+        sb.append("&client_secret="+APPLE_LOGIN_KEY);
+        sb.append("&code=" + code);
+
+        return sb.toString();
+    }
+    public AppleDTO getAppleInfo(String code) throws Exception{
+        if (code == null) throw new Exception("Failed get authorization code");
+
+        String clientSecret = createClientSecret();
+        System.out.println(clientSecret);
+
+        String userId = "";
+        String email  = "";
+        String accessToken = "";
+
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-type", "application/x-www-form-urlencoded");
+
+            MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+            params.add("grant_type"   , "authorization_code");
+            params.add("client_id"    , APPLE_CLIENT_ID);
+            params.add("client_secret", clientSecret);
+            params.add("code"         , code);
+            params.add("redirect_uri" , APPLE_REDIRECT_URL);
+
+            RestTemplate restTemplate = new RestTemplate();
+            HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
+
+            ResponseEntity<String> response = restTemplate.exchange(
+                    APPLE_AUTH_URL + "/auth/token",
+                    HttpMethod.POST,
+                    httpEntity,
+                    String.class
+            );
+
+            JSONParser jsonParser = new JSONParser();
+            JSONObject jsonObj = (JSONObject) jsonParser.parse(response.getBody()); //
+            accessToken = String.valueOf(jsonObj.get("access_token"));
+
+            //ID TOKEN을 통해 회원 고유 식별자 받기
+            SignedJWT signedJWT = SignedJWT.parse(String.valueOf(jsonObj.get("id_token"))); //
+            ReadOnlyJWTClaimsSet getPayload = signedJWT.getJWTClaimsSet(); //
+            ObjectMapper objectMapper = new ObjectMapper();
+            JSONObject payload = objectMapper.readValue(getPayload.toJSONObject().toJSONString(), JSONObject.class);
+            //
+            userId = String.valueOf(payload.get("sub"));
+            email  = String.valueOf(payload.get("email"));
+        } catch (Exception e) {
+            throw new Exception("API call failed");
+        }
+
+        return AppleDTO.builder()
+                .id(userId)
+                .token(accessToken)
+                .email(email).build();
     }
 
-    /**
-     *
-     * 카카오 연결
-     */
+    private String createClientSecret() throws Exception {
+        JWSHeader header = new JWSHeader.Builder(JWSAlgorithm.ES256).keyID(APPLE_LOGIN_KEY).build();
+        JWTClaimsSet claimsSet = new JWTClaimsSet();
+
+        Date now = new Date();
+        claimsSet.setIssuer(APPLE_TEAM_ID);
+        claimsSet.setIssueTime(now);
+        claimsSet.setExpirationTime(new Date(now.getTime() + 3600000));
+        claimsSet.setAudience(APPLE_AUTH_URL);
+        claimsSet.setSubject(APPLE_CLIENT_ID);
+
+        SignedJWT jwt = new SignedJWT(header, claimsSet);
+
+        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(getPrivateKey());
+        KeyFactory kf = KeyFactory.getInstance("EC");
+        try {
+            ECPrivateKey ecPrivateKey = (ECPrivateKey) kf.generatePrivate(spec);
+            JWSSigner jwsSigner = new ECDSASigner(ecPrivateKey.getS());
+            jwt.sign(jwsSigner);
+        } catch (JOSEException e) {
+            throw new Exception("Failed create client secret");
+        }
+
+        return jwt.serialize();
+    }
+
+    private byte[] getPrivateKey() throws Exception {
+        byte[] content = null;
+        File file = null;
+
+        URL res = getClass().getResource(APPLE_KEY_PATH);
+        System.out.println(APPLE_KEY_PATH);
+        System.out.println(res);
+        if ("jar".equals(res.getProtocol())) {
+            try {
+                InputStream input = getClass().getResourceAsStream(APPLE_KEY_PATH);
+                file = File.createTempFile("tempfile", ".tmp");
+                OutputStream out = new FileOutputStream(file);
+
+                int read;
+                byte[] bytes = new byte[1024];
+
+                while ((read = input.read(bytes)) != -1) {
+                    out.write(bytes, 0, read);
+                }
+
+                out.close();
+                file.deleteOnExit();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            file = new File(res.getFile());
+        }
+
+        if (file.exists()) {
+            try (FileReader keyReader = new FileReader(file);
+                 PemReader pemReader = new PemReader(keyReader))
+            {
+                PemObject pemObject = pemReader.readPemObject();
+                content = pemObject.getContent();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            throw new Exception("File " + file + " not found");
+        }
+
+        return content;
+    }
+
     public JsonObject connect(String reqURL, String token) {
         try {
             URL url = new URL(reqURL);
@@ -40,7 +202,6 @@ public class MemberAppleService implements  MemberLoginService{
 
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Authorization", "Bearer " + token); //전송할 header 작성, access_token전송
-//            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
 
             int responseCode = conn.getResponseCode();
             System.out.println("responseCode : " + responseCode);
@@ -62,36 +223,22 @@ public class MemberAppleService implements  MemberLoginService{
         }
 
     }
-
-    /**
-     * saveMember() 할 때
-     */
     @Override
     public String getEmail(JsonObject userInfo) {
-        if (userInfo.getAsJsonObject(KAKAO_ACOUNT.getValue()).get("has_email").getAsBoolean()) {
-            return userInfo.getAsJsonObject(KAKAO_ACOUNT.getValue()).get("email").getAsString();
+        if (userInfo.getAsJsonObject(APPLE_ACOUNT.getValue()).has("email")) {
+            return userInfo.getAsJsonObject(APPLE_ACOUNT.getValue()).get("email").getAsString();
         }
         throw new BizException(NOT_FOUND_EMAIL);
     }
-    /**
-     * saveMember() 할 때
-     */
     @Override
     public String getProfileUrl(JsonObject userInfo) {
         return userInfo.getAsJsonObject("properties").get("profile_image").getAsString();
     }
-
-    /**
-     * saveMember() 할 때
-     */
     @Override
     public String getGender(JsonObject userInfo) {
-        if (userInfo.getAsJsonObject(KAKAO_ACOUNT.getValue()).get("has_gender").getAsBoolean() &&
-                !userInfo.getAsJsonObject(KAKAO_ACOUNT.getValue()).get("gender_needs_agreement").getAsBoolean()) {
-            return userInfo.getAsJsonObject(KAKAO_ACOUNT.getValue()).get("gender").getAsString();
+        if (userInfo.getAsJsonObject(APPLE_ACOUNT.getValue()).has("gender")) {
+            return userInfo.getAsJsonObject(APPLE_ACOUNT.getValue()).get("gender").getAsString();
         }
-        return "동의안함";
+        return "NOTAGREE";
     }
-
-
 }

@@ -12,7 +12,7 @@ import java.io.IOException;
 @Transactional
 public interface MemberLoginService {
 
-    String getOauthRedirectURL(String code) throws IOException;
+    String getOauthRedirectURL(String code) throws Exception;
 
     JsonObject connect(String reqURL, String token);
 

@@ -38,6 +38,10 @@ dependencies {
 	implementation 'org.jetbrains:annotations:23.0.0'
 
 	implementation 'org.springframework.boot:spring-boot-starter-mail:2.7.0'
+	//apple
+	implementation 'org.bouncycastle:bcprov-jdk15on:1.68'
+	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+	implementation 'com.nimbusds:nimbus-jose-jwt:3.10'
 
 	compileOnly 'org.projectlombok:lombok'
 //	runtimeOnly 'com.h2database:h2:1.4.199'
@@ -45,6 +49,8 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 //	testImplementation 'org.springframework.security:spring-security-test'
+
+
 }
 
 tasks.named('test') {

@@ -1,6 +1,7 @@
 package server.api.kiwes.global.jwt;
 
-import com.nimbusds.jose.shaded.json.JSONObject;
+//import com.nimbusds.jose.shaded.json.JSONObject; //todo 망할 충돌점
+import com.nimbusds.oauth2.sdk.util.OrderedJSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -52,7 +53,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-        JSONObject responseJson = new JSONObject();
+        OrderedJSONObject responseJson = new OrderedJSONObject();
         responseJson.put("timestamp", LocalDateTime.now().withNano(0).toString());
         responseJson.put("message", exceptionCode.getMessage());
         responseJson.put("errorCode", exceptionCode.getCode());

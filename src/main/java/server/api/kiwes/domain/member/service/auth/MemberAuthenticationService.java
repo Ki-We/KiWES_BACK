@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -60,8 +61,14 @@ public class MemberAuthenticationService {
     private final MemberValidationService validateService;
     private final TokenProvider tokenProvider;
 
-    private MemberLoginService loginService;
+    @Value("${spring.security.oauth2.client.provider.kakao.token-uri}")
+    private String KAKAO_TOKEN_URL;
+    @Value("${spring.security.oauth2.client.provider.google.token-uri}")
+    private String GOOGLE_TOKEN_URL;
+    @Value("${apple.auth.token-url}")
+    private String APPLE_TOKEN_URL;
 
+    private MemberLoginService loginService;
     /**
      * 카카오 연결해서 엑세스 토큰 발급 받기
      */
@@ -74,14 +81,14 @@ public class MemberAuthenticationService {
         try{
         switch (socialLoginType){
             case kakao:
-                reqURL = "https://kauth.kakao.com/oauth/token";
+                reqURL = KAKAO_TOKEN_URL;
                 break;
             case google:
-                reqURL = "https://oauth2.googleapis.com/token";
+                reqURL = GOOGLE_TOKEN_URL;
                 refreshTokenName ="id_token";
                 break;
             case apple:
-                reqURL = "";
+                reqURL = APPLE_TOKEN_URL;
                 break;
             default:
                 break;
@@ -117,7 +124,7 @@ public class MemberAuthenticationService {
             JsonElement element = parser.parse(result);
 
             access_Token = element.getAsJsonObject().get("access_token").getAsString();
-
+            System.out.println("access_token : " + access_Token);
             refresh_Token = element.getAsJsonObject().get(refreshTokenName).getAsString();
 
             System.out.println("access_token : " + access_Token);
@@ -127,17 +134,13 @@ public class MemberAuthenticationService {
             bw.close();
         }catch (IOException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
         return access_Token;
     }
-    /**
-     *
-     * @param token
-     * @return LoginResponse
-     * 카카오 로그인
-     *
-     */
+
     public LoginResponse login(SocialLoginType socialLoginType, String token) {
         loginService = findSocialOauthByType(socialLoginType);
 

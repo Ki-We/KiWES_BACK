@@ -6,14 +6,15 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.api.kiwes.domain.member.constant.MemberResponseType;
 import server.api.kiwes.domain.member.constant.SocialLoginType;
-import server.api.kiwes.domain.member.dto.AdditionInfoRequest;
-import server.api.kiwes.domain.member.dto.RefreshTokenRequest;
+import server.api.kiwes.domain.member.dto.*;
 import server.api.kiwes.domain.member.service.MemberService;
 import server.api.kiwes.domain.member.service.auth.MemberAuthenticationService;
 import server.api.kiwes.domain.member.service.email.EmailService;
+import server.api.kiwes.domain.member.service.login.MemberAppleService;
 import server.api.kiwes.global.aws.PreSignedUrlService;
 import server.api.kiwes.global.converter.SocialLoginTypeConverter;
 import server.api.kiwes.global.jwt.TokenProvider;
@@ -21,6 +22,8 @@ import server.api.kiwes.response.BizException;
 import server.api.kiwes.response.ApiResponse;
 import server.api.kiwes.response.foo.FooResponseType;
 
+import javax.servlet.http.HttpServletRequest;
+import java.net.URL;
 import java.text.ParseException;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY;
@@ -37,6 +40,7 @@ public class MemberController {
     private final PreSignedUrlService preSignedUrlService;
 //    private final TokenProvider tokenProvider;
     private final EmailService emailService;
+    private final MemberAppleService memberAppleService;
 
 //    @ApiOperation(value = "accessToken 값 위한 API",
 //            notes = "https://kauth.kakao.com/oauth/authorize?client_id=6f0216bfb31177fe4956e6a1a17bb5c6&redirect_uri=http://43.200.185.205:8080/oauth/kakao&response_type=code  카카오 요청 ~~~~~~~~~///~~~~" +
@@ -44,34 +48,56 @@ public class MemberController {
 //                    " 구글 로그인 ///")
     @ApiOperation(value = "accessToken 값 위한 API",
             notes = "https://kauth.kakao.com/oauth/authorize?client_id=6f0216bfb31177fe4956e6a1a17bb5c6&redirect_uri=http://localhost:8080/oauth/kakao&response_type=code  카카오 요청 ~~~~~~~~~///~~~~" +
-                    "https://accounts.google.com/o/oauth2/v2/auth?scope=profile%20email&response_type=code&redirect_uri=http://localhost:8080/login/oauth2/code/google&client_id=156388466486-i9b6usmht9jkmmtc7bpvmrmfks5489bp.apps.googleusercontent.com" +
-                    " 구글 로그인 ///")
+                    "https://accounts.google.com/o/oauth2/v2/auth?scope=profile%20email&response_type=code&redirect_uri=http://localhost:8080/login/oauth2/code/google&client_id=156388466486-i9b6usmht9jkmmtc7bpvmrmfks5489bp.apps.googleusercontent.com  구글 로그인 /// " +
+                    "https://appleid.apple.com/auth/keys?client_id=org.kiwes.KiWESApp&redirect_uri=https://kiwes.org/login/oauth/apple&response_type=code%20id_token&scope=name%20email&response_mode=form_post" +
+                    " 애플 로그인"
 
-    @GetMapping(value = {"/oauth/{socialLoginType}","/login/oauth2/code/{socialLoginType}"})
+    )
+    @GetMapping(value = {"/oauth/{socialLoginType}","/login/oauth2/code/{socialLoginType}","/auth/keys"})
 
-    public ApiResponse<Object> CallBack(
+    public ApiResponse<Object> callBack(
             @PathVariable(name="socialLoginType") SocialLoginType socialLoginType,
                                               @RequestParam String code){
+        log.info(code);
         log.info(">> 사용자로부터 accessToken 요청을 받음 :: {} Social Login", socialLoginType);
         return ApiResponse.of(MemberResponseType.CALL_BACK_SUCCESS,
                 authenticationService.getAccessToken(socialLoginType, code));
     }
-    /**
-     * API
-     *
-     * @return ApiResponse
-     * @Author Seungyeon, Jeong
-     */
+
+
     @ApiOperation(value = "외부 로그인", notes = "외부 로그인 API")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20001, message = "로그인 객체 정상 리턴 (200 OK)"),
             @io.swagger.annotations.ApiResponse(code = 40001, message = "parameter 누락 (400 BAD_REQUEST)")
     })
-    @PostMapping(value = {"/oauth/{socialLoginType}","/login/oauth2/code/{socialLoginType}"})
+    @PostMapping(value = {"/oauth/{socialLoginType}","/login/oauth2/code/{socialLoginType}"}) //"/oauth/{socialLoginType}",
     public ApiResponse<Object> login(@PathVariable(name="socialLoginType") SocialLoginType socialLoginType,
-                                     @RequestHeader(name = "Authorization") String token) {
+                                        @RequestParam String token) {
+        log.info(token);
         return ApiResponse.of(MemberResponseType.LOGIN_SUCCESS,
                 authenticationService.login(socialLoginType,token));
+    }
+
+    @ApiOperation(value = "애플 로그인", notes = "애플 로그인 API" +
+            " https://appleid.apple.com/auth/authorize?client_id=org.kiwes.KiWESApp&redirect_uri=https://kiwes.org/login/oauth/apple&response_type=code%20id_token&scope=name%20email&response_mode=form_post "
+     )
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 20001, message = "로그인 객체 정상 리턴 (200 OK)"),
+            @io.swagger.annotations.ApiResponse(code = 40001, message = "parameter 누락 (400 BAD_REQUEST)")
+    })
+    @PostMapping(value = {"/login/oauth/apple"})
+    public ResponseEntity<MsgEntity>  loginApple(HttpServletRequest request) throws Exception {
+
+        log.info(">> 사용자로부터 accessToken 요청을 받음 :: {} Social Login????");
+//        return ApiResponse.of(MemberResponseType.LOGIN_SUCCESS,
+//                authenticationService.login(SocialLoginType.apple,"apple"));
+
+        AppleDTO appleInfo = memberAppleService.getAppleInfo(request.getParameter("code"));
+        System.out.println(appleInfo.getId());
+        System.out.println(appleInfo.getEmail());
+        System.out.println(appleInfo.getToken());
+        return ResponseEntity.ok()
+                .body(new MsgEntity("Success", appleInfo));
     }
 
     /**
