@@ -5,8 +5,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import server.api.kiwes.domain.alarm.constant.AlarmContent;
+import server.api.kiwes.domain.alarm.constant.AlarmType;
+import server.api.kiwes.domain.alarm.service.AlarmService;
 import server.api.kiwes.domain.club.entity.Club;
 import server.api.kiwes.domain.club.service.ClubService;
+import server.api.kiwes.domain.club_member.entity.ClubMember;
 import server.api.kiwes.domain.club_member.service.ClubMemberService;
 import server.api.kiwes.domain.member.entity.Member;
 import server.api.kiwes.domain.member.service.MemberService;
@@ -27,8 +31,9 @@ public class QnaController {
     private final MemberService memberService;
     private final ClubService clubService;
     private final ClubMemberService clubMemberService;
+    private final AlarmService alarmService;
     
-    @ApiOperation(value = "qna 질문 등록", notes = "")
+    @ApiOperation(value = "qna 질문 등록", notes = "AlarmContent.QUESTION")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 21101, message = "qna 질문 등록 성공"),
             @io.swagger.annotations.ApiResponse(code = 40101, message = "clubId와 일치하는 모임이 존재하지 않습니다. (404)"),
@@ -39,10 +44,14 @@ public class QnaController {
         Club club = clubService.findById(clubId);
         qnaService.postQuestion(club, member, requestDto);
 
+        ClubMember host = clubMemberService.findByClubHost(club);
+        String name = member.getNickname() == null ? "익명" : member.getNickname();
+        alarmService.postAlarm(host.getMember(), club, AlarmType.CLUB, name + AlarmContent.QUESTION.getContent());
+
         return ApiResponse.of(QnaResponseType.Q_POST_SUCCESS);
     }
 
-    @ApiOperation(value = "qna 답변 등록", notes = "")
+    @ApiOperation(value = "qna 답변 등록", notes = "AlarmContent.ANSWER")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 21102, message = "qna 답변 등록 성공"),
             @io.swagger.annotations.ApiResponse(code = 40101, message = "clubId와 일치하는 모임이 존재하지 않습니다. (404)"),
@@ -63,6 +72,9 @@ public class QnaController {
 
         Qna qna = qnaService.findById(qnaId);
         qnaService.postAnswer(member, qna, requestDto);
+
+        alarmService.postAlarm(qna.getQuestioner(), club, AlarmType.CLUB, AlarmContent.ANSWER.getContent());
+
         return ApiResponse.of(QnaResponseType.A_POST_SUCCESS);
     }
     

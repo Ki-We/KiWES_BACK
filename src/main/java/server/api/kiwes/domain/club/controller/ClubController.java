@@ -5,6 +5,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import server.api.kiwes.domain.alarm.constant.AlarmContent;
+import server.api.kiwes.domain.alarm.constant.AlarmType;
+import server.api.kiwes.domain.alarm.service.AlarmService;
 import server.api.kiwes.domain.club.constant.ClubResponseType;
 import server.api.kiwes.domain.club.dto.*;
 import server.api.kiwes.domain.club.entity.Club;
@@ -33,6 +36,7 @@ public class ClubController {
     private final ClubMemberService clubMemberService;
     private final ClubSortService clubSortService;
     private final PreSignedUrlService preSignedUrlService;
+    private final AlarmService alarmService;
 
     private static final String DATE_REGEX = "^\\d{4}-\\d{2}-\\d{2}$";
 
@@ -89,7 +93,7 @@ public class ClubController {
         return ApiResponse.of(ClubResponseType.DELETE_SUCCESS);
     }
     
-    @ApiOperation(value = "모임 참여 하기", notes = "")
+    @ApiOperation(value = "모임 참여 하기", notes = "AlarmContent.PARTICIPATE")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20103, message = "참여 신청 성공"),
             @io.swagger.annotations.ApiResponse(code = 40102, message = "호스트이거나 이미 참여 신청함"),
@@ -98,13 +102,17 @@ public class ClubController {
     public ApiResponse<Object> signUpClub(@PathVariable Long clubId){
         Member member = memberService.getLoggedInMember();
         Club club = clubService.findById(clubId);
+
         ClubMember clubMember = clubMemberService.findByClubAndMember(club, member);
         if(clubMember != null){
             throw new BizException(ClubResponseType.ALREADY_APPLIED);
         }
 
-        clubService.applyClub(member, club);
+        ClubMember host = clubMemberService.findByClubHost(club);
+        String name = member.getNickname() == null ? "익명" : member.getNickname();
+        alarmService.postAlarm(host.getMember(), club, AlarmType.CLUB, name + AlarmContent.QUESTION.getContent());
 
+        clubService.applyClub(member, club);
         return ApiResponse.of(ClubResponseType.APPLICATION_SUCCESS);
     }
 
@@ -130,6 +138,8 @@ public class ClubController {
 
         ClubJoinedResponseDto response = clubService.approveMember(clubMember, club);
 
+        alarmService.postAlarm(applicant, club, AlarmType.CHAT, AlarmContent.APPROVE.getContent());
+
         return ApiResponse.of(ClubResponseType.APPROVE_SUCCESS, response);
     }
 
@@ -154,6 +164,8 @@ public class ClubController {
         }
 
         clubService.denyMember(clubMember);
+
+        alarmService.postAlarm(applicant, club, AlarmType.CLUB, AlarmContent.DENY.getContent());
 
         return ApiResponse.of(ClubResponseType.DENY_SUCCESS);
     }
@@ -210,6 +222,8 @@ public class ClubController {
         }
 
         clubService.kickMember(clubApplicant, club);
+
+        alarmService.postAlarm(applicant, club, AlarmType.CLUB,  AlarmContent.KICKOUT.getContent());
         return ApiResponse.of(ClubResponseType.KICK_OUT_SUCCESS);
     }
 

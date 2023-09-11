@@ -5,8 +5,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import server.api.kiwes.domain.alarm.constant.AlarmContent;
+import server.api.kiwes.domain.alarm.constant.AlarmType;
+import server.api.kiwes.domain.alarm.service.AlarmService;
 import server.api.kiwes.domain.club.entity.Club;
 import server.api.kiwes.domain.club.service.ClubService;
+import server.api.kiwes.domain.club_member.entity.ClubMember;
 import server.api.kiwes.domain.club_member.service.ClubMemberService;
 import server.api.kiwes.domain.member.entity.Member;
 import server.api.kiwes.domain.member.service.MemberService;
@@ -29,8 +33,9 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final ClubMemberService clubMemberService;
     private final ClubService clubService;
+    private final AlarmService alarmService;
 
-    @ApiOperation(value = "후기 등록", notes = "")
+    @ApiOperation(value = "후기 등록", notes = "AlarmContent.REVIEW")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 21201, message = "후기 등록 완료"),
             @io.swagger.annotations.ApiResponse(code = 41201, message = "해당 모임에 승인된 멤버가 아님 (400)"),
@@ -46,6 +51,10 @@ public class ReviewController {
         }
 
         reviewService.postReview(club, member, registerDto);
+
+        ClubMember host = clubMemberService.findByClubHost(club);
+        String name = member.getNickname() == null ? "익명" : member.getNickname();
+        alarmService.postAlarm(host.getMember(), club, AlarmType.CLUB, name + AlarmContent.REVIEW.getContent());
 
         return ApiResponse.of(ReviewResponseType.POST_SUCCESS);
     }
