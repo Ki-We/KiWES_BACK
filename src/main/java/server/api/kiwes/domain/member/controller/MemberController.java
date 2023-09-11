@@ -30,6 +30,7 @@ import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY;
 
 @RestController
 @AllArgsConstructor
+//@RequestMapping("/api/v1/members")
 @Api(tags = "Member")
 @Slf4j
 public class MemberController {
@@ -37,7 +38,9 @@ public class MemberController {
     private final MemberAuthenticationService authenticationService;
     private final MemberService memberService;
     private final PreSignedUrlService preSignedUrlService;
+//    private final TokenProvider tokenProvider;
     private final EmailService emailService;
+    private final MemberAppleService memberAppleService;
 
 //    @ApiOperation(value = "accessToken 값 위한 API",
 //            notes = "https://kauth.kakao.com/oauth/authorize?client_id=6f0216bfb31177fe4956e6a1a17bb5c6&redirect_uri=http://43.200.185.205:8080/oauth/kakao&response_type=code  카카오 요청 ~~~~~~~~~///~~~~" +
@@ -67,13 +70,30 @@ public class MemberController {
             @io.swagger.annotations.ApiResponse(code = 20001, message = "로그인 객체 정상 리턴 (200 OK)"),
             @io.swagger.annotations.ApiResponse(code = 40001, message = "parameter 누락 (400 BAD_REQUEST)")
     })
-    @PostMapping(value = {"/oauth/{socialLoginType}","/login/oauth/{socialLoginType}","/login/oauth2/code/{socialLoginType}"}) //"/oauth/{socialLoginType}",
+    @PostMapping(value = {"/oauth/{socialLoginType}","/login/oauth2/code/{socialLoginType}"}) //"/oauth/{socialLoginType}",
     public ApiResponse<Object> login(@PathVariable(name="socialLoginType") SocialLoginType socialLoginType,
                                         @RequestParam String token) {
         log.info(token);
         return ApiResponse.of(MemberResponseType.LOGIN_SUCCESS,
                 authenticationService.login(socialLoginType,token));
     }
+
+    @ApiOperation(value = "애플 로그인", notes = "애플 로그인 API" +
+            " https://appleid.apple.com/auth/authorize?client_id=org.kiwes.KiWESApp&redirect_uri=https://kiwes.org/login/oauth/apple&response_type=code%20id_token&scope=name%20email&response_mode=form_post "
+    )
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 20001, message = "로그인 객체 정상 리턴 (200 OK)"),
+            @io.swagger.annotations.ApiResponse(code = 40001, message = "parameter 누락 (400 BAD_REQUEST)")
+    })
+    @PostMapping(value = {"/login/oauth/{socialLoginType}"})
+    public ApiResponse<Object>  loginApple(@PathVariable(name="socialLoginType") SocialLoginType socialLoginType,
+                                                 @RequestParam String code) {
+        log.info(">> 사용자로부터 accessToken 요청을 받음 :: {} Social Login "+ socialLoginType);
+        return ApiResponse.of(MemberResponseType.LOGIN_SUCCESS,
+                authenticationService.login(socialLoginType,code));
+    }
+
+
 
     @ApiOperation(value = "추가 정보 입력", notes = "추가 정보를 입력합니다.")
     @ApiResponses({
@@ -90,6 +110,7 @@ public class MemberController {
         authenticationService.signUp(additionInfoRequest);
         return ApiResponse.of(MemberResponseType.SIGN_UP_SUCCESS);
     }
+
 
     @ApiOperation(value = "토큰 재발급", notes = "토큰을 재발급합니다.")
     @PostMapping("/auth/refresh")
