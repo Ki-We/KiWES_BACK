@@ -17,7 +17,7 @@ public enum MemberServiceMessage {
     GOOGLE_DELETE_URL(""),
     GOOGLE_ACOUNT("google_account"),
 
-    APPLE_LOGIN_URL("https://appleid.apple.com/auth/keys"),
+    APPLE_LOGIN_URL("https://appleid.apple.com/"),
     APPLE_LOGOUT_URL(""),
     APPLE_DELETE_URL(""),
     APPLE_ACOUNT("apple_account"),

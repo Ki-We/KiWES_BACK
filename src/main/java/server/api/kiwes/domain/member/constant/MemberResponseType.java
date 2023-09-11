@@ -29,8 +29,8 @@ public enum MemberResponseType implements BaseResponseType {
     NOT_FOUND_EMAIL(40002,"이메일을 찾을 수 없습니다.", HttpStatus.BAD_REQUEST),
     EXISTED_NICKNAME(40003, "이미 존재하는 닉네임입니다", HttpStatus.BAD_REQUEST),
     NOT_LOGGED_IN_USER(40004, "사용자 정보를 알 수 없습니다.", HttpStatus.BAD_REQUEST),
-
-
+    CANT_CREATE_SECRET(40005, "client secret 만들기에 실패했습니다.", HttpStatus.BAD_REQUEST),
+    NOT_FOUND_KEYFILE(40006, "Key 파일을 찾을 수 없습니다.", HttpStatus.BAD_REQUEST),
 
 
 

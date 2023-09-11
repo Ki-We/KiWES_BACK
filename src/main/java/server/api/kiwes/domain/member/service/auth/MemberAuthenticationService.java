@@ -65,8 +65,6 @@ public class MemberAuthenticationService {
     private String KAKAO_TOKEN_URL;
     @Value("${spring.security.oauth2.client.provider.google.token-uri}")
     private String GOOGLE_TOKEN_URL;
-    @Value("${apple.auth.token-url}")
-    private String APPLE_TOKEN_URL;
 
     private MemberLoginService loginService;
     /**
@@ -86,9 +84,6 @@ public class MemberAuthenticationService {
             case google:
                 reqURL = GOOGLE_TOKEN_URL;
                 refreshTokenName ="id_token";
-                break;
-            case apple:
-                reqURL = APPLE_TOKEN_URL;
                 break;
             default:
                 break;

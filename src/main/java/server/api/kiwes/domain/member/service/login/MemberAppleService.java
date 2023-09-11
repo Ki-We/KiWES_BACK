@@ -1,5 +1,6 @@
 package server.api.kiwes.domain.member.service.login;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.*;
 import com.nimbusds.jose.JOSEException;
@@ -37,10 +38,10 @@ import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.interfaces.ECPrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.text.ParseException;
 import java.util.Date;
 
-import static server.api.kiwes.domain.member.constant.MemberResponseType.CONNECT_ERROR;
-import static server.api.kiwes.domain.member.constant.MemberResponseType.NOT_FOUND_EMAIL;
+import static server.api.kiwes.domain.member.constant.MemberResponseType.*;
 import static server.api.kiwes.domain.member.constant.MemberServiceMessage.APPLE_ACOUNT;
 
 @Service
@@ -71,17 +72,15 @@ public class MemberAppleService implements  MemberLoginService{
 
         return sb.toString();
     }
-    public AppleDTO getAppleInfo(String code) throws Exception{
-        if (code == null) throw new Exception("Failed get authorization code");
+    public JsonObject connect(String reqURL,String code){
+        if (code == null) throw new BizException(CONNECT_ERROR);
 
-        String clientSecret = createClientSecret();
-        System.out.println(clientSecret);
-
-        String userId = "";
-        String email  = "";
-        String accessToken = "";
-
+//        String userId = "";
+//        String email  = "";
+//        String accessToken = "";
+//        String refreshToken = "";
         try {
+            String clientSecret = createClientSecret();
             HttpHeaders headers = new HttpHeaders();
             headers.add("Content-type", "application/x-www-form-urlencoded");
 
@@ -96,32 +95,45 @@ public class MemberAppleService implements  MemberLoginService{
             HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
 
             ResponseEntity<String> response = restTemplate.exchange(
-                    APPLE_AUTH_URL + "/auth/token",
+                    reqURL + "/auth/token",
                     HttpMethod.POST,
                     httpEntity,
                     String.class
             );
 
-            JSONParser jsonParser = new JSONParser();
-            JSONObject jsonObj = (JSONObject) jsonParser.parse(response.getBody()); //
-            accessToken = String.valueOf(jsonObj.get("access_token"));
+//            JSONParser jsonParser = new JSONParser();
+//            JSONObject jsonObj = (JSONObject) jsonParser.parse(response.getBody());
+//            JsonObject jsonObj = JsonParser.parseString(response.getBody()).getAsJsonObject();
+            return JsonParser.parseString(response.getBody()).getAsJsonObject();
 
-            //ID TOKEN을 통해 회원 고유 식별자 받기
-            SignedJWT signedJWT = SignedJWT.parse(String.valueOf(jsonObj.get("id_token"))); //
-            ReadOnlyJWTClaimsSet getPayload = signedJWT.getJWTClaimsSet(); //
-            ObjectMapper objectMapper = new ObjectMapper();
-            JSONObject payload = objectMapper.readValue(getPayload.toJSONObject().toJSONString(), JSONObject.class);
-            //
-            userId = String.valueOf(payload.get("sub"));
-            email  = String.valueOf(payload.get("email"));
+
+//            accessToken = String.valueOf(jsonObj.get("access_token"));
+//            System.out.println(accessToken);
+//
+//            refreshToken = String.valueOf(jsonObj.get("refresh_token"));
+//            System.out.println(refreshToken);
+//            //ID TOKEN을 통해 회원 고유 식별자 받기
+//            SignedJWT signedJWT = SignedJWT.parse(String.valueOf(jsonObj.get("id_token")));
+//            ReadOnlyJWTClaimsSet getPayload = signedJWT.getJWTClaimsSet();
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            JSONObject payload = objectMapper.readValue(getPayload.toJSONObject().toJSONString(), JSONObject.class);
+//            System.out.println(payload);
+//
+//            userId = String.valueOf(payload.get("sub"));
+//            email  = String.valueOf(payload.get("email"));
+        } catch (IOException | ParseException | org.json.simple.parser.ParseException e) {
+            log.info(CONNECT_ERROR.getMessage());
+            throw new BizException(CONNECT_ERROR);
         } catch (Exception e) {
-            throw new Exception("API call failed");
+            log.info(CANT_CREATE_SECRET.getMessage());
+            throw new BizException(CANT_CREATE_SECRET);
         }
 
-        return AppleDTO.builder()
-                .id(userId)
-                .token(accessToken)
-                .email(email).build();
+//        return AppleDTO.builder()
+//                .id(userId)
+//                .token(accessToken)
+//                .email(email).build();
+
     }
 
     private String createClientSecret() throws Exception {
@@ -144,19 +156,18 @@ public class MemberAppleService implements  MemberLoginService{
             JWSSigner jwsSigner = new ECDSASigner(ecPrivateKey.getS());
             jwt.sign(jwsSigner);
         } catch (JOSEException e) {
-            throw new Exception("Failed create client secret");
+            log.info(CANT_CREATE_SECRET.getMessage());
+            throw new BizException(CANT_CREATE_SECRET);
         }
 
         return jwt.serialize();
     }
 
-    private byte[] getPrivateKey() throws Exception {
+    private byte[] getPrivateKey() {
         byte[] content = null;
         File file = null;
 
         URL res = getClass().getResource(APPLE_KEY_PATH);
-        System.out.println(APPLE_KEY_PATH);
-        System.out.println(res);
         if ("jar".equals(res.getProtocol())) {
             try {
                 InputStream input = getClass().getResourceAsStream(APPLE_KEY_PATH);
@@ -173,7 +184,7 @@ public class MemberAppleService implements  MemberLoginService{
                 out.close();
                 file.deleteOnExit();
             } catch (IOException ex) {
-                ex.printStackTrace();
+                throw new BizException(NOT_FOUND_KEYFILE);
             }
         } else {
             file = new File(res.getFile());
@@ -181,64 +192,79 @@ public class MemberAppleService implements  MemberLoginService{
 
         if (file.exists()) {
             try (FileReader keyReader = new FileReader(file);
-                 PemReader pemReader = new PemReader(keyReader))
-            {
+                 PemReader pemReader = new PemReader(keyReader)){
                 PemObject pemObject = pemReader.readPemObject();
                 content = pemObject.getContent();
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new BizException(NOT_FOUND_KEYFILE);
             }
         } else {
-            throw new Exception("File " + file + " not found");
+            throw new BizException(NOT_FOUND_KEYFILE);
         }
 
         return content;
     }
 
-    public JsonObject connect(String reqURL, String token) {
-        try {
-            URL url = new URL(reqURL);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Authorization", "Bearer " + token); //전송할 header 작성, access_token전송
-
-            int responseCode = conn.getResponseCode();
-            System.out.println("responseCode : " + responseCode);
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String inputLine;
-
-            StringBuffer response = new StringBuffer();
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-
-            in.close();
-            JsonObject json = JsonParser.parseString(response.toString()).getAsJsonObject();
-            return json;
-        } catch (IOException e) {
-            log.info(CONNECT_ERROR.getMessage());
-            throw new BizException(CONNECT_ERROR);
-        }
-
-    }
     @Override
     public String getEmail(JsonObject userInfo) {
-        if (userInfo.getAsJsonObject(APPLE_ACOUNT.getValue()).has("email")) {
-            return userInfo.getAsJsonObject(APPLE_ACOUNT.getValue()).get("email").getAsString();
-        }
-        throw new BizException(NOT_FOUND_EMAIL);
+        return String.valueOf(getIdentifier(userInfo).get("email"));
     }
     @Override
     public String getProfileUrl(JsonObject userInfo) {
-        return userInfo.getAsJsonObject("properties").get("profile_image").getAsString();
+        return "NOTAGREE";
     }
     @Override
     public String getGender(JsonObject userInfo) {
-        if (userInfo.getAsJsonObject(APPLE_ACOUNT.getValue()).has("gender")) {
-            return userInfo.getAsJsonObject(APPLE_ACOUNT.getValue()).get("gender").getAsString();
-        }
+//        if (userInfo.getAsJsonObject(APPLE_ACOUNT.getValue()).has("gender")) {
+//            return userInfo.getAsJsonObject(APPLE_ACOUNT.getValue()).get("gender").getAsString();
+//        }
         return "NOTAGREE";
     }
+
+    public JSONObject getIdentifier(JsonObject userInfo) {
+        try {
+//        String accessToken = String.valueOf(userInfo.get("access_token"));
+//        String refreshToken = String.valueOf(userInfo.get("refresh_token"));
+            //ID TOKEN을 통해 회원 고유 식별자 받기
+            SignedJWT signedJWT = SignedJWT.parse(String.valueOf(userInfo.get("id_token")));
+            ReadOnlyJWTClaimsSet getPayload = signedJWT.getJWTClaimsSet();
+            ObjectMapper objectMapper = new ObjectMapper(){};
+            JSONObject payload = objectMapper.readValue(getPayload.toJSONObject().toJSONString(), JSONObject.class);
+            System.out.println(payload);
+            return payload;
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    //    public JsonObject connect(String reqURL, String token) {
+//        try {
+//            URL url = new URL(reqURL);
+//            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//
+//            conn.setRequestMethod("POST");
+//            conn.setRequestProperty("Authorization", "Bearer " + token); //전송할 header 작성, access_token전송
+//
+//            int responseCode = conn.getResponseCode();
+//            System.out.println("responseCode : " + responseCode);
+//
+//            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+//            String inputLine;
+//
+//            StringBuffer response = new StringBuffer();
+//            while ((inputLine = in.readLine()) != null) {
+//                response.append(inputLine);
+//            }
+//
+//            in.close();
+//            JsonObject json = JsonParser.parseString(response.toString()).getAsJsonObject();
+//            return json;
+//        } catch (IOException e) {
+//            log.info(CONNECT_ERROR.getMessage());
+//            throw new BizException(CONNECT_ERROR);
+//        }
+//
+//    }
 }
