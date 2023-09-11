@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -27,14 +26,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import server.api.kiwes.domain.member.dto.AppleDTO;
 import server.api.kiwes.response.BizException;
 
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.interfaces.ECPrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -42,7 +37,6 @@ import java.text.ParseException;
 import java.util.Date;
 
 import static server.api.kiwes.domain.member.constant.MemberResponseType.*;
-import static server.api.kiwes.domain.member.constant.MemberServiceMessage.APPLE_ACOUNT;
 
 @Service
 @Transactional
