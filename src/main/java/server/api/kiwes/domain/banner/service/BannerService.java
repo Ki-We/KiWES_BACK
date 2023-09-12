@@ -19,8 +19,8 @@ public class BannerService {
 
     public List<BannerResponse> getBanners() {
 
-        List<Banner> banners = new ArrayList<>();
-        banners = bannerRepository.findAllByOrderByPriorityAsc();
+//        List<Banner> banners = new ArrayList<>();
+        List<Banner> banners = bannerRepository.findAllByOrderByPriorityAsc();
 
         List<BannerResponse> bannerResponses = new ArrayList<>();
 

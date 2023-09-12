@@ -44,7 +44,19 @@ public class ClubController {
         return Pattern.matches(DATE_REGEX, dateStr);
     }
 
-    @ApiOperation(value = "모임 글 작성", notes = "날짜 요청 형식 : YYYY-MM-DD\n location : 위도, 경도\nlocationsKeyword : 짧은 위치 키워드\nGender: MALE, FEMALE, ALL")
+    @ApiOperation(value = "모임 글 작성", notes = "날짜 요청 형식 : YYYY-MM-DD\n location : 위도, 경도\nlocationsKeyword : 짧은 위치 키워드\nGender: MALE, FEMALE, ALL" +
+            "\n예시 출력 데이터\n" +
+            "\"status\": 20101,\n" +
+            "\"message\": \"성공\",\n" +
+            "\"data\": [\n" +
+            "(List<ClubCreatedResponseDto>값 예시)\n" +
+            "{clubMaxPeople\": \"Integer\",\n" +
+            "\"hostNickname\": \"String\",\n" +
+            "\"hostId\": \"Long\",\n" +
+            "\"clubTitle\": \"String\",\n" +
+            " \"clubId\": Long }]"
+
+    )
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20101, message = "모임 모집 작성글 업로드 성공"),
             @io.swagger.annotations.ApiResponse(code = 40108, message = "날짜 요청 형식이 잘못 되었습니다. (400)"),
@@ -60,13 +72,18 @@ public class ClubController {
         return ApiResponse.of(ClubResponseType.POST_SUCCESS, response);
     }
     
-    @ApiOperation(value = "모임 글 작성 시 썸네일 이미지 업로드 링크 반환", notes = "응답받은 링크에 파일과 함께 PUT요청. 파일명 상관없음.\n POST /article 요청 먼저 하고, clubId 반환 받은 후에 요청")
+    @ApiOperation(value = "모임 글 작성 시 썸네일 이미지 업로드 링크 반환", notes = "응답받은 링크에 파일과 함께 PUT요청. 파일명 상관없음.\n POST /article 요청 먼저 하고, clubId 반환 받은 후에 요청" +
+            "\n예시 출력 데이터\n" +
+            "\"status\": 20113,\n" +
+            "\"message\": \"성공\",\n" +
+            "\"data\": [\n" +
+            "{ url\": \"String\"}]")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20113, message = "모임 썸네일 이미지 업로드 프리사인url 리턴 성공"),
     })
     @GetMapping("/article/presigned-url")
     public ApiResponse<String> getUploadClubThumbnailImagePresignedUrl(@RequestParam Long clubId){
-        Member member = memberService.getLoggedInMember();
+        Member member = memberService.getLoggedInMember(); //todo 이게 뭐냐
         Club club = clubService.findById(clubId);
         String url = preSignedUrlService.getPreSignedUrl("clubThumbnail/", club.getUuid());
         clubService.setClubThumbnailImageUrl(club);
@@ -74,7 +91,12 @@ public class ClubController {
         return ApiResponse.of(ClubResponseType.CLUB_THUMBNAIL_IMG_PRESIGNED_URL, url);
     }
     
-    @ApiOperation(value = "모임 글 삭제", notes = "")
+    @ApiOperation(value = "모임 글 삭제", notes = "" +
+            "\n예시 출력 데이터\n" +
+            "\"status\": 20102,\n" +
+            "\"message\": \"성공\",\n" +
+            "\"data\": [\n" +
+            "\"모임 모집 글 삭제 성공\"]")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20102, message = "모임 모집 글 삭제 성공"),
     })
@@ -93,7 +115,12 @@ public class ClubController {
         return ApiResponse.of(ClubResponseType.DELETE_SUCCESS);
     }
     
-    @ApiOperation(value = "모임 참여 하기", notes = "AlarmContent.PARTICIPATE")
+    @ApiOperation(value = "모임 참여 하기", notes = "AlarmContent.PARTICIPATE" +
+            "\n예시 출력 데이터\n" +
+            "\"status\": 20103,\n" +
+            "\"message\": \"성공\",\n" +
+            "\"data\": [\n" +
+            "\"참여 신청 성공\"]")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20103, message = "참여 신청 성공"),
             @io.swagger.annotations.ApiResponse(code = 40102, message = "호스트이거나 이미 참여 신청함"),
@@ -116,7 +143,15 @@ public class ClubController {
         return ApiResponse.of(ClubResponseType.APPLICATION_SUCCESS);
     }
 
-    @ApiOperation(value = "모임 신청자 승인", notes = "호스트만이 가능")
+    @ApiOperation(value = "모임 신청자 승인", notes = "호스트만이 가능" +
+            "\n예시 출력 데이터\n" +
+            "\"status\": 20105,\n" +
+            "\"message\": \"성공\",\n" +
+            "\"data\": [\n" +
+            "{\"participantNickname\": \"String\",\n" +
+            "\"participantId\": \"Long\",\n" +
+            "\"clubTitle\": \"String\",\n" +
+            " \"clubId\": Long }]")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20105, message = "모임 참여 승인 성공"),
             @io.swagger.annotations.ApiResponse(code = 40103, message = "호스트가 아니므로 권한 없음 (401)"),
@@ -143,7 +178,12 @@ public class ClubController {
         return ApiResponse.of(ClubResponseType.APPROVE_SUCCESS, response);
     }
 
-    @ApiOperation(value = "모임 신청 거절(삭제)", notes = "")
+    @ApiOperation(value = "모임 신청 거절(삭제)", notes = "" +
+            "\n예시 출력 데이터\n" +
+            "\"status\": 20106,\n" +
+            "\"message\": \"성공\",\n" +
+            "\"data\": [\n" +
+            "\"멤버 거절 성공\"]")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20106, message = "신청자 거절(삭제) 성공"),
             @io.swagger.annotations.ApiResponse(code = 40103, message = "호스트가 아니므로 권한 없음 (401)"),
@@ -170,7 +210,12 @@ public class ClubController {
         return ApiResponse.of(ClubResponseType.DENY_SUCCESS);
     }
 
-    @ApiOperation(value = "참여 취소 (지원자)", notes = "")
+    @ApiOperation(value = "참여 취소 (지원자)", notes = "" +
+            "\n예시 출력 데이터\n" +
+            "\"status\": 20104,\n" +
+            "\"message\": \"성공\",\n" +
+            "\"data\": [\n" +
+            "\"참여 취소 성공\"]")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20104, message = "참여취소 성공"),
             @io.swagger.annotations.ApiResponse(code = 40107, message = "호스트는 참여 취소를 할 수 없습니다 (400)"),
@@ -195,7 +240,12 @@ public class ClubController {
     }
 
     //호스트가 승인된 지원자 강퇴
-    @ApiOperation(value = "승인된 사용자 모임에서 강퇴 (호스트)", notes = "호스트만 요청 가능")
+    @ApiOperation(value = "승인된 사용자 모임에서 강퇴 (호스트)", notes = "호스트만 요청 가능" +
+            "\n예시 출력 데이터\n" +
+            "\"status\": 20107,\n" +
+            "\"message\": \"성공\",\n" +
+            "\"data\": [\n" +
+            "\"멤버 강퇴 성공\"]")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20107, message = "멤버 강퇴 성공"),
             @io.swagger.annotations.ApiResponse(code = 40103, message = "호스트가 아니므로 권한 없음 (401)"),
@@ -227,21 +277,60 @@ public class ClubController {
         return ApiResponse.of(ClubResponseType.KICK_OUT_SUCCESS);
     }
 
-    @ApiOperation(value = "카테고리별 모임", notes = "카테고리별 모임 조회")
+    @ApiOperation(value = "카테고리별 모임", notes = "카테고리별 모임 조회" +
+            "\n예시 출력 데이터\n" +
+            "\"status\": 20110,\n" +
+            "\"message\": \"성공\",\n" +
+            "\"data\": [\n" +
+            "(List<ClubSortResponseDto>값 예시)\n" +
+            "{\"clubId\": Long }\n" +
+            "\"title\": \"String\",\n" +
+            "\"thumbnailImage\": \"String\",\n" +
+            "\"date\": \"String\",\n" +
+            "\"location\": \"String\",\n" +
+            "\"languages\": \"List<String>\",\n" +
+            " HeartStatus\": \"enum{YES, NO}\",\n "+
+            "]")
     @PostMapping("/category")
     public ApiResponse<Object> sortByCategories(@RequestBody ClubSortRequestDto clubSortRequestDto ) {
         return ApiResponse.of(ClubResponseType.CLUB_SORT_BY_CATEGORY_SUCCESS,
                 clubSortService.getClubByCategory(clubSortRequestDto.getSortedBy()));
     }
 
-    @ApiOperation(value = "언어별 모임", notes = "언어별 모임 조회")
+    @ApiOperation(value = "언어별 모임", notes = "언어별 모임 조회" +
+            "\n예시 출력 데이터\n" +
+            "\"status\": 20111,\n" +
+            "\"message\": \"성공\",\n" +
+            "\"data\": [\n" +
+            "(List<ClubSortResponseDto>값 예시)\n" +
+            "{\"clubId\": Long }\n" +
+            "\"title\": \"String\",\n" +
+            "\"thumbnailImage\": \"String\",\n" +
+            "\"date\": \"String\",\n" +
+            "\"location\": \"String\",\n" +
+            "\"languages\": \"List<String>\",\n" +
+            " HeartStatus\": \"enum{YES, NO}\",\n "+
+            "]")
     @PostMapping("/language")
     public ApiResponse<Object> sortByLanguages(@RequestBody ClubSortRequestDto clubSortRequestDto ) {
         return ApiResponse.of(ClubResponseType.CLUB_SORT_BY_LANGUAGE_SUCCESS,
                 clubSortService.getClubByLanguages(clubSortRequestDto.getSortedBy()));
     }
 
-    @ApiOperation(value = "인기 모임", notes = "인기 모임 조회 5개")
+    @ApiOperation(value = "인기 모임", notes = "인기 모임 조회 5개" +
+            "\n예시 출력 데이터\n" +
+            "\"status\": 20112,\n" +
+            "\"message\": \"성공\",\n" +
+            "\"data\": [\n" +
+            "(List<ClubPopularEachResponseDto>값 예시)\n" +
+            "{\"clubId\": Long }\n" +
+            "\"title\": \"String\",\n" +
+            "\"hostProfileImg\": \"String\",\n" +
+            "\"date\": \"String\",\n" +
+            "\"location\": \"String\",\n" +
+            "\"languages\": \"List<String>\",\n" +
+            " HeartStatus\": \"enum{YES, NO}\",\n "+
+            "]")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20112, message = "인기 모임 조회 성공"),
     })

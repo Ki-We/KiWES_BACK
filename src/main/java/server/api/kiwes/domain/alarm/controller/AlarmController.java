@@ -20,7 +20,15 @@ public class AlarmController {
     private final AlarmService alarmService;
     private final MemberService memberService;
 
-    @ApiOperation(value = "알림 가져오기", notes = "")
+    @ApiOperation(value = "알림 가져오기", notes =
+            "예시 출력 데이터\n" +
+            "\"status\": 20401,\n" +
+            "\"message\": \"성공\",\n" +
+            "\"data\": [\n" +
+            " {type\": \"NOTICE\",\n" +
+            "\"content\": \"새로운 공지가 등록되었습니다.\",\n" +
+            " \"club_id\": 0 }"
+    )
     @GetMapping("/")
     public ApiResponse<Object> alarmList(){
         Member member = memberService.getLoggedInMember();

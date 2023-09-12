@@ -1,6 +1,7 @@
 package server.api.kiwes.domain.banner.controller;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +18,15 @@ public class BannerController {
 
     private final BannerService bannerService;
 
-
+    @ApiOperation(value = "배너 가져오기", notes =
+            "예시 출력 데이터\n" +
+                    "\"status\": 20401,\n" +
+                    "\"message\": \"성공\",\n" +
+                    "\"data\": [\n" +
+                    " {type\": \"String\",\n" +
+                    "\"imageUrl\": \"String\",\n" +
+                    " \"id\": 0 }"
+    )
     @GetMapping()
     public ApiResponse<Object> getBanners() {
 
