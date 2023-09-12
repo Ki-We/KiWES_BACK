@@ -35,7 +35,13 @@ public class ReviewController {
     private final ClubService clubService;
     private final AlarmService alarmService;
 
-    @ApiOperation(value = "후기 등록", notes = "AlarmContent.REVIEW")
+    @ApiOperation(value = "후기 등록", notes = "AlarmContent.REVIEW" +
+            "\n예시 출력 데이터" +
+            "{\n" +
+            "  \"status\": 21201,\n" +
+            "  \"message\": \"후기 등록 완료\",\n" +
+            "  \"data\": null\n" +
+            "}")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 21201, message = "후기 등록 완료"),
             @io.swagger.annotations.ApiResponse(code = 41201, message = "해당 모임에 승인된 멤버가 아님 (400)"),
@@ -59,7 +65,13 @@ public class ReviewController {
         return ApiResponse.of(ReviewResponseType.POST_SUCCESS);
     }
 
-    @ApiOperation(value = "후기 수정", notes = "")
+    @ApiOperation(value = "후기 수정", notes = "" +
+            "\n예시 출력 데이터" +
+            "{\n" +
+            "  \"status\": 21202,\n" +
+            "  \"message\": \"후기 수정 완료\",\n" +
+            "  \"data\": null\n" +
+            "}")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 21202, message = "후기 수정 완료"),
             @io.swagger.annotations.ApiResponse(code = 41201, message = "해당 모임에 승인된 멤버가 아님 (400)"),
@@ -85,7 +97,13 @@ public class ReviewController {
         return ApiResponse.of(ReviewResponseType.MODIFY_SUCCESS);
     }
 
-    @ApiOperation(value = "후기 삭제", notes = "")
+    @ApiOperation(value = "후기 삭제", notes = "" +
+            "\n예시 출력 데이터" +
+            "{\n" +
+            "  \"status\": 21203,\n" +
+            "  \"message\": \"후기 삭제 완료\",\n" +
+            "  \"data\": null\n" +
+            "}")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 21203, message = "후기 삭제 완료"),
     })
@@ -106,7 +124,25 @@ public class ReviewController {
         return ApiResponse.of(ReviewResponseType.DELETE_SUCCESS);
     }
     
-    @ApiOperation(value = "후기 모두 보기", notes = "")
+    @ApiOperation(value = "후기 모두 보기", notes = "" +
+            "\n예시 출력 데이터" +
+            "{\n" +
+            "  \"status\": 21105,\n" +
+            "  \"message\": \"qna 리스트 응답 성공\",\n" +
+            "  \"data\": isHost : Boolean ,\n" +
+            " ReviewDetailDto : { \n" +
+            "reviewerProfileImg : String\n" +
+            "reviewerNickname : String\n" +
+            "reviewContent : String\n" +
+            "reviewDate : String\n" +
+            "respondentProfileImg : String\n" +
+            "respondentNickname : String\n" +
+            "replyContent : String\n" +
+            "replyDate : String\n" +
+            "isAuthorOfReview : Boolean\n" +
+            "isAuthorOfReply : Boolean\n" +
+            "isModified : Boolean\n" +
+            "}")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 21204, message = "후기 모두 보기 성공"),
     })
@@ -118,7 +154,13 @@ public class ReviewController {
         return ApiResponse.of(ReviewResponseType.ENTIRE_LIST, reviewService.getEntire(club, member));
     }
 
-    @ApiOperation(value = "후기에 답글 달기", notes = "호스트만 달 수 있다.")
+    @ApiOperation(value = "후기에 답글 달기", notes = "호스트만 달 수 있다." +
+            "\n예시 출력 데이터" +
+            "{\n" +
+            "  \"status\": 21205,\n" +
+            "  \"message\": \"후기 답글 등록 성공\",\n" +
+            "  \"data\": null\n" +
+            "}")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 21205, message = "후기 답글 등록 성공"),
             @io.swagger.annotations.ApiResponse(code = 41206, message = "호스트가 아니므로 답글을 달 수 없음 (401)"),

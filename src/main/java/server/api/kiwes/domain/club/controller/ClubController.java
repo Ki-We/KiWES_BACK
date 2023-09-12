@@ -94,9 +94,8 @@ public class ClubController {
     @ApiOperation(value = "모임 글 삭제", notes = "" +
             "\n예시 출력 데이터\n" +
             "\"status\": 20102,\n" +
-            "\"message\": \"성공\",\n" +
-            "\"data\": [\n" +
-            "\"모임 모집 글 삭제 성공\"]")
+            "\"message\": \"모임 모집 글 삭제 성공\",\n" +
+            "\"data\": [\"null\"]")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20102, message = "모임 모집 글 삭제 성공"),
     })
@@ -118,9 +117,8 @@ public class ClubController {
     @ApiOperation(value = "모임 참여 하기", notes = "AlarmContent.PARTICIPATE" +
             "\n예시 출력 데이터\n" +
             "\"status\": 20103,\n" +
-            "\"message\": \"성공\",\n" +
-            "\"data\": [\n" +
-            "\"참여 신청 성공\"]")
+            "\"message\": \"참여 신청 성공\",\n" +
+            "\"data\": [\"null\"]")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20103, message = "참여 신청 성공"),
             @io.swagger.annotations.ApiResponse(code = 40102, message = "호스트이거나 이미 참여 신청함"),
@@ -181,9 +179,8 @@ public class ClubController {
     @ApiOperation(value = "모임 신청 거절(삭제)", notes = "" +
             "\n예시 출력 데이터\n" +
             "\"status\": 20106,\n" +
-            "\"message\": \"성공\",\n" +
-            "\"data\": [\n" +
-            "\"멤버 거절 성공\"]")
+            "\"message\": \"멤버 거절 성공\",\n" +
+            "\"data\": [\"null\"]")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20106, message = "신청자 거절(삭제) 성공"),
             @io.swagger.annotations.ApiResponse(code = 40103, message = "호스트가 아니므로 권한 없음 (401)"),
@@ -213,9 +210,8 @@ public class ClubController {
     @ApiOperation(value = "참여 취소 (지원자)", notes = "" +
             "\n예시 출력 데이터\n" +
             "\"status\": 20104,\n" +
-            "\"message\": \"성공\",\n" +
-            "\"data\": [\n" +
-            "\"참여 취소 성공\"]")
+            "\"message\": \"참여 취소 성공\",\n" +
+            "\"data\": [\"null\"]")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20104, message = "참여취소 성공"),
             @io.swagger.annotations.ApiResponse(code = 40107, message = "호스트는 참여 취소를 할 수 없습니다 (400)"),
@@ -243,9 +239,8 @@ public class ClubController {
     @ApiOperation(value = "승인된 사용자 모임에서 강퇴 (호스트)", notes = "호스트만 요청 가능" +
             "\n예시 출력 데이터\n" +
             "\"status\": 20107,\n" +
-            "\"message\": \"성공\",\n" +
-            "\"data\": [\n" +
-            "\"멤버 강퇴 성공\"]")
+            "\"message\": \"멤버 강퇴 성공\",\n" +
+            "\"data\": [\"null\"]")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20107, message = "멤버 강퇴 성공"),
             @io.swagger.annotations.ApiResponse(code = 40103, message = "호스트가 아니므로 권한 없음 (401)"),

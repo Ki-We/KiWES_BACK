@@ -27,7 +27,44 @@ public class ClubDetailController {
     private final MemberService memberService;
     private final ClubDetailService clubDetailService;
     
-    @ApiOperation(value = "모임 상세 정보 불러오기", notes = "모임 정보 페이지에서 활용\n, qna, review는 최대 2개까지")
+    @ApiOperation(value = "모임 상세 정보 불러오기", notes = "모임 정보 페이지에서 활용\n, qna, review는 최대 2개까지"+
+            "\n예시 출력 데이터\n" +
+            "\"status\": 20108,\n" +
+            "  \"message\": \"모임 정보 불러오기 성공\",\n" +
+            "  \"data\": {\n" +
+            "    \"baseInfo\": {\n" +
+            "      \"clubId\": 1,\n" +
+            "      \"title\": \"첫번째 모임 제목입니다.\",\n" +
+            "      \"thumbnailImageUrl\": \"https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FlXdug%2Fbtsl9NySlW1%2FrxaVigq7yGuv7JDhlk5kH0%2Fimg.png\",\n" +
+            "      \"heartCount\": 0,\n" +
+            "      \"tags\": [\n" +
+            "        \"CRAFT\",\n" +
+            "        \"CAFE\",\n" +
+            "        \"KO\",\n" +
+            "        \"EN\"\n" +
+            "      ],\n" +
+            "      \"date\": \"Oct 30\",\n" +
+            "      \"dueTo\": \"Sep 30\",\n" +
+            "      \"cost\": 1000,\n" +
+            "      \"gender\": \"MALE\",\n" +
+            "      \"locationsKeyword\": \"신촌\",\n" +
+            "      \"content\": \"첫번째 모임입니다.\",\n" +
+            "      \"location\": \"신촌\"\n" +
+            "    },\n" +
+            "    \"memberInfo\": {\n" +
+            "      \"hostThumbnailImage\": \"http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_640x640.jpg\",\n" +
+            "      \"hostNickname\": \"규리\",\n" +
+            "      \"koreanCount\": 0,\n" +
+            "      \"foreignerCount\": 0,\n" +
+            "      \"maxPeople\": 10\n" +
+            "    },\n" +
+            "    \"qnas\": [],\n" +
+            "    \"reviews\": [],\n" +
+            "    \"isHost\": false,\n" +
+            "    \"isHeart\": false,\n" +
+            "    \"isActivated\": \"YES\"\n" +
+            "  }"+
+            "]")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20108, message = "모임 정보 불러오기 성공")
     })

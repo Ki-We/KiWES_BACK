@@ -22,7 +22,13 @@ public class HeartController {
     private final ClubService clubService;
     private final HeartService heartService;
 
-    @ApiOperation(value = "모임 찜하기", notes = "")
+    @ApiOperation(value = "모임 찜하기", notes = "" +
+            "예시 출력 데이터" +
+            "{\n" +
+            "  \"status\": 20201,\n" +
+            "  \"message\": \"찜하기 성공\",\n" +
+            "  \"data\": null\n" +
+            "}")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20201, message = "찜하기 성공"),
     })
@@ -35,7 +41,12 @@ public class HeartController {
         return ApiResponse.of(HeartResponseType.HEART_SUCCEED);
     }
 
-    @ApiOperation(value = "모임 찜하기 취소", notes = "")
+    @ApiOperation(value = "모임 찜하기 취소", notes = "예시 출력 데이터" +
+            "{\n" +
+            "  \"status\": 20202,\n" +
+            "  \"message\": \"찜하기 취소 성공\",\n" +
+            "  \"data\": null\n" +
+            "}")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20202, message = "찜하기 취소 성공"),
     })

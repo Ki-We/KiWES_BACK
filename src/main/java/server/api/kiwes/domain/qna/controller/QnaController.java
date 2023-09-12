@@ -33,7 +33,13 @@ public class QnaController {
     private final ClubMemberService clubMemberService;
     private final AlarmService alarmService;
     
-    @ApiOperation(value = "qna 질문 등록", notes = "AlarmContent.QUESTION")
+    @ApiOperation(value = "qna 질문 등록", notes = "AlarmContent.QUESTION" +
+            "\n예시 출력 데이터" +
+            "{\n" +
+            "  \"status\": 21101,\n" +
+            "  \"message\": \"qna 질문 등록 성공\",\n" +
+            "  \"data\": null\n" +
+            "}")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 21101, message = "qna 질문 등록 성공"),
             @io.swagger.annotations.ApiResponse(code = 40101, message = "clubId와 일치하는 모임이 존재하지 않습니다. (404)"),
@@ -51,7 +57,13 @@ public class QnaController {
         return ApiResponse.of(QnaResponseType.Q_POST_SUCCESS);
     }
 
-    @ApiOperation(value = "qna 답변 등록", notes = "AlarmContent.ANSWER")
+    @ApiOperation(value = "qna 답변 등록", notes = "AlarmContent.ANSWER" +
+            "\n예시 출력 데이터" +
+            "{\n" +
+            "  \"status\": 21102,\n" +
+            "  \"message\": \"qna 답변 등록 성공\",\n" +
+            "  \"data\": null\n" +
+            "}")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 21102, message = "qna 답변 등록 성공"),
             @io.swagger.annotations.ApiResponse(code = 40101, message = "clubId와 일치하는 모임이 존재하지 않습니다. (404)"),
@@ -78,7 +90,13 @@ public class QnaController {
         return ApiResponse.of(QnaResponseType.A_POST_SUCCESS);
     }
     
-    @ApiOperation(value = "qna 질문 삭제", notes = "삭제된 질문입니다 텍스트로 변환")
+    @ApiOperation(value = "qna 질문 삭제", notes = "삭제된 질문입니다 텍스트로 변환" +
+            "\n예시 출력 데이터" +
+            "{\n" +
+            "  \"status\": 21103,\n" +
+            "  \"message\": \"qna 질문 삭제 성공\",\n" +
+            "  \"data\": null\n" +
+            "}")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 21103, message = "qna 질문 삭제 성공"),
             @io.swagger.annotations.ApiResponse(code = 41104, message = "작성자가 아닙니다. (401)"),
@@ -93,7 +111,13 @@ public class QnaController {
 
     }
 
-    @ApiOperation(value = "qna 답변 삭제", notes = "답변 삭제")
+    @ApiOperation(value = "qna 답변 삭제", notes = "답변 삭제" +
+            "\n예시 출력 데이터" +
+            "{\n" +
+            "  \"status\": 21104,\n" +
+            "  \"message\": \"qna 답변 삭제 성공\",\n" +
+            "  \"data\": null\n" +
+            "}")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 21104, message = "qna 답변 삭제 성공"),
             @io.swagger.annotations.ApiResponse(code = 41103, message = "로그인한 사용자가 호스트가 아닙니다. (400)"),
@@ -115,7 +139,24 @@ public class QnaController {
 
     }
 
-    @ApiOperation(value = "모임의 qna 전체 보기", notes = "")
+    @ApiOperation(value = "모임의 qna 전체 보기", notes = "" +
+            "\n예시 출력 데이터" +
+            "{\n" +
+            "  \"status\": 21105,\n" +
+            "  \"message\": \"qna 리스트 응답 성공\",\n" +
+            "  \"data\": isHost : Boolean ,\n" +
+            " QnaDetailDto : { \n" +
+            "questionerProfileImg : String\n" +
+            "questionerNickname : String\n" +
+            "questionContent : String\n" +
+            "qDate : String\n" +
+            "respondentProfileImg : String\n" +
+            "respondentNickname : String\n" +
+            "answerContent : String\n" +
+            "aDate : String\n" +
+            "isAuthorOfQuestion : false\n" +
+            "isAuthorOfAnswer : false\n" +
+            "}")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 21105, message = "qna 리스트 응답 성공\n 답변이 달리지 않은 질문은 답변 관련 정보가 전부 null로 응답됩니다."),
     })

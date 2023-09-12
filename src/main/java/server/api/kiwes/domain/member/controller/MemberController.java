@@ -6,24 +6,17 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.api.kiwes.domain.member.constant.MemberResponseType;
 import server.api.kiwes.domain.member.constant.SocialLoginType;
 import server.api.kiwes.domain.member.dto.*;
 import server.api.kiwes.domain.member.service.MemberService;
 import server.api.kiwes.domain.member.service.auth.MemberAuthenticationService;
-import server.api.kiwes.domain.member.service.email.EmailService;
-import server.api.kiwes.domain.member.service.login.MemberAppleService;
 import server.api.kiwes.global.aws.PreSignedUrlService;
-import server.api.kiwes.global.converter.SocialLoginTypeConverter;
-import server.api.kiwes.global.jwt.TokenProvider;
 import server.api.kiwes.response.BizException;
 import server.api.kiwes.response.ApiResponse;
 import server.api.kiwes.response.foo.FooResponseType;
 
-import javax.servlet.http.HttpServletRequest;
-import java.net.URL;
 import java.text.ParseException;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY;
@@ -39,8 +32,6 @@ public class MemberController {
     private final MemberService memberService;
     private final PreSignedUrlService preSignedUrlService;
 //    private final TokenProvider tokenProvider;
-    private final EmailService emailService;
-    private final MemberAppleService memberAppleService;
 
 //    @ApiOperation(value = "accessToken 값 위한 API",
 //            notes = "https://kauth.kakao.com/oauth/authorize?client_id=6f0216bfb31177fe4956e6a1a17bb5c6&redirect_uri=http://43.200.185.205:8080/oauth/kakao&response_type=code  카카오 요청 ~~~~~~~~~///~~~~" +
@@ -95,7 +86,13 @@ public class MemberController {
 
 
 
-    @ApiOperation(value = "추가 정보 입력", notes = "추가 정보를 입력합니다.")
+    @ApiOperation(value = "추가 정보 입력", notes = "추가 정보를 입력합니다." +
+            "\n예시 출력 데이터" +
+            "{\n" +
+            "  \"status\": 20002,\n" +
+            "  \"message\": \"회원가입 성공\",\n" +
+            "  \"data\": null\n" +
+            "}")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20001, message = "Foo 객체 정상 리턴 (200 OK)"),
             @io.swagger.annotations.ApiResponse(code = 40001, message = "parameter 누락 (400 BAD_REQUEST)")
@@ -112,7 +109,14 @@ public class MemberController {
     }
 
 
-    @ApiOperation(value = "토큰 재발급", notes = "토큰을 재발급합니다.")
+    @ApiOperation(value = "토큰 재발급", notes = "토큰을 재발급합니다." +
+            "\n예시 출력 데이터" +
+            "{\n" +
+            "  \"status\": 20003,\n" +
+            "  \"message\": \"토큰 재발급을 완료하였습니다\",\n" +
+            "  \"data\": { accessToken : String\n" +
+            "refreshToken: String" +
+            "}")
     @PostMapping("/auth/refresh")
     public ApiResponse<Object> tokenRefresh(
             @RequestBody RefreshTokenRequest refreshTokenRequest) {
@@ -120,7 +124,13 @@ public class MemberController {
     }
 
 
-    @ApiOperation(value = "닉네임 중복검사", notes = "중복되는 닉네임이 있는지 검사합니다..")
+    @ApiOperation(value = "닉네임 중복검사", notes = "중복되는 닉네임이 있는지 검사합니다." +
+            "\n예시 출력 데이터" +
+            "{\n" +
+            "  \"status\": 20005,\n" +
+            "  \"message\": \"닉네임 중복체크 완료\",\n" +
+            "  \"data\": null\n" +
+            "}")
     @PostMapping("/nickname")
     public ApiResponse<Object> nickname(
             @RequestBody String nickname
@@ -128,7 +138,13 @@ public class MemberController {
         return ApiResponse.of(MemberResponseType.NICKNAME_DUPLICATE_SUCCESS, memberService.nicknameDuplicateCheck(nickname));
     }
 
-    @ApiOperation(value = "자기소개 수정", notes = "자기소개를 수정합니다.")
+    @ApiOperation(value = "자기소개 수정", notes = "자기소개를 수정합니다." +
+            "\n예시 출력 데이터" +
+            "{\n" +
+            "  \"status\": 20006,\n" +
+            "  \"message\": \"자기소개 수정 완료\",\n" +
+            "  \"data\": {nickname : String}\n" +
+            "}")
     @PostMapping("/mypage/introduction")
     public ApiResponse<Object> introduction(
             @RequestBody String introduction
@@ -136,18 +152,32 @@ public class MemberController {
         return ApiResponse.of(MemberResponseType.INTRODUCTION_UPDATE_SUCCESS, memberService.updateIntroduction(introduction));
     }
 
-    @ApiOperation(value = "프로필 이미지 수정", notes = "프로필 이미지 변경을 위한 presigned-url 을 받아옵니다.")
+    @ApiOperation(value = "프로필 이미지 수정", notes = "프로필 이미지 변경을 위한 presigned-url 을 받아옵니다." +
+            "\n예시 출력 데이터" +
+            "{\n" +
+            "  \"status\": 20003,\n" +
+            "  \"message\": \"프로필 이미지 Presigned URL 발급 완료\",\n" +
+            "  \"data\": {url : String}\n" +
+            "}")
     @GetMapping("mypage/profileImg")
-    public ApiResponse<Object> profileImg(
-
-    ) {
-
+    public ApiResponse<Object> profileImg() {
         String nickname = memberService.changeProfileImg() + ".jpg";
         return ApiResponse.of(MemberResponseType.PROFILE_IMG_SUCCESS, preSignedUrlService.getPreSignedUrl("profileimg/", nickname));
-
     }
 
-    @ApiOperation(value = "마이페이지 정보 ", notes = "마이페이지 내 정보 가져오기.")
+    @ApiOperation(value = "마이페이지 정보 ", notes = "마이페이지 내 정보 가져오기." +
+            "\n예시 출력 데이터" +
+            "{\n" +
+            "  \"status\": 20007,\n" +
+            "  \"message\": \"마이페이지 정보 조회 완료\",\n" +
+            "  \"data\": " +
+            "{profileImage : String\n" +
+            "nickname : String\n" +
+            "Nationality : String\n" +
+            "age : String\n" +
+            "gender : String\n" +
+            "introduction : String\n" +
+            "}")
     @GetMapping("/mypage")
     public ApiResponse<Object> myPage(
     ) throws ParseException {
@@ -155,24 +185,28 @@ public class MemberController {
 
     }
 
-    @ApiOperation(value = "로그아웃", notes = "로그아웃을 합니다.")
+    @ApiOperation(value = "로그아웃", notes = "로그아웃을 합니다." +
+            "\n예시 출력 데이터" +
+            "{\n" +
+            "  \"status\": 20009,\n" +
+            "  \"message\": \"로그아웃 성공\",\n" +
+            "  \"data\": \"hi\"\n" +
+            "}")
     @PostMapping("/auth/logout")
     public ApiResponse<Object> logout( ){
         return ApiResponse.of(MemberResponseType.LOGOUT_SUCCESS,authenticationService.logout());
     }
 
-    @ApiOperation(value = "회원 탈퇴", notes = "회원탈퇴를 합니다.")
+    @ApiOperation(value = "회원 탈퇴", notes = "회원탈퇴를 합니다." +
+            "\n예시 출력 데이터" +
+            "{\n" +
+            "  \"status\": 20010,\n" +
+            "  \"message\": \"회원 탈퇴 성공\",\n" +
+            "  \"data\": \"bye\"\n" +
+            "}")
     @PostMapping("/auth/quit")
     public ApiResponse<Object> quit( ){
-        return ApiResponse.of(MemberResponseType.LOGOUT_SUCCESS,authenticationService.quit());
+        return ApiResponse.of(MemberResponseType.QUIT_SUCCESS,authenticationService.quit());
     }
 
-    @PostMapping("/auth/email")
-    @ApiOperation(value = "이메일 인증", notes = "이메일 인증을 합니다.")
-    @ResponseBody
-    public String mailConfirm(@RequestParam String email) throws Exception {
-        String code = emailService.sendSimpleMessage(email);
-        log.info("인증코드 : " + code);
-        return code;
-    }
 }

@@ -24,7 +24,21 @@ public class SearchController {
     private final SearchService searchService;
     private final MemberService memberService;
 
-    @ApiOperation(value = "검색")
+    @ApiOperation(value = "검색",notes = "호스트만 달 수 있다." +
+            "\n예시 출력 데이터" +
+            "{\n" +
+            "  \"status\": 21301,\n" +
+            "  \"message\": \"검색 결과 응답 성공 (200)\",\n" +
+            "  \"data\": \n" +
+            "clubId : Long\n" +
+            "thumbnailImageUrl : String\n" +
+            "title : String\n" +
+            "dueTo : String\n" +
+            "location : String\n" +
+            "languages : List<String>\n" +
+            "categories : List<String>\n" +
+            "isHeart : enum{YES,NO}\n" +
+            "}")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 21301, message = "검색 결과 응답 성공 (200)"),
             @io.swagger.annotations.ApiResponse(code = 41301, message = "검색 결과가 없습니다. (200)"),
@@ -39,7 +53,13 @@ public class SearchController {
         return ApiResponse.of(SearchResponseType.SEARCH_SUCCESS, response);
     }
     
-    @ApiOperation(value = "인기 검색어", notes = "3일간 TOP 5, 배열인데 앞에서부터 1위")
+    @ApiOperation(value = "인기 검색어", notes = "3일간 TOP 5, 배열인데 앞에서부터 1위" +
+            "\n예시 출력 데이터" +
+            "{\n" +
+            "  \"status\": 21302,\n" +
+            "  \"message\": \"인기 검색어 응답 성공\",\n" +
+            "  \"data\": List<String>\n" +
+            "}")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 21302, message = "인기 검색어 응답 성공"),
     })
