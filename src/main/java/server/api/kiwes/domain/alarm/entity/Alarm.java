@@ -1,6 +1,7 @@
 package server.api.kiwes.domain.alarm.entity;
 
 import lombok.*;
+import server.api.kiwes.domain.BaseTimeEntity;
 import server.api.kiwes.domain.alarm.constant.AlarmType;
 import server.api.kiwes.domain.club.entity.Club;
 import server.api.kiwes.domain.heart.constant.HeartStatus;
@@ -14,7 +15,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Alarm {
+public class Alarm extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ALARM_ID")
     private Long id;
