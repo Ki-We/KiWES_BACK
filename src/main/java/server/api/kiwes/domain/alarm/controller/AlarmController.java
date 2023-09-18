@@ -3,6 +3,7 @@ package server.api.kiwes.domain.alarm.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import server.api.kiwes.domain.alarm.constant.AlarmResponseType;
 import server.api.kiwes.domain.alarm.service.AlarmService;
@@ -10,7 +11,11 @@ import server.api.kiwes.domain.club.entity.Club;
 import server.api.kiwes.domain.club.service.ClubService;
 import server.api.kiwes.domain.member.entity.Member;
 import server.api.kiwes.domain.member.service.MemberService;
+import server.api.kiwes.domain.search_count.entity.SearchCount;
 import server.api.kiwes.response.ApiResponse;
+
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 @Api(tags = "Alarm - 알림")
 @RestController
@@ -33,6 +38,15 @@ public class AlarmController {
     public ApiResponse<Object> alarmList(){
         Member member = memberService.getLoggedInMember();
         return ApiResponse.of(AlarmResponseType.ALARMS, alarmService.getAlarmAll(member));
+    }
+
+
+    /**
+     * 매일 0시 3일 지난 검색기록 카운트 삭제
+     */
+    @Scheduled(cron = "0 0 0 * * ?") // 매일 0시
+    public void removeOldAlarm(){
+        alarmService.deleteOldAlarm();
     }
 
 }
