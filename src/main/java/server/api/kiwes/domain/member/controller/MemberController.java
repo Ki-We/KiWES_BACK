@@ -70,7 +70,7 @@ public class MemberController {
     }
 
     @ApiOperation(value = "애플 로그인", notes = "애플 로그인 API" +
-            " https://appleid.apple.com/auth/authorize?client_id=org.kiwes.KiWESApp&redirect_uri=https://kiwes.org/login/oauth/apple&response_type=code%20id_token&scope=name%20email&response_mode=form_post "
+            " https://appleid.apple.com/auth/authorize?client_id=org.kiwes.KiWESApp&redirect_uri=https://api.kiwes.org/login/oauth/apple&response_type=code%20id_token&scope=name%20email&response_mode=form_post "
     )
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20001, message = "로그인 객체 정상 리턴 (200 OK)"),
