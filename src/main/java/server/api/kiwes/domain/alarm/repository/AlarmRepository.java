@@ -10,6 +10,7 @@ import server.api.kiwes.domain.club.dto.ClubApprovalRequestSimpleDto;
 import server.api.kiwes.domain.club.entity.Club;
 import server.api.kiwes.domain.member.entity.Member;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 

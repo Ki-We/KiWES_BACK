@@ -8,6 +8,7 @@ import server.api.kiwes.domain.heart.constant.HeartStatus;
 import server.api.kiwes.domain.member.entity.Member;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter

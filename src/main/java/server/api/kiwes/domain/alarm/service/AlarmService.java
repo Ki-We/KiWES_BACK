@@ -7,23 +7,12 @@ import server.api.kiwes.domain.alarm.constant.AlarmType;
 import server.api.kiwes.domain.alarm.dto.AlarmResponseDto;
 import server.api.kiwes.domain.alarm.entity.Alarm;
 import server.api.kiwes.domain.alarm.repository.AlarmRepository;
-import server.api.kiwes.domain.club.constant.ClubStatus;
-import server.api.kiwes.domain.club.dto.ClubArticleReviewDto;
-import server.api.kiwes.domain.club.dto.ClubPopularEachResponseDto;
 import server.api.kiwes.domain.club.entity.Club;
-import server.api.kiwes.domain.heart.constant.HeartStatus;
-import server.api.kiwes.domain.heart.entity.Heart;
-import server.api.kiwes.domain.heart.repository.HeartRepository;
 import server.api.kiwes.domain.member.entity.Member;
-import server.api.kiwes.domain.review.entity.Review;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -38,6 +27,7 @@ public class AlarmService {
 
         for(Alarm alarm : alarms){
             response.add(AlarmResponseDto.of(alarm));
+            member.setChecked(LocalDateTime.now());
         }
         return response;
     }
@@ -54,4 +44,15 @@ public class AlarmService {
             }
         }
     }
+
+    public boolean isAnyCheckedAlarm(Member member) {
+        List<Alarm> alarms = alarmRepository.findByMemberIdAndType((member.getId()));
+        for(Alarm alarm : alarms){
+            if(alarm.getCreatedDate().isBefore(member.getChecked())){
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

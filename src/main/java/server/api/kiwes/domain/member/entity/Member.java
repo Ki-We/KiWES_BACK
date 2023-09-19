@@ -3,6 +3,7 @@ package server.api.kiwes.domain.member.entity;
 import io.swagger.annotations.Api;
 import lombok.*;
 import server.api.kiwes.domain.BaseTimeEntity;
+import server.api.kiwes.domain.alarm.constant.AlarmType;
 import server.api.kiwes.domain.heart.entity.Heart;
 import server.api.kiwes.domain.member.constant.Role;
 import server.api.kiwes.domain.member_category.entity.MemberCategory;
@@ -14,6 +15,7 @@ import server.api.kiwes.global.entity.Gender;
 
 import javax.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -68,6 +70,8 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<MemberCategory> categories;
 
+    @Builder.Default
+    private LocalDateTime checked = LocalDateTime.now();
     public Member(String email, String profileImg, Gender gender) {
         this.email = email;
         this.profileImg = profileImg;

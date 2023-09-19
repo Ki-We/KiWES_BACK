@@ -49,4 +49,16 @@ public class AlarmController {
         alarmService.deleteOldAlarm();
     }
 
+
+    @ApiOperation(value = "알림 로깅", notes ="")
+    @GetMapping("/log")
+    public ApiResponse<Object> getloging(){
+        Member member = memberService.getLoggedInMember();
+        if(alarmService.isAnyCheckedAlarm(member)){
+            return ApiResponse.of(AlarmResponseType.CHECKED);
+        }else{
+            return ApiResponse.of(AlarmResponseType.UNCHECKED);
+        }
+
+    }
 }
