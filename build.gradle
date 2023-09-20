@@ -36,8 +36,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 	implementation 'org.jetbrains:annotations:23.0.0'
-
-	implementation 'org.springframework.boot:spring-boot-starter-mail:2.7.0'
 	//apple
 	implementation 'org.bouncycastle:bcprov-jdk15on:1.68'
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'

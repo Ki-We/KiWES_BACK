@@ -9,6 +9,7 @@ import server.api.kiwes.domain.alarm.entity.Alarm;
 import server.api.kiwes.domain.alarm.repository.AlarmRepository;
 import server.api.kiwes.domain.club.entity.Club;
 import server.api.kiwes.domain.member.entity.Member;
+import server.api.kiwes.domain.member.repository.MemberRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AlarmService {
     private final AlarmRepository alarmRepository;
-
+    private final MemberRepository memberRepository;
 
     public List<AlarmResponseDto> getAlarmAll(Member member) {
         List<AlarmResponseDto> response = new ArrayList<>();
@@ -28,6 +29,7 @@ public class AlarmService {
         for(Alarm alarm : alarms){
             response.add(AlarmResponseDto.of(alarm));
             member.setChecked(LocalDateTime.now());
+            memberRepository.save(member);
         }
         return response;
     }
