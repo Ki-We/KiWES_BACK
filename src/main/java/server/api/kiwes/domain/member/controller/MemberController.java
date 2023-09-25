@@ -31,18 +31,12 @@ public class MemberController {
     private final MemberAuthenticationService authenticationService;
     private final MemberService memberService;
     private final PreSignedUrlService preSignedUrlService;
-//    private final TokenProvider tokenProvider;
 
-//    @ApiOperation(value = "accessToken 값 위한 API",
-//            notes = "https://kauth.kakao.com/oauth/authorize?client_id=6f0216bfb31177fe4956e6a1a17bb5c6&redirect_uri=http://43.200.185.205:8080/oauth/kakao&response_type=code  카카오 요청 ~~~~~~~~~///~~~~" +
-//                     "https://accounts.google.com/o/oauth2/v2/auth?scope=profile%20email&response_type=code&redirect_uri=http://ec2-43-200-185-205.ap-northeast-2.compute.amazonaws.com:8080/login/oauth2/code/google&client_id=156388466486-i9b6usmht9jkmmtc7bpvmrmfks5489bp.apps.googleusercontent.com" +
-//                    " 구글 로그인 ///")
     @ApiOperation(value = "accessToken 값 위한 API",
-            notes = "https://kauth.kakao.com/oauth/authorize?client_id=6f0216bfb31177fe4956e6a1a17bb5c6&redirect_uri=http://localhost:8080/oauth/kakao&response_type=code  카카오 요청 ~~~~~~~~~///~~~~" +
-                    "https://accounts.google.com/o/oauth2/v2/auth?scope=profile%20email&response_type=code&redirect_uri=http://localhost:8080/login/oauth2/code/google&client_id=156388466486-i9b6usmht9jkmmtc7bpvmrmfks5489bp.apps.googleusercontent.com  구글 로그인 /// " +
-                    " https://appleid.apple.com/auth/authorize?client_id=org.kiwes.KiWESApp&redirect_uri=https://kiwes.org/login/oauth/apple&response_type=code%20id_token&scope=name%20email&response_mode=form_post "+
+            notes = "https://kauth.kakao.com/oauth/authorize?client_id=6f0216bfb31177fe4956e6a1a17bb5c6&redirect_uri=https://api.kiwes.org/oauth/kakao&response_type=code  카카오 요청 ~~~~~~~~~///~~~~" +
+                    "https://accounts.google.com/o/oauth2/v2/auth?scope=profile%20email&response_type=code&redirect_uri=https://api.kiwes.org/login/oauth2/code/google&client_id=156388466486-i9b6usmht9jkmmtc7bpvmrmfks5489bp.apps.googleusercontent.com  구글 로그인 /// " +
+                    " https://appleid.apple.com/auth/authorize?client_id=org.kiwes.KiWESApp&redirect_uri=https://api.kiwes.org/login/oauth/apple&response_type=code%20id_token&scope=name%20email&response_mode=form_post "+
                     " 애플 로그인"
-
     )
     @GetMapping(value = {"/oauth/{socialLoginType}","/login/oauth2/code/{socialLoginType}"})
 
