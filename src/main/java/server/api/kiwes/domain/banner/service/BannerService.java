@@ -29,6 +29,7 @@ public class BannerService {
                     .id(banner.getId())
                     .imageUrl(banner.getImageUrl())
                     .type(banner.getType())
+                    .Url(banner.getUrl())
                     .build());
         }
         return bannerResponses;

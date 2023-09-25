@@ -25,6 +25,7 @@ public class BannerController {
                     "\"data\": [\n" +
                     " {type\": \"String\",\n" +
                     "\"imageUrl\": \"String\",\n" +
+                    "\"Url\": \"String\",\n" +
                     " \"id\": 0 }"
     )
     @GetMapping()

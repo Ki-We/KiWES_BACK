@@ -19,6 +19,8 @@ public class Banner {
 
     private String type;    // ??
 
+    private String Url;
+
     private Long priority;
 
 }
