@@ -79,8 +79,8 @@ public class MemberService {
     public MyPageResponse myPage() throws ParseException {
         Long memberId = SecurityUtils.getLoggedInUser().getId();
         Member member = memberRepository.findById(memberId).orElseThrow();
-
-        String birth = member.getBirth();
+        String birth= member.getBirth();
+        if(!birth.equals("NOT SETTING")){
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date dueToDate = format.parse(birth);
 
@@ -88,9 +88,10 @@ public class MemberService {
 
         long diffInMillis = now.getTime() -  dueToDate.getTime();
         long diffInYears = diffInMillis / (1000L * 60L * 60L * 24L * 365L);
-
+        birth=String.valueOf(diffInYears);
+        }
         //프로필 사진, 닉네임, 국적, 나이, 성별, 소개
-        return new MyPageResponse(member.getProfileImg(), member.getNickname(), member.getNationality().getName(), String.valueOf(diffInYears), member.getGender().getName(), member.getIntroduction());
+        return new MyPageResponse(member.getProfileImg(), member.getNickname(), member.getNationality().getName(), birth, member.getGender().getName(), member.getIntroduction());
 
     }
 

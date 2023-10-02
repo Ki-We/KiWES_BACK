@@ -21,6 +21,7 @@ import server.api.kiwes.domain.language.type.LanguageType;
 import server.api.kiwes.domain.member.constant.SocialLoginType;
 import server.api.kiwes.domain.member.dto.*;
 import server.api.kiwes.domain.member.entity.Member;
+import server.api.kiwes.domain.member.entity.Nationality;
 import server.api.kiwes.domain.member.repository.MemberRepository;
 import server.api.kiwes.domain.member.repository.RefreshTokenRepository;
 import server.api.kiwes.domain.member.service.login.MemberLoginService;
@@ -223,6 +224,7 @@ public class MemberAuthenticationService {
         Member member = new Member(email,profileImg, Gender.valueOf(gender.toUpperCase()));
         // 가입 여부 확인
         if (!memberRepository.existsByEmail(member.getEmail())) {
+            member.setMember("kiwes"+(member.getId()+4),"NOT SETTING","String", "FOREIGN");
             memberRepository.save(member);
         }
 
