@@ -55,6 +55,7 @@ public class ClubSortService {
             clubsbyPageDTO.add(
                     new ClubSortResponseDto(club.getId(),club.getTitle(),club.getThumbnailUrl(),club.getDate(),club.getLocation()));
         }
+        clubsbyPageDTO.remove(0);
         return clubsbyPageDTO;
     }
     /**
