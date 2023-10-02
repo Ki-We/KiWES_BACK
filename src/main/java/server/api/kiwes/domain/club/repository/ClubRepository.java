@@ -35,6 +35,13 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
     List<Club> findByTitleContaining(String keyword);
 
     @Query(nativeQuery = true,
-    value = "select * from Club c order by c.heart_cnt desc limit 5")
+    value = "select * from club c order by c.heart_cnt desc limit 5")
     List<Club> findAllOrderByHeartCnt();
+
+    @Query(nativeQuery = true,
+            value = "select * from club c order by c.heart_cnt desc,RAND() limit 3")
+    List<Club> findOrderByHeartCntRandom();
+    @Query(nativeQuery = true,
+            value = "SELECT * FROM club c ORDER BY c.id DESC LIMIT 10 OFFSET :page")
+    List<Club> findAllbyPage(@Param("page") int page);
 }

@@ -18,7 +18,7 @@ import server.api.kiwes.domain.member.entity.Member;
 import server.api.kiwes.domain.member.service.MemberService;
 import server.api.kiwes.response.ApiResponse;
 
-@Api(tags = "Club - Read 관련")
+@Api(tags = "Club - 디테일 관련")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/club/info")

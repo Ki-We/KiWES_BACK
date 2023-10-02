@@ -46,11 +46,21 @@ public class ClubSortService {
                 .orElseThrow(() -> new BizException(ClubResponseType.CLUB_NOT_EXIST));
     }
 
+
+    public List<ClubSortResponseDto> getClubs(){
+//        List<Club> clubByPage = clubRepository.findAllbyPage(page);
+        List<Club> clubByPage = clubRepository.findAll();
+        List<ClubSortResponseDto> clubsbyPageDTO =  new ArrayList<>();
+        for (Club club : clubByPage) {
+            clubsbyPageDTO.add(
+                    new ClubSortResponseDto(club.getId(),club.getTitle(),club.getThumbnailUrl(),club.getDate(),club.getLocation()));
+        }
+        return clubsbyPageDTO;
+    }
     /**
      * 카테고리별 모임
      * @param categories
      */
-
     public List<ClubSortResponseDto> getClubByCategory(List<String> categories){
 
 

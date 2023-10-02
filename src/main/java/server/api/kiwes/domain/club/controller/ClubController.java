@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-@Api(tags = "Club - C/U/D 관련", value = "모암 참여, 취소, 승인, 생성 관련")
+@Api(tags = "Club - CRUD 관련", value = "모암 참여, 취소, 승인, 생성 관련")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/club")
@@ -311,7 +311,26 @@ public class ClubController {
         return ApiResponse.of(ClubResponseType.CLUB_SORT_BY_LANGUAGE_SUCCESS,
                 clubSortService.getClubByLanguages(clubSortRequestDto.getSortedBy()));
     }
-
+    @ApiOperation(value = "모임 전체 조회", notes = "모임 전체 조회" +
+            "\n예시 출력 데이터\n" +
+            "\"status\": 20110,\n" +
+            "\"message\": \"성공\",\n" +
+            "\"data\": [\n" +
+            "(List<ClubSortResponseDto>값 예시)\n" +
+            "{\"clubId\": Long }\n" +
+            "\"title\": \"String\",\n" +
+            "\"thumbnailImage\": \"String\",\n" +
+            "\"date\": \"String\",\n" +
+            "\"location\": \"String\",\n" +
+            "\"languages\": \"List<String>\",\n" +
+            " HeartStatus\": \"enum{YES, NO}\",\n "+
+            "]")
+    @GetMapping("/getClubs")
+//    public ApiResponse<Object> getClubs(@RequestBody int page) {
+    public ApiResponse<Object> getClubs(@RequestBody int page) {
+        return ApiResponse.of(ClubResponseType.CLUB_ALL_SUCCESS,
+                clubSortService.getClubs());
+    }
     @ApiOperation(value = "인기 모임", notes = "인기 모임 조회 5개" +
             "\n예시 출력 데이터\n" +
             "\"status\": 20112,\n" +
@@ -332,5 +351,27 @@ public class ClubController {
     @GetMapping("/popular")
     public ApiResponse<List<ClubPopularEachResponseDto>> getPopularClubs(){
         return ApiResponse.of(ClubResponseType.POPULAR_CLUBS, clubService.getPopularClubs(memberService.getLoggedInMember()));
+    }
+
+    @ApiOperation(value = "인기 모임 무작위 3개", notes = "인기 모임 무작위 조회 3개" +
+            "\n예시 출력 데이터\n" +
+            "\"status\": 20112,\n" +
+            "\"message\": \"성공\",\n" +
+            "\"data\": [\n" +
+            "(List<ClubPopularEachResponseDto>값 예시)\n" +
+            "{\"clubId\": Long }\n" +
+            "\"title\": \"String\",\n" +
+            "\"hostProfileImg\": \"String\",\n" +
+            "\"date\": \"String\",\n" +
+            "\"location\": \"String\",\n" +
+            "\"languages\": \"List<String>\",\n" +
+            " HeartStatus\": \"enum{YES, NO}\",\n "+
+            "]")
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 20112, message = "인기 무작위 모임 조회 성공"),
+    })
+    @GetMapping("/popular/random")
+    public ApiResponse<List<ClubPopularEachResponseDto>> getPopularRandomClubs(){
+        return ApiResponse.of(ClubResponseType.POPULAR_CLUBS, clubService.getPopularRandomClubs(memberService.getLoggedInMember()));
     }
 }

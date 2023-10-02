@@ -215,16 +215,23 @@ public class ClubService {
         List<ClubPopularEachResponseDto> response = new ArrayList<>();
 
         for(Club club : clubRepository.findAllOrderByHeartCnt()){
-            ClubPopularEachResponseDto each = ClubPopularEachResponseDto.of(club);
-            each.setHostProfileImg(member.getProfileImg());
-
-            Optional<Heart> heart = heartRepository.findByClubAndMember(club, member);
-            each.setIsHeart(heart.isPresent() ? heart.get().getStatus() : HeartStatus.NO);
-
-            response.add(each);
+            response.add(eachPopularClub(club,member));
         }
         return response;
     }
+
+    /**
+     * 인기 모임 무작위 조회 (3개)
+     */
+    public List<ClubPopularEachResponseDto> getPopularRandomClubs(Member member) {
+        List<ClubPopularEachResponseDto> response = new ArrayList<>();
+
+        for(Club club : clubRepository.findOrderByHeartCntRandom()){
+            response.add(eachPopularClub(club,member));
+        }
+        return response;
+    }
+
 
     /**
      * 썸네일이미지 수정
@@ -237,5 +244,13 @@ public class ClubService {
                 ".amazonaws.com/clubThumbnail/" +
                 club.getUuid();
         club.setThumbnailUrl(url);
+    }
+    private ClubPopularEachResponseDto eachPopularClub(Club club,Member member) {
+        ClubPopularEachResponseDto each = ClubPopularEachResponseDto.of(club);
+        each.setHostProfileImg(member.getProfileImg());
+
+        Optional<Heart> heart = heartRepository.findByClubAndMember(club, member);
+        each.setIsHeart(heart.isPresent() ? heart.get().getStatus() : HeartStatus.NO);
+        return each;
     }
 }
