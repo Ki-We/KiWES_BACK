@@ -327,7 +327,7 @@ public class ClubController {
             "]")
     @GetMapping("/getClubs")
 //    public ApiResponse<Object> getClubs(@RequestBody int page) {
-    public ApiResponse<Object> getClubs(@RequestBody int page) {
+    public ApiResponse<Object> getClubs() {
         return ApiResponse.of(ClubResponseType.CLUB_ALL_SUCCESS,
                 clubSortService.getClubs());
     }
