@@ -47,15 +47,13 @@ public class ClubSortService {
     }
 
 
-    public List<ClubSortResponseDto> getClubs(){
-//        List<Club> clubByPage = clubRepository.findAllbyPage(page);
-        List<Club> clubByPage = clubRepository.findAll();
+    public List<ClubSortResponseDto> getClubsByCursor(int cursor){
+        List<Club> clubByPage = clubRepository.findAllbyCursor(cursor);
         List<ClubSortResponseDto> clubsbyPageDTO =  new ArrayList<>();
         for (Club club : clubByPage) {
             clubsbyPageDTO.add(
                     new ClubSortResponseDto(club.getId(),club.getTitle(),club.getThumbnailUrl(),club.getDate(),club.getLocation()));
         }
-        clubsbyPageDTO.remove(0);
         return clubsbyPageDTO;
     }
     /**

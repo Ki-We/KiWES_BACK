@@ -326,10 +326,9 @@ public class ClubController {
             " HeartStatus\": \"enum{YES, NO}\",\n "+
             "]")
     @GetMapping("/getClubs")
-//    public ApiResponse<Object> getClubs(@RequestBody int page) {
-    public ApiResponse<Object> getClubs() {
+    public ApiResponse<Object> getClubs(@RequestBody int cursor) {
         return ApiResponse.of(ClubResponseType.CLUB_ALL_SUCCESS,
-                clubSortService.getClubs());
+                clubSortService.getClubsByCursor(cursor));
     }
     @ApiOperation(value = "인기 모임", notes = "인기 모임 조회 5개" +
             "\n예시 출력 데이터\n" +
