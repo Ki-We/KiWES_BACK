@@ -22,9 +22,9 @@ public class AlarmService {
     private final AlarmRepository alarmRepository;
     private final MemberRepository memberRepository;
 
-    public List<AlarmResponseDto> getAlarmAll(Member member) {
+    public List<AlarmResponseDto> getAlarmAll(Member member, int cursor) {
         List<AlarmResponseDto> response = new ArrayList<>();
-        List<Alarm> alarms = alarmRepository.findByMemberIdAndType((member.getId()));
+        List<Alarm> alarms = alarmRepository.findByMemberIdAndType((member.getId()),cursor);
 
         for(Alarm alarm : alarms){
             response.add(AlarmResponseDto.of(alarm));

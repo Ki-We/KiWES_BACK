@@ -326,7 +326,7 @@ public class ClubController {
             " HeartStatus\": \"enum{YES, NO}\",\n "+
             "]")
     @GetMapping("/getClubs")
-    public ApiResponse<Object> getClubs(@RequestBody int cursor) {
+    public ApiResponse<Object> getClubs(@RequestParam int cursor) {
         return ApiResponse.of(ClubResponseType.CLUB_ALL_SUCCESS,
                 clubSortService.getClubsByCursor(cursor));
     }

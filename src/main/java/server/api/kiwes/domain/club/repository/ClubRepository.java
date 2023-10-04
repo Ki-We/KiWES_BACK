@@ -42,6 +42,6 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
             value = "select * from club c where club_id >0 order by c.heart_cnt desc,RAND() limit 3")
     List<Club> findOrderByHeartCntRandom();
     @Query(nativeQuery = true,
-            value = "SELECT * FROM club c where club_id > 0 ORDER BY c.id DESC LIMIT :cursor,7")
+            value = "SELECT * FROM club where club_id > 0 ORDER BY club_id DESC LIMIT :cursor,7")
     List<Club> findAllbyCursor(@Param("cursor") int cursor);
 }
