@@ -25,7 +25,7 @@ public class BannerService {
         List<BannerResponse> bannerResponses = new ArrayList<>();
 
         for (Banner banner : banners) {
-            bannerResponses.add( BannerResponse.builder()
+            bannerResponses.add(BannerResponse.builder()
                     .id(banner.getId())
                     .imageUrl(banner.getImageUrl())
                     .type(banner.getType())

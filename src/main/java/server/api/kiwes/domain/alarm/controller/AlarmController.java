@@ -42,7 +42,7 @@ public class AlarmController {
 
 
     /**
-     * 매일 0시 3일 지난 검색기록 카운트 삭제
+     * 매일 0시 3일 지난 알람 삭제
      */
     @Scheduled(cron = "0 0 0 * * ?") // 매일 0시
     public void removeOldAlarm(){
@@ -55,9 +55,9 @@ public class AlarmController {
     public ApiResponse<Object> getloging(){
         Member member = memberService.getLoggedInMember();
         if(alarmService.isAnyCheckedAlarm(member)){
-            return ApiResponse.of(AlarmResponseType.CHECKED);
-        }else{
             return ApiResponse.of(AlarmResponseType.UNCHECKED);
+        }else{
+            return ApiResponse.of(AlarmResponseType.CHECKED);
         }
 
     }

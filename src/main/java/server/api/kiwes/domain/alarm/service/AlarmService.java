@@ -49,12 +49,12 @@ public class AlarmService {
 
     public boolean isAnyCheckedAlarm(Member member) {
         List<Alarm> alarms = alarmRepository.findByMemberIdAndType((member.getId()));
+        if(alarms.isEmpty()) return false;
         for(Alarm alarm : alarms){
             if(alarm.getCreatedDate().isBefore(member.getChecked())){
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
-
 }
