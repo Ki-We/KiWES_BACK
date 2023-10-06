@@ -273,19 +273,22 @@ public class ClubController {
     }
 
     @ApiOperation(value = "카테고리별 모임", notes = "카테고리별 모임 조회" +
-            "\n예시 출력 데이터\n" +
-            "\"status\": 20110,\n" +
-            "\"message\": \"성공\",\n" +
-            "\"data\": [\n" +
-            "(List<ClubSortResponseDto>값 예시)\n" +
-            "{\"clubId\": Long }\n" +
-            "\"title\": \"String\",\n" +
-            "\"thumbnailImage\": \"String\",\n" +
-            "\"date\": \"String\",\n" +
-            "\"location\": \"String\",\n" +
-            "\"languages\": \"List<String>\",\n" +
-            " HeartStatus\": \"enum{YES, NO}\",\n "+
-            "]")
+            "카테고리종류" +
+            "KPOP\n" +
+            "KOREAN_CULTURE\n" +
+            "CAFE\n" +
+            "SPORTS\n" +
+            "CULTURE\n" +
+            "TRAVEL\n" +
+            "STUDY\n" +
+            "GAME\n" +
+            "PARTY\n" +
+            "DRINK\n" +
+            "MOVIE\n" +
+            "CRAFT\n" +
+            "VOLUNTEER\n" +
+            "OTHER\n"
+            )
     @PostMapping("/category")
     public ApiResponse<Object> sortByCategories(@RequestBody ClubSortRequestDto clubSortRequestDto,@RequestParam int cursor) {
         return ApiResponse.of(ClubResponseType.CLUB_SORT_BY_CATEGORY_SUCCESS,
@@ -293,19 +296,18 @@ public class ClubController {
     }
 
     @ApiOperation(value = "언어별 모임", notes = "언어별 모임 조회" +
-            "\n예시 출력 데이터\n" +
-            "\"status\": 20111,\n" +
-            "\"message\": \"성공\",\n" +
-            "\"data\": [\n" +
-            "(List<ClubSortResponseDto>값 예시)\n" +
-            "{\"clubId\": Long }\n" +
-            "\"title\": \"String\",\n" +
-            "\"thumbnailImage\": \"String\",\n" +
-            "\"date\": \"String\",\n" +
-            "\"location\": \"String\",\n" +
-            "\"languages\": \"List<String>\",\n" +
-            " HeartStatus\": \"enum{YES, NO}\",\n "+
-            "]")
+            "언어 종류" +
+            "CH1\n" +
+            "CH2\n" +
+            "DE\n" +
+            "EN\n" +
+            "ES\n" +
+            "FR\n" +
+            "JP\n" +
+            "KO\n" +
+            "OTHER\n" +
+            "RU\n" +
+            "VN\n")
     @PostMapping("/language")
     public ApiResponse<Object> sortByLanguages(@RequestBody ClubSortRequestDto clubSortRequestDto,@RequestParam int cursor) {
         return ApiResponse.of(ClubResponseType.CLUB_SORT_BY_LANGUAGE_SUCCESS,

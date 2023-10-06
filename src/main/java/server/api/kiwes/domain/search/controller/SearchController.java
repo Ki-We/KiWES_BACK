@@ -25,6 +25,7 @@ public class SearchController {
     private final MemberService memberService;
 
     @ApiOperation(value = "검색",notes = "호스트만 달 수 있다." +
+            "입력시 키워드 아무거나 가능" +
             "\n예시 출력 데이터" +
             "{\n" +
             "  \"status\": 21301,\n" +
