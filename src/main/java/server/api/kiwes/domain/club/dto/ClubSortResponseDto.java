@@ -22,8 +22,8 @@ public class ClubSortResponseDto {
     List<String> languages;
     HeartStatus isHeart;
 
-    public ClubSortResponseDto(Long clubId, String title, String thumbnailImage, String date, String location) {
-        this.clubId = clubId;
+    public ClubSortResponseDto(Long club_id, String title, String thumbnailImage, String date, String location) {
+        this.clubId = club_id;
         this.title = title;
         this.thumbnailImage = thumbnailImage;
         this.date = date;

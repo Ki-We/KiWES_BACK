@@ -44,8 +44,8 @@ public class SearchController {
             @io.swagger.annotations.ApiResponse(code = 41301, message = "검색 결과가 없습니다. (200)"),
     })
     @GetMapping("/search")
-    public ApiResponse<List<SearchResponseDto>> search(@RequestParam String keyword){
-        List<SearchResponseDto> response = searchService.search(keyword.trim(), memberService.getLoggedInMember());
+    public ApiResponse<List<SearchResponseDto>> search(@RequestParam String keyword, @RequestParam int cursor){
+        List<SearchResponseDto> response = searchService.search(keyword.trim(), memberService.getLoggedInMember(),cursor);
         if(response.isEmpty()){
             return ApiResponse.of(SearchResponseType.NO_RESULT);
         }

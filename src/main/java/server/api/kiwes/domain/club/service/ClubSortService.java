@@ -1,12 +1,14 @@
 package server.api.kiwes.domain.club.service;
 
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import server.api.kiwes.domain.category.entity.Category;
 import server.api.kiwes.domain.category.repository.CategoryRepository;
 import server.api.kiwes.domain.category.type.CategoryType;
 import server.api.kiwes.domain.club.constant.ClubResponseType;
+import server.api.kiwes.domain.club.dto.ClubSortInterface;
 import server.api.kiwes.domain.club.dto.ClubSortResponseDto;
 import server.api.kiwes.domain.club.entity.Club;
 import server.api.kiwes.domain.club.repository.ClubRepository;
@@ -60,10 +62,7 @@ public class ClubSortService {
      * 카테고리별 모임
      * @param categories
      */
-    public List<ClubSortResponseDto> getClubByCategory(List<String> categories){
-
-
-        // 카테고리 id list
+    public List<ClubSortResponseDto> getClubByCategory(List<String> categories, int cursor){
         Member member = memberService.getLoggedInMember();
         List<Long> clubIds = new ArrayList<>();
 
@@ -72,34 +71,11 @@ public class ClubSortService {
             Category category = categoryRepository.findByName(type);
             clubIds.add(category.getId());
         }
-
-        List<ClubSortResponseDto> allByCategoryIds = clubCategoryRepository.findAllByCategoryIds(clubIds);
-        for (ClubSortResponseDto allByCategoryId : allByCategoryIds) {
-            Club club = findById(allByCategoryId.getClubId());
-
-            allByCategoryId.setLanguages(club.getLanguages());
-
-            if (club.getHearts().size() > 0) {
-                club.getHearts().forEach(heartMember -> {
-                    if (heartMember.getId().equals(member.getId())) {
-                        allByCategoryId.setHeart(true);
-                    }
-                });
-            } else{
-                allByCategoryId.setHeart(false);
-            }
-        }
-
-        return allByCategoryIds;
+        return getClubSortResponseDtosAllByTypeIds(member,clubCategoryRepository.findAllByTypeIds(clubIds,cursor));
 
 
     }
-
-
-    public List<ClubSortResponseDto> getClubByLanguages(List<String> languages){
-
-
-        // 카테고리 id list
+    public List<ClubSortResponseDto> getClubByLanguages(List<String> languages, int cursor){
         Member member = memberService.getLoggedInMember();
         List<Long> clubIds = new ArrayList<>();
 
@@ -108,28 +84,31 @@ public class ClubSortService {
             Language language = languageRepository.findByName(type);
             clubIds.add(language.getId());
         }
+        clubLanguageRepository.findAllByTypeIds(clubIds,cursor);
+        return getClubSortResponseDtosAllByTypeIds(member, clubLanguageRepository.findAllByTypeIds(clubIds,cursor));
+    }
+    @NotNull
+    private List<ClubSortResponseDto> getClubSortResponseDtosAllByTypeIds(Member member,List<ClubSortInterface> allByTypeIds) {
+        List<ClubSortResponseDto> clubsbyPageDTOs =  new ArrayList<>();
+        for (ClubSortInterface c : allByTypeIds) {
+            clubsbyPageDTOs.add(
+                    new ClubSortResponseDto(c.getClub_id(),c.getTitle(),c.getThumbnail_url(),c.getDate(),c.getLocation()));
+        }
+        for (ClubSortResponseDto clubsbyPageDTO : clubsbyPageDTOs) {
+            Club club = findById(clubsbyPageDTO.getClubId());
 
-        List<ClubSortResponseDto> allByLanguageIds = clubLanguageRepository.findAllByCategoryIds(clubIds);
-        for (ClubSortResponseDto allByLanguageId : allByLanguageIds) {
-            Club club = findById(allByLanguageId.getClubId());
-
-            allByLanguageId.setLanguages(club.getLanguages());
+            clubsbyPageDTO.setLanguages(club.getLanguages());
 
             if (club.getHearts().size() > 0) {
                 club.getHearts().forEach(heartMember -> {
                     if (heartMember.getId().equals(member.getId())) {
-                        allByLanguageId.setHeart(true);
+                        clubsbyPageDTO.setHeart(true);
                     }
                 });
             } else{
-                allByLanguageId.setHeart(false);
+                clubsbyPageDTO.setHeart(false);
             }
         }
-
-        return allByLanguageIds;
-
-
+        return clubsbyPageDTOs;
     }
-
-
 }

@@ -1,5 +1,6 @@
 package server.api.kiwes.domain.club.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -31,9 +32,9 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
 
     @Query("select c from Club c where c.isActivated = :status order by c.dueTo ")
     List<Club> findActivatedClubsOrderByDueTo(@Param("status") ClubStatus status);
-
-    List<Club> findByTitleContaining(String keyword);
-
+    @Query( nativeQuery = true,
+            value = "SELECT * FROM club where club_id > 0  AND content LIKE CONCAT('%',:keyword,'%') ORDER BY club_id DESC limit :cursor,7")
+    List<Club> findByTitlePage(@Param("keyword") String keyword, @Param("cursor")int cursor);
     @Query(nativeQuery = true,
     value = "select * from club c where club_id >0 order by c.heart_cnt desc limit 5")
     List<Club> findAllOrderByHeartCnt();

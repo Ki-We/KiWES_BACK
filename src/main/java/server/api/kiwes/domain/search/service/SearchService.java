@@ -1,6 +1,8 @@
 package server.api.kiwes.domain.search.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import server.api.kiwes.domain.category.entity.Category;
@@ -14,6 +16,7 @@ import server.api.kiwes.domain.search_count.dto.SearchCountResultDto;
 import server.api.kiwes.domain.search_count.entity.SearchCount;
 import server.api.kiwes.domain.search_count.repository.SearchCountRepository;
 
+import java.awt.print.Pageable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +30,8 @@ public class SearchService {
     private final ClubRepository clubRepository;
     private final SearchCountRepository searchCountRepository;
 
-    public List<SearchResponseDto> search(String keyword, Member member) {
-        List<SearchResponseDto> searchResults = clubRepository.findByTitleContaining(keyword).stream().map(club -> SearchResponseDto.of(club, member)).collect(Collectors.toList());
+    public List<SearchResponseDto> search(String keyword, Member member,int cursor) {
+        List<SearchResponseDto> searchResults = clubRepository.findByTitlePage(keyword,cursor).stream().map(club -> SearchResponseDto.of(club, member)).collect(Collectors.toList());
         List<SearchResponseDto> responseDtos = new ArrayList<>();
 
         // 언어 일치하는게 있으면 삽입

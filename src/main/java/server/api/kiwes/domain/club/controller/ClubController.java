@@ -287,9 +287,9 @@ public class ClubController {
             " HeartStatus\": \"enum{YES, NO}\",\n "+
             "]")
     @PostMapping("/category")
-    public ApiResponse<Object> sortByCategories(@RequestBody ClubSortRequestDto clubSortRequestDto ) {
+    public ApiResponse<Object> sortByCategories(@RequestBody ClubSortRequestDto clubSortRequestDto,@RequestParam int cursor) {
         return ApiResponse.of(ClubResponseType.CLUB_SORT_BY_CATEGORY_SUCCESS,
-                clubSortService.getClubByCategory(clubSortRequestDto.getSortedBy()));
+                clubSortService.getClubByCategory(clubSortRequestDto.getSortedBy(),cursor));
     }
 
     @ApiOperation(value = "언어별 모임", notes = "언어별 모임 조회" +
@@ -307,9 +307,9 @@ public class ClubController {
             " HeartStatus\": \"enum{YES, NO}\",\n "+
             "]")
     @PostMapping("/language")
-    public ApiResponse<Object> sortByLanguages(@RequestBody ClubSortRequestDto clubSortRequestDto ) {
+    public ApiResponse<Object> sortByLanguages(@RequestBody ClubSortRequestDto clubSortRequestDto,@RequestParam int cursor) {
         return ApiResponse.of(ClubResponseType.CLUB_SORT_BY_LANGUAGE_SUCCESS,
-                clubSortService.getClubByLanguages(clubSortRequestDto.getSortedBy()));
+                clubSortService.getClubByLanguages(clubSortRequestDto.getSortedBy(),cursor));
     }
     @ApiOperation(value = "모임 전체 조회", notes = "모임 전체 조회" +
             "\n예시 출력 데이터\n" +
