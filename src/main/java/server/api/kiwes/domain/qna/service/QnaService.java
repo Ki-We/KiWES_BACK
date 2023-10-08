@@ -106,11 +106,12 @@ public class QnaService {
     /**
      * 클럽의 QnA 전체보기 페이지에서 필요한 정보
      */
-    public QnaResponseDto getEntireQna(Club club, Member member) {
+    public QnaResponseDto getEntireQna(Club club, Member member,int cursor) {
 
         return QnaResponseDto.builder()
                 .isHost(clubMemberService.findByClubAndMember(club, member).getIsHost())
                 .qnas(club.getQnas().stream()
+                        .filter(qna -> qna.getId() >= cursor)
                         .map(qna -> QnaDetailDto.of(qna, member))
                         .collect(Collectors.toList()))
                 .build();

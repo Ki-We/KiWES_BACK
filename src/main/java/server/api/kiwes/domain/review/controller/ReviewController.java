@@ -147,11 +147,11 @@ public class ReviewController {
             @io.swagger.annotations.ApiResponse(code = 21204, message = "후기 모두 보기 성공"),
     })
     @GetMapping("/entire/{clubId}")
-    public ApiResponse<ReviewEntireResponseDto> getEntireReview(@PathVariable Long clubId){
+    public ApiResponse<ReviewEntireResponseDto> getEntireReview(@PathVariable Long clubId, @RequestParam int cursor){
         Member member = memberService.getLoggedInMember();
         Club club = clubService.findById(clubId);
 
-        return ApiResponse.of(ReviewResponseType.ENTIRE_LIST, reviewService.getEntire(club, member));
+        return ApiResponse.of(ReviewResponseType.ENTIRE_LIST, reviewService.getEntire(club, member, cursor));
     }
 
     @ApiOperation(value = "후기에 답글 달기", notes = "호스트만 달 수 있다." +

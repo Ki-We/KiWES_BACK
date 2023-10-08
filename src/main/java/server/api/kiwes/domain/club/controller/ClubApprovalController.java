@@ -98,7 +98,7 @@ public class ClubApprovalController {
             "\"languages\": \"List<String>\",\n" +
             " isHeart\": \"enum{YES, NO}\"] ")
     @ApiResponses({
-            @io.swagger.annotations.ApiResponse(code = 20109, message = "승인관련 리스트 리턴 성공"),
+            @io.swagger.annotations.ApiResponse(code = 20109, message = "승인 관련 리스트 리턴 성공"),
     })
     @GetMapping("/my-waitings")
     public ApiResponse<List<ClubApprovalWaitingSimpleDto>> getWaitingApproval(){

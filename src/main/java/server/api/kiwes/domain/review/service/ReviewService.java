@@ -68,12 +68,15 @@ public class ReviewService {
     /**
      * 후기 모두 보기
      */
-    public ReviewEntireResponseDto getEntire(Club club, Member member) {
+    public ReviewEntireResponseDto getEntire(Club club, Member member, int cursor) {
         List<Review> reviews = reviewRepository.findByClub(club);
-
+        club.getReviews().stream()
+                .map(review -> ReviewDetailDto.of(review, member))
+                .collect(Collectors.toList());
         return ReviewEntireResponseDto.builder()
                 .isHost(clubMemberService.findByClubAndMember(club, member).getIsHost())
                 .reviews(club.getReviews().stream()
+                        .filter(review -> review.getId() >= cursor)
                         .map(review -> ReviewDetailDto.of(review, member))
                         .collect(Collectors.toList()))
                 .build();

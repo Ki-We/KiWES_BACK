@@ -161,8 +161,8 @@ public class QnaController {
             @io.swagger.annotations.ApiResponse(code = 21105, message = "qna 리스트 응답 성공\n 답변이 달리지 않은 질문은 답변 관련 정보가 전부 null로 응답됩니다."),
     })
     @GetMapping("/entire/{clubId}")
-    public ApiResponse<QnaResponseDto> getEntireQna(@PathVariable Long clubId){
-        return ApiResponse.of(QnaResponseType.GET_ENTIRE_LIST, qnaService.getEntireQna(clubService.findById(clubId), memberService.getLoggedInMember()));
+    public ApiResponse<QnaResponseDto> getEntireQna(@PathVariable Long clubId, @RequestParam int cursor){
+        return ApiResponse.of(QnaResponseType.GET_ENTIRE_LIST, qnaService.getEntireQna(clubService.findById(clubId), memberService.getLoggedInMember(),cursor));
     }
 
 }
