@@ -4,10 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import server.api.kiwes.domain.club.constant.ClubResponseType;
 import server.api.kiwes.domain.club.dto.ClubApprovalRequestSimpleDto;
 import server.api.kiwes.domain.club.dto.ClubApprovalResponseDto;
@@ -77,9 +74,9 @@ public class ClubApprovalController {
             @io.swagger.annotations.ApiResponse(code = 20109, message = "승인관련 리스트 리턴 성공"),
     })
     @GetMapping("/my-club")
-    public ApiResponse<List<ClubApprovalRequestSimpleDto>> getRequestsApproval(){
+    public ApiResponse<List<ClubApprovalRequestSimpleDto>> getRequestsApproval(@RequestParam int cursor){
         Member member = memberService.getLoggedInMember();
-        List<ClubApprovalRequestSimpleDto> response = clubApprovalService.getRequestsResponse(member);
+        List<ClubApprovalRequestSimpleDto> response = clubApprovalService.getRequestsResponse(member,cursor);
 
         return ApiResponse.of(ClubResponseType.APPROVAL_LIST_GET_SUCCEED, response);
     }
@@ -101,9 +98,9 @@ public class ClubApprovalController {
             @io.swagger.annotations.ApiResponse(code = 20109, message = "승인 관련 리스트 리턴 성공"),
     })
     @GetMapping("/my-waitings")
-    public ApiResponse<List<ClubApprovalWaitingSimpleDto>> getWaitingApproval(){
+    public ApiResponse<List<ClubApprovalWaitingSimpleDto>> getWaitingApproval(@RequestParam int cursor){
         Member member = memberService.getLoggedInMember();
-        List<ClubApprovalWaitingSimpleDto> response = clubApprovalService.getWaitingsResponse(member);
+        List<ClubApprovalWaitingSimpleDto> response = clubApprovalService.getWaitingsResponse(member, cursor);
 
         return ApiResponse.of(ClubResponseType.APPROVAL_LIST_GET_SUCCEED, response);
     }
@@ -121,7 +118,7 @@ public class ClubApprovalController {
             @io.swagger.annotations.ApiResponse(code = 20109, message = "승인 관련 리스트 리턴 성공"),
     })
     @GetMapping("/my-club/waiting/{clubId}")
-    public ApiResponse<List<ClubWaitingMemberDto>> getWaitingPeople(@PathVariable Long clubId){
+    public ApiResponse<List<ClubWaitingMemberDto>> getWaitingPeople(@PathVariable Long clubId, @RequestParam int cursor){
         Member member = memberService.getLoggedInMember();
         Club club = clubService.findById(clubId);
         ClubMember clubMember = clubMemberService.findByClubAndMember(club, member);
@@ -129,7 +126,7 @@ public class ClubApprovalController {
             throw new BizException(ClubResponseType.NOT_HOST);
         }
 
-        List<ClubWaitingMemberDto> response = clubApprovalService.getClubWaitingPeople(club);
+        List<ClubWaitingMemberDto> response = clubApprovalService.getClubWaitingPeople(club,cursor);
 
         return ApiResponse.of(ClubResponseType.APPROVAL_LIST_GET_SUCCEED, response);
     }

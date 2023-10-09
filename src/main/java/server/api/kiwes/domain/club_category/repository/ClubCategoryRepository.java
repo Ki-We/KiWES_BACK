@@ -16,7 +16,7 @@ public interface ClubCategoryRepository extends JpaRepository<ClubCategory, Long
 
 
     @Query(nativeQuery = true,
-            value = "SELECT c.club_id, c.title, c.thumbnail_url, c.date, c.location " +
+            value = "SELECT distinct c.club_id, c.title, c.thumbnail_url, c.date, c.location " +
             "FROM club_category cc INNER JOIN club c ON cc.club_id = c.club_id " +
             "WHERE cc.category_id IN (:categoryIds) " +
             "ORDER BY c.club_id DESC LIMIT :cursor,7")

@@ -13,9 +13,11 @@ import java.util.Optional;
 public interface ClubMemberRepository extends JpaRepository<ClubMember, Long> {
     Optional<ClubMember> findByClubAndMember(Club club, Member member);
 
-    @Query("select cm.member from ClubMember cm " +
-            "where cm.club = :club and cm.isApproved = :isApproved")
-    List<Member> findClubMembersWaitingFrom(@Param("club") Club club, @Param("isApproved") Boolean isApproved);
+    @Query(nativeQuery = true,
+            value ="select cm.member_id from club_member cm " +
+            "where cm.club_id = :club and cm.is_approved = :isApproved order by cm.club_member_id asc limit :cursor,7" )
+    List<Member> findClubMembersWaitingFrom(@Param("club") Club club, @Param("isApproved") Boolean isApproved
+            , @Param("cursor") int cursor);
     @Query("select cm from ClubMember cm " +
             "where cm.club = :club and cm.isHost = true")
     Optional<ClubMember> findByClubHost(@Param("club") Club club);
