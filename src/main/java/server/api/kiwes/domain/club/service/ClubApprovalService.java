@@ -67,6 +67,17 @@ public class ClubApprovalService {
         return requestDTOs;
     }
 
+    public List<ClubApprovalRequestSimpleDto> getAllMyClub(Member member,int cursor) {
+        List<ClubApprovalRequestSimpleInterface> requests;
+        requests = clubRepository.findAllMyClub(member, cursor);
+        List<ClubApprovalRequestSimpleDto> requestDTOs =  new ArrayList<>();
+        for (ClubApprovalRequestSimpleInterface c : requests) {
+            requestDTOs.add(
+                    new ClubApprovalRequestSimpleDto(c.getClub_id(),c.getTitle(),c.getCurrent_people()));
+        }
+        return requestDTOs;
+    }
+
     public List<ClubApprovalWaitingSimpleDto> getWaitingsResponse(Member member, int cursor) {
         List<ClubApprovalWaitingSimpleInterface> waitings = clubRepository.findApprovalWaitingSimple(member, false, false,cursor);
         List<ClubApprovalWaitingSimpleDto> waitingDTOs =  new ArrayList<>();

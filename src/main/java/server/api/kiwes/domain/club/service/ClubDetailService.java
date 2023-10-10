@@ -8,6 +8,7 @@ import server.api.kiwes.domain.club.entity.Club;
 import server.api.kiwes.domain.club_category.entity.ClubCategory;
 import server.api.kiwes.domain.club_language.entity.ClubLanguage;
 import server.api.kiwes.domain.club_member.entity.ClubMember;
+import server.api.kiwes.domain.club_member.repository.ClubMemberRepository;
 import server.api.kiwes.domain.heart.service.HeartService;
 import server.api.kiwes.domain.member.entity.Member;
 import server.api.kiwes.domain.member.entity.Nationality;
@@ -19,12 +20,27 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class ClubDetailService {
     private final HeartService heartService;
+    private final ClubMemberRepository clubMemberRepository;
+
+    public ClubMemberInfoDto getClubSimple(Member member, Club club) {
+        Member host = getHostFrom(club);
+        ClubMemberInfoDto memberInfoDto = ClubMemberInfoDto.builder()
+                .hostThumbnailImage(host.getProfileImg())
+                .hostNickname(host.getNickname())
+                .currentPeople(club.getCurrentPeople())
+                .MemberNickname(clubMemberRepository.findAllNickByClubAndMember(member)
+                        .stream().map(x ->x.getNickname())
+                        .collect(Collectors.toList()))
+                .build();
+        return memberInfoDto;
+    }
 
     /**
      * 모임 상세정보 페이지에 필요한 정보들 리턴

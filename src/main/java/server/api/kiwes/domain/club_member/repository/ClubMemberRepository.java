@@ -12,7 +12,10 @@ import java.util.Optional;
 
 public interface ClubMemberRepository extends JpaRepository<ClubMember, Long> {
     Optional<ClubMember> findByClubAndMember(Club club, Member member);
-
+    @Query("select cm.member " +
+            "from ClubMember cm inner join Member m on  m.id = cm.member.id " +
+            "where cm.member = :member")
+    List<Member> findAllNickByClubAndMember( @Param("member")Member member);
     @Query(nativeQuery = true,
             value ="select cm.member_id from club_member cm " +
             "where cm.club_id = :club and cm.is_approved = :isApproved order by cm.club_member_id asc limit :cursor,7" )

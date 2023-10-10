@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import server.api.kiwes.domain.club.constant.ClubResponseType;
+import server.api.kiwes.domain.club.dto.ClubArticleMemberInfoDto;
 import server.api.kiwes.domain.club.dto.ClubArticleResponseDto;
+import server.api.kiwes.domain.club.dto.ClubMemberInfoDto;
 import server.api.kiwes.domain.club.entity.Club;
 import server.api.kiwes.domain.club.service.ClubDetailService;
 import server.api.kiwes.domain.club.service.ClubService;
@@ -68,11 +70,24 @@ public class ClubDetailController {
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20108, message = "모임 정보 불러오기 성공")
     })
-    @GetMapping("/{clubId}")
+    @GetMapping("/detail/{clubId}")
     public ApiResponse<ClubArticleResponseDto> getClubDetail(@PathVariable Long clubId){
         Member member = memberService.getLoggedInMember();
         Club club = clubService.findById(clubId);
         ClubArticleResponseDto response = clubDetailService.getClubDetail(member, club);
+
+        return ApiResponse.of(ClubResponseType.GET_INFO_SUCCESS, response);
+    }
+
+    @ApiOperation(value = "모임 정보 불러오기", notes = "특정 모임에 참여하고 있는 사람들의 리스트 + 조회한 사람이 호스트 인지도 + 인원 수 까지")
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 20108, message = "모임 정보 불러오기 성공")
+    })
+    @GetMapping("/simple/{clubId}")
+    public ApiResponse<ClubMemberInfoDto> getClubSimple(@PathVariable Long clubId){
+        Member member = memberService.getLoggedInMember();
+        Club club = clubService.findById(clubId);
+        ClubMemberInfoDto response = clubDetailService.getClubSimple(member, club);
 
         return ApiResponse.of(ClubResponseType.GET_INFO_SUCCESS, response);
     }

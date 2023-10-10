@@ -28,6 +28,14 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
             value = "select c.club_id, c.title, c.current_people " +
                     "from club c " +
                     "inner join club_member cm " +
+                    "on c.club_id = cm.club_id and cm.member_id = :member " +
+                    "order by c.club_id asc limit :cursor,7")
+    List<ClubApprovalRequestSimpleInterface> findAllMyClub(@Param("member") Member member,
+                                                                       @Param("cursor") int cursor);
+    @Query(nativeQuery = true,
+            value = "select c.club_id, c.title, c.current_people " +
+                    "from club c " +
+                    "inner join club_member cm " +
                     "on c.club_id = cm.club_id and cm.member_id = :member and cm.is_host = :isHost " +
                     "order by c.club_id asc limit 2")
     List<ClubApprovalRequestSimpleInterface> findApprovalRequestSimpleLimit2(@Param("member") Member member,
@@ -50,9 +58,10 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
 
     @Query("select c from Club c where c.isActivated = :status order by c.dueTo ")
     List<Club> findActivatedClubsOrderByDueTo(@Param("status") ClubStatus status);
-    @Query( nativeQuery = true,
-            value = "SELECT * FROM club where club_id > 0  AND content LIKE CONCAT('%',:keyword,'%') ORDER BY club_id DESC limit :cursor,7")
-    List<Club> findByTitlePage(@Param("keyword") String keyword, @Param("cursor")int cursor);
+//    @Query( nativeQuery = true,
+//            value = "SELECT * FROM club where club_id > 0  AND content LIKE CONCAT('%',:keyword,'%') ORDER BY club_id DESC limit :cursor,7")
+//    List<Club> findByTitlePage(@Param("keyword") String keyword, @Param("cursor")int cursor);
+    List<Club> findByTitleContaining(String keyword);
     @Query(nativeQuery = true,
     value = "select * from club c where club_id >0 order by c.heart_cnt desc limit 5")
     List<Club> findAllOrderByHeartCnt();

@@ -61,7 +61,7 @@ public class ClubApprovalController {
         return ApiResponse.of(ClubResponseType.APPROVAL_LIST_GET_SUCCEED, response);
     }
 
-    @ApiOperation(value = "내 모임 모두 보기", notes = "내가 호스트인 모임 전체 리스트" +
+    @ApiOperation(value = "내가 호스트인 모임 모두 보기", notes = "내가 호스트인 모임 전체 리스트" +
             "\n예시 출력 데이터\n" +
             "\"status\": 20109,\n" +
             "\"message\": \"성공\",\n" +
@@ -73,13 +73,34 @@ public class ClubApprovalController {
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20109, message = "승인관련 리스트 리턴 성공"),
     })
-    @GetMapping("/my-club")
+    @GetMapping("/my-own-club")
     public ApiResponse<List<ClubApprovalRequestSimpleDto>> getRequestsApproval(@RequestParam int cursor){
         Member member = memberService.getLoggedInMember();
         List<ClubApprovalRequestSimpleDto> response = clubApprovalService.getRequestsResponse(member,cursor);
 
         return ApiResponse.of(ClubResponseType.APPROVAL_LIST_GET_SUCCEED, response);
     }
+
+    @ApiOperation(value = "내 모임 모두 보기", notes = "내가 호스트인 모임 전체 리스트" +
+            "\n예시 출력 데이터\n" +
+            "\"status\": 20109,\n" +
+            "\"message\": \"성공\",\n" +
+            "\"data\": [\n" +
+            "(List<ClubApprovalRequestSimpleDto>값 예시)\n" +
+            "{currentPeople\": \"Integer\",\n" +
+            "\"title\": \"String\",\n" +
+            " \"clubId\": Long }]")
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 20115, message = "내모임 리스트 리턴 성공"),
+    })
+    @GetMapping("/my-club")
+    public ApiResponse<List<ClubApprovalRequestSimpleDto>> getAllMyClub(@RequestParam int cursor){
+        Member member = memberService.getLoggedInMember();
+        List<ClubApprovalRequestSimpleDto> response = clubApprovalService.getAllMyClub(member,cursor);
+
+        return ApiResponse.of(ClubResponseType.Club_LIST_GET_SUCCEED, response);
+    }
+
 
     @ApiOperation(value = "대기 중인 모임 모두 보기", notes = "" +
             "예시 출력 데이터\n" +

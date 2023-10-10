@@ -31,7 +31,11 @@ public class SearchService {
     private final SearchCountRepository searchCountRepository;
 
     public List<SearchResponseDto> search(String keyword, Member member,int cursor) {
-        List<SearchResponseDto> searchResults = clubRepository.findByTitlePage(keyword,cursor).stream().map(club -> SearchResponseDto.of(club, member)).collect(Collectors.toList());
+        List<SearchResponseDto> searchResults = clubRepository.findByTitleContaining(keyword).stream()
+                .filter(sr -> sr.getId() > cursor)
+                .limit(7)
+                .map(club -> SearchResponseDto.of(club, member))
+                .collect(Collectors.toList());
         List<SearchResponseDto> responseDtos = new ArrayList<>();
 
         // 언어 일치하는게 있으면 삽입

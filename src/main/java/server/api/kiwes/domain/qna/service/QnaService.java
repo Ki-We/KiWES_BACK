@@ -112,6 +112,7 @@ public class QnaService {
                 .isHost(clubMemberService.findByClubAndMember(club, member).getIsHost())
                 .qnas(club.getQnas().stream()
                         .filter(qna -> qna.getId() >= cursor)
+                        .limit(7)
                         .map(qna -> QnaDetailDto.of(qna, member))
                         .collect(Collectors.toList()))
                 .build();
