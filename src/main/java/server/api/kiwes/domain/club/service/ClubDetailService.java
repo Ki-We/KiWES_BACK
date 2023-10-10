@@ -35,9 +35,7 @@ public class ClubDetailService {
                 .hostThumbnailImage(host.getProfileImg())
                 .hostNickname(host.getNickname())
                 .currentPeople(club.getCurrentPeople())
-                .MemberNickname(clubMemberRepository.findAllNickByClubAndMember(member)
-                        .stream().map(x ->x.getNickname())
-                        .collect(Collectors.toList()))
+                .Members(clubMemberRepository.findAllMembersInClub(member))
                 .build();
         return memberInfoDto;
     }

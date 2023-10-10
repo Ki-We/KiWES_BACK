@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import server.api.kiwes.domain.member.constant.MemberResponseType;
 import server.api.kiwes.domain.member.dto.MyPageResponse;
+import server.api.kiwes.domain.member.dto.myIdResponse;
 import server.api.kiwes.domain.member.entity.Member;
 import server.api.kiwes.domain.member.repository.MemberRepository;
 import server.api.kiwes.global.security.util.SecurityUtils;
@@ -94,8 +95,16 @@ public class MemberService {
         return new MyPageResponse(member.getProfileImg(), member.getNickname(), member.getNationality().getName(), birth, member.getGender().getName(), member.getIntroduction());
 
     }
+    public myIdResponse myId() throws ParseException {
+        Long memberId = SecurityUtils.getLoggedInUser().getId();
+        Member member = memberRepository.findById(memberId).orElseThrow();
 
+        return myIdResponse.builder()
+                .id(member.getId())
+                .nickName(member.getNickname())
+                .email(member.getEmail())
+                .build();
 
-
+    }
 
 }

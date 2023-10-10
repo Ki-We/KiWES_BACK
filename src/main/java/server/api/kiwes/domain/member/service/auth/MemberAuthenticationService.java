@@ -207,11 +207,13 @@ public class MemberAuthenticationService {
      */
 
     public RefreshTokenResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+        Long userId=tokenProvider.getUserId(refreshTokenRequest.getRefreshToken());
+        System.out.println(userId);
         //1. refreshToken 검증
-        refreshTokenRepository.findById(refreshTokenRequest.getId()).orElseThrow(() -> new BizException(NOT_FOUND_EMAIL));
+        refreshTokenRepository.findById(userId).orElseThrow(() -> new BizException(NOT_FOUND_EMAIL));
         //2. 새로운 accessToken 재발급
         //2.1 시큐리티 설정
-        Member member = memberRepository.findById(refreshTokenRequest.getId()).orElseThrow(() -> new BizException(NOT_FOUND_EMAIL));
+        Member member = memberRepository.findById(userId).orElseThrow(() -> new BizException(NOT_FOUND_EMAIL));
         List<GrantedAuthority> authorities = initAuthorities();
         OAuth2User userDetails = createOAuth2UserByMember(authorities, member);
         OAuth2AuthenticationToken auth = configureAuthentication(userDetails, authorities);

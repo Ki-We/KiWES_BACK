@@ -45,6 +45,7 @@ public class TokenProvider implements InitializingBean {
 
     private static final String AUTHORITIES_KEY = "auth";
     private static final String ADDITIONAL_INFO = "isAdditionalInfoProvided";
+    private static final String USER_INFO = "userId";
 
     private final MemberRepository memberRepository;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -80,9 +81,8 @@ public class TokenProvider implements InitializingBean {
                 .collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
-        Date accessTokenValidity = new Date(now + 1000*this.accessTokenValidityTime);
-        Date refreshTokenValidity = new Date(now + 1000*this.refreshTokenValidityTime);
-
+        Date accessTokenValidity = new Date(now + 1000 * this.accessTokenValidityTime);
+        Date refreshTokenValidity = new Date(now + 1000 * this.refreshTokenValidityTime);
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
@@ -93,6 +93,7 @@ public class TokenProvider implements InitializingBean {
 
         String refreshToken = Jwts.builder()
                 .setExpiration(refreshTokenValidity)
+                .claim(USER_INFO, userId)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
@@ -101,10 +102,6 @@ public class TokenProvider implements InitializingBean {
         return TokenInfoResponse.from("Bearer", accessToken, refreshToken, refreshTokenValidityTime);
 
     }
-
-
-
-
 
     public boolean getAdditionalInfoProvided(String token){
         Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
@@ -208,6 +205,10 @@ public class TokenProvider implements InitializingBean {
         Date expiration = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody().getExpiration();
         Long now = new Date().getTime();
         return (expiration.getTime() - now);
+    }
+
+    public Long getUserId(String token) {
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get(USER_INFO,Long.class);
     }
 
 }

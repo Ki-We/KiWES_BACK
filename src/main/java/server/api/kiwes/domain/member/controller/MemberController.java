@@ -102,7 +102,6 @@ public class MemberController {
         return ApiResponse.of(MemberResponseType.SIGN_UP_SUCCESS);
     }
 
-
     @ApiOperation(value = "토큰 재발급", notes = "토큰을 재발급합니다." +
             "\n예시 출력 데이터" +
             "{\n" +
@@ -179,6 +178,7 @@ public class MemberController {
 
     }
 
+
     @ApiOperation(value = "로그아웃", notes = "로그아웃을 합니다." +
             "\n예시 출력 데이터" +
             "{\n" +
@@ -202,5 +202,12 @@ public class MemberController {
     public ApiResponse<Object> quit( ){
         return ApiResponse.of(MemberResponseType.QUIT_SUCCESS,authenticationService.quit());
     }
+
+    @ApiOperation(value = "내 아이디 가져오기", notes = "내 id 가져오기." )
+            @GetMapping("/myid")
+            public ApiResponse<myIdResponse> myId() throws ParseException {
+            return ApiResponse.of(MemberResponseType.MYPAGE_LOAD_SUCCESS, memberService.myId());
+
+}
 
 }

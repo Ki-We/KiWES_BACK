@@ -81,7 +81,7 @@ public class ClubApprovalController {
         return ApiResponse.of(ClubResponseType.APPROVAL_LIST_GET_SUCCEED, response);
     }
 
-    @ApiOperation(value = "내 모임 모두 보기", notes = "내가 호스트인 모임 전체 리스트" +
+    @ApiOperation(value = "내 모임 모두 보기", notes = "내 모임 전체 리스트" +
             "\n예시 출력 데이터\n" +
             "\"status\": 20109,\n" +
             "\"message\": \"성공\",\n" +
