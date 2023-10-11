@@ -85,9 +85,9 @@ public class ClubDetailController {
     })
     @GetMapping("/simple/{clubId}")
     public ApiResponse<ClubMemberInfoDto> getClubSimple(@PathVariable Long clubId){
-        Member member = memberService.getLoggedInMember();
+//        Member member = memberService.getLoggedInMember();
         Club club = clubService.findById(clubId);
-        ClubMemberInfoDto response = clubDetailService.getClubSimple(member, club);
+        ClubMemberInfoDto response = clubDetailService.getClubSimple(club);
 
         return ApiResponse.of(ClubResponseType.GET_INFO_SUCCESS, response);
     }

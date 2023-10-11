@@ -9,6 +9,6 @@ import lombok.*;
 @Builder
 public class ClubMembersInfoDto {
     Long id;
-    String Nickname;
+    String nickName;
     String thumbnail;
 }

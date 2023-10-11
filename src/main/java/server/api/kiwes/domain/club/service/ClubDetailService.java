@@ -29,13 +29,14 @@ public class ClubDetailService {
     private final HeartService heartService;
     private final ClubMemberRepository clubMemberRepository;
 
-    public ClubMemberInfoDto getClubSimple(Member member, Club club) {
+    public ClubMemberInfoDto getClubSimple(Club club) {
         Member host = getHostFrom(club);
         ClubMemberInfoDto memberInfoDto = ClubMemberInfoDto.builder()
                 .hostThumbnailImage(host.getProfileImg())
                 .hostNickname(host.getNickname())
                 .currentPeople(club.getCurrentPeople())
-                .Members(clubMemberRepository.findAllMembersInClub(member))
+                .title(club.getTitle())
+                .Members(clubMemberRepository.findAllMembersInClub(club))
                 .build();
         return memberInfoDto;
     }

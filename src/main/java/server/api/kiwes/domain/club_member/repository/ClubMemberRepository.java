@@ -13,10 +13,10 @@ import java.util.Optional;
 
 public interface ClubMemberRepository extends JpaRepository<ClubMember, Long> {
     Optional<ClubMember> findByClubAndMember(Club club, Member member);
-    @Query("select new server.api.kiwes.domain.club.dto.ClubMembersInfoDto(cm.member.id,cm.member.nickname,cm.member.profileImg) " +
-            "from ClubMember cm inner join Member m on  m.id = cm.member.id " +
-            "where cm.member = :member")
-    List<ClubMembersInfoDto> findAllMembersInClub(@Param("member")Member member);
+    @Query("select distinct new server.api.kiwes.domain.club.dto.ClubMembersInfoDto(cm.member.id,cm.member.nickname,cm.member.profileImg) " +
+            "from ClubMember cm " +
+            "where cm.club = :club and cm.isHost = false")
+    List<ClubMembersInfoDto> findAllMembersInClub(@Param("club")Club club);
     @Query(nativeQuery = true,
             value ="select cm.member_id from club_member cm " +
             "where cm.club_id = :club and cm.is_approved = :isApproved order by cm.club_member_id asc limit :cursor,7" )

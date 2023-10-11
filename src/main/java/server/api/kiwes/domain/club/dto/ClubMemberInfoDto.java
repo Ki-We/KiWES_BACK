@@ -13,5 +13,6 @@ public class ClubMemberInfoDto {
     String hostThumbnailImage;
     String hostNickname;
     Integer currentPeople;
+    String title;
     List<ClubMembersInfoDto> Members;
 }
