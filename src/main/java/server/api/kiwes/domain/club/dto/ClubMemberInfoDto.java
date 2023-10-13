@@ -10,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class ClubMemberInfoDto {
+    Long hostId;
     String hostThumbnailImage;
     String hostNickname;
     Integer currentPeople;

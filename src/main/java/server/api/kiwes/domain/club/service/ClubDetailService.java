@@ -32,6 +32,7 @@ public class ClubDetailService {
     public ClubMemberInfoDto getClubSimple(Club club) {
         Member host = getHostFrom(club);
         ClubMemberInfoDto memberInfoDto = ClubMemberInfoDto.builder()
+                .hostId(host.getId())
                 .hostThumbnailImage(host.getProfileImg())
                 .hostNickname(host.getNickname())
                 .currentPeople(club.getCurrentPeople())
