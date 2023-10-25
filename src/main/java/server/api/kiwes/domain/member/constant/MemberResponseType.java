@@ -22,7 +22,6 @@ public enum MemberResponseType implements BaseResponseType {
     LOGOUT_SUCCESS(20009,"로그아웃 성공",HttpStatus.OK),
     QUIT_SUCCESS(20010,"회원 탈퇴 성공", HttpStatus.OK),
 
-
     SIGN_UP_ING(40003,"회원가입 진행중", HttpStatus.BAD_REQUEST),
 
     CONNECT_ERROR(40001, "연결 에러", HttpStatus.BAD_REQUEST),
@@ -31,8 +30,6 @@ public enum MemberResponseType implements BaseResponseType {
     NOT_LOGGED_IN_USER(40004, "사용자 정보를 알 수 없습니다.", HttpStatus.BAD_REQUEST),
     CANT_CREATE_SECRET(40005, "client secret 만들기에 실패했습니다.", HttpStatus.BAD_REQUEST),
     NOT_FOUND_KEYFILE(40006, "Key 파일을 찾을 수 없습니다.", HttpStatus.BAD_REQUEST),
-
-
 
     ;
 

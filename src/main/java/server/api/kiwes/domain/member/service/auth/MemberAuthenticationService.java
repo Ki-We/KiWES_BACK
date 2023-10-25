@@ -226,7 +226,7 @@ public class MemberAuthenticationService {
         Member member = new Member(email,profileImg, Gender.valueOf(gender.toUpperCase()));
         // 가입 여부 확인
         if (!memberRepository.existsByEmail(member.getEmail())) {
-            member.setMember("kiwes"+(member.getId()+4),"NOT SETTING","String", "FOREIGN");
+            member.setMember("kiwes&"+member.getEmail(),"NOT SETTING","String", "FOREIGN");
             memberRepository.save(member);
         }
 

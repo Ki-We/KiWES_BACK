@@ -40,6 +40,8 @@ dependencies {
 	implementation 'org.bouncycastle:bcprov-jdk15on:1.68'
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 	implementation 'com.nimbusds:nimbus-jose-jwt:3.10'
+	//translate
+	implementation 'software.amazon.awssdk:translate:2.16.83'
 
 	compileOnly 'org.projectlombok:lombok'
 //	runtimeOnly 'com.h2database:h2:1.4.199'
