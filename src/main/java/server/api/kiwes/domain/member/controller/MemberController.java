@@ -154,8 +154,8 @@ public class MemberController {
             "}")
     @GetMapping("mypage/profileImg")
     public ApiResponse<Object> profileImg() {
-        String nickname = memberService.changeProfileImg() + ".jpg";
-        return ApiResponse.of(MemberResponseType.PROFILE_IMG_SUCCESS, preSignedUrlService.getPreSignedUrl("profileimg/", nickname));
+        String fileName = memberService.changeProfileImg() + ".jpg";
+        return ApiResponse.of(MemberResponseType.PROFILE_IMG_SUCCESS, preSignedUrlService.getPreSignedUrl("profileimg/", fileName));
     }
 
     @ApiOperation(value = "마이페이지 정보 ", notes = "마이페이지 내 정보 가져오기." +

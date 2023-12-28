@@ -47,10 +47,10 @@ public class MemberService {
 
         Long memberId = SecurityUtils.getLoggedInUser().getId();
         Member member = memberRepository.findById(memberId).orElseThrow();
-        member.setProfileImg("https://kiwes-bucket.s3.ap-northeast-2.amazonaws.com/profileimg/" + member.getNickname() + ".jpg");
+        member.setProfileImg("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/profileimg/" + member.getEmail() + ".jpg");
         memberRepository.save(member);
 
-        return member.getNickname();
+        return member.getEmail();
     }
     /**
      * 닉네임 중복 체크

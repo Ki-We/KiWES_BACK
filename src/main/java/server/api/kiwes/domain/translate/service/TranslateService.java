@@ -41,7 +41,6 @@ public class TranslateService {
 
         } catch (TranslateException e) {
             System.err.println(e.awsErrorDetails().errorMessage());
-            System.exit(1);
         }
         return "";
     }
