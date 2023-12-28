@@ -70,13 +70,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/oauth/kakao/**").permitAll()
                 .antMatchers("/oauth/**").permitAll()
                 // 구글
-//                .antMatchers(HttpMethod.POST, "/oauth/google").permitAll()
                 .antMatchers("/login/oauth2/code/google").permitAll()
                 .antMatchers("/oauth/google/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/auth/userinfo.email").permitAll()
                 .antMatchers(HttpMethod.GET, "/auth/userinfo.profile").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/userinfo.profile").permitAll()
-//                .antMatchers("openid").permitAll()
                 //애플
                 .antMatchers("/oauth/apple").permitAll()
                 .antMatchers("/oauth/apple/**").permitAll()

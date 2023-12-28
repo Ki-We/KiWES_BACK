@@ -21,8 +21,6 @@ public class PreSignedUrlService {
 
     private final AmazonS3Client amazonS3Client;
 
-    private String useOnlyOneFileName;
-
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
@@ -31,18 +29,15 @@ public class PreSignedUrlService {
 
     public String getPreSignedUrl(String prefix, String fileName) {
 
-//        String onlyOneFileName = onlyOneFileName(fileName);
-        useOnlyOneFileName = fileName;
-
         if (!prefix.equals(" ")) {
-            useOnlyOneFileName = prefix  + fileName;
+            fileName = prefix  + fileName;
         }
 
-        GeneratePresignedUrlRequest generatePresignedUrlRequest = getGeneratePreSignedUrlRequest(bucket, useOnlyOneFileName);
+        GeneratePresignedUrlRequest generatePresignedUrlRequest = getGeneratePreSignedUrlRequest(fileName);
         return amazonS3Client.generatePresignedUrl(generatePresignedUrlRequest).toString();
     }
 
-    private GeneratePresignedUrlRequest getGeneratePreSignedUrlRequest(String bucket, String fileName) {
+    private GeneratePresignedUrlRequest getGeneratePreSignedUrlRequest(String fileName) {
 
         GeneratePresignedUrlRequest generatePresignedUrlRequest =
                 new GeneratePresignedUrlRequest(bucket, fileName)
@@ -59,20 +54,19 @@ public class PreSignedUrlService {
         long expTimeMillis = expiration.getTime();
         expTimeMillis += 1000 * 60 * 2;
         expiration.setTime(expTimeMillis);
-//        log.info(expiration.toString());
         return expiration;
     }
 
-    private String onlyOneFileName(String filename){
-        return UUID.randomUUID().toString()+filename;
+//    private String onlyOneFileName(String filename){
+//        return UUID.randomUUID().toString()+filename;
+//
+//    }
 
-    }
-
-    public String findByName(String path) {
+//    public String findByName(String path) {
 //        if (!amazonS3.doesObjectExist(bucket,editPath+ useOnlyOneFileName))
 //            return "File does not exist";
 //        log.info("Generating signed URL for file name {}", useOnlyOneFileName);
 //        return  amazonS3.getUrl(bucket,editPath+useOnlyOneFileName).toString();
-        return "https://"+bucket+".s3."+location+".amazonaws.com/"+path+"/"+useOnlyOneFileName;
-    }
+//        return "https://"+bucket+".s3."+location+".amazonaws.com/"+path+"/"+useOnlyOneFileName;
+//    }
 }

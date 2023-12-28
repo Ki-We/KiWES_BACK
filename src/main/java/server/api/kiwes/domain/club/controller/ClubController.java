@@ -83,7 +83,7 @@ public class ClubController {
     })
     @GetMapping("/article/presigned-url")
     public ApiResponse<String> getUploadClubThumbnailImagePresignedUrl(@RequestParam Long clubId){
-        Member member = memberService.getLoggedInMember(); //todo 이게 뭐냐
+        Member member = memberService.getLoggedInMember();
         Club club = clubService.findById(clubId);
         String url = preSignedUrlService.getPreSignedUrl("clubThumbnail/", club.getUuid());
         clubService.setClubThumbnailImageUrl(club);
