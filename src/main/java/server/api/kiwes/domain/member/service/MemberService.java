@@ -44,7 +44,6 @@ public class MemberService {
      * 마이페이지-프로필 이미지 변경 (presigned URL)
      */
     public String changeProfileImg() {
-
         Long memberId = SecurityUtils.getLoggedInUser().getId();
         Member member = memberRepository.findById(memberId).orElseThrow();
         member.setProfileImg("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/profileimg/" + member.getEmail() + ".jpg");

@@ -23,7 +23,6 @@ import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY;
 
 @RestController
 @AllArgsConstructor
-//@RequestMapping("/api/v1/members")
 @Api(tags = "Member")
 @Slf4j
 public class MemberController {
@@ -80,7 +79,7 @@ public class MemberController {
 
 
 
-    @ApiOperation(value = "추가 정보 입력", notes = "추가 정보를 입력합니다." +
+    @ApiOperation(value = "회원가입 시 추가 정보 일괄 입력", notes = "추가 정보를 입력합니다." +
             "\n예시 출력 데이터" +
             "{\n" +
             "  \"status\": 20002,\n" +
@@ -117,7 +116,7 @@ public class MemberController {
     }
 
 
-    @ApiOperation(value = "닉네임 중복검사", notes = "중복되는 닉네임이 있는지 검사합니다." +
+    @ApiOperation(value = "닉네임 중복 검사", notes = "중복되는 닉네임이 있는지 검사합니다." +
             "\n예시 출력 데이터" +
             "{\n" +
             "  \"status\": 20005,\n" +

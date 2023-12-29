@@ -43,9 +43,9 @@ public class PreSignedUrlService {
                 new GeneratePresignedUrlRequest(bucket, fileName)
                         .withMethod(HttpMethod.PUT)
                         .withExpiration(getPreSignedUrlExpiration());
-        generatePresignedUrlRequest.addRequestParameter(
-                Headers.S3_CANNED_ACL,
-                CannedAccessControlList.PublicRead.toString());
+//        generatePresignedUrlRequest.addRequestParameter(
+//                Headers.S3_CANNED_ACL,
+//                CannedAccessControlList.PublicRead.toString());
         return generatePresignedUrlRequest;
     }
 
