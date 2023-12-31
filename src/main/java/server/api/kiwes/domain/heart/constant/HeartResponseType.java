@@ -10,7 +10,7 @@ import server.api.kiwes.response.BaseResponseType;
 public enum HeartResponseType implements BaseResponseType {
     HEART_SUCCEED(20201, "찜하기 성공",HttpStatus.OK),
     UNHEART_SUCCEED(20202, "찜하기 취소 성공",HttpStatus.OK),
-
+    HEART_RETRIVE_SUCCEED(20203, "찜 목록 불러오기 성공",HttpStatus.OK),
     ;
 
     private final Integer code;

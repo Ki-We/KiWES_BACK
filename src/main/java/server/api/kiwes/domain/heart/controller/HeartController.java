@@ -58,4 +58,16 @@ public class HeartController {
 
         return ApiResponse.of(HeartResponseType.UNHEART_SUCCEED);
     }
+
+
+    @ApiOperation(value = "찜한 모임 목록", notes = "예시 출력 데이터" +
+            "{\n" +
+            "  \"status\": 20202,\n" +
+            "  \"message\": \"찜하기 취소 성공\",\n" +
+            "  \"data\": null\n" +
+            "}")
+    @GetMapping("/club_list")
+    public ApiResponse<Object> heartClubList(){
+        return ApiResponse.of(HeartResponseType.HEART_RETRIVE_SUCCEED,heartService.getHeartedAll());
+    }
 }
