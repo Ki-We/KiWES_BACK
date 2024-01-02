@@ -77,9 +77,9 @@ public class ClubService {
                 .content(requestDto.getContent())
                 .locationsKeyword(requestDto.getLocationsKeyword())
                 .location(requestDto.getLocation())
+                .uuid(member.getId()+requestDto.getTitle())
                 .build();
         clubRepository.save(club);
-
         club.setLanguages(getClubLanguageEntities(requestDto.getLanguages(), club));
         club.setMembers(getClubMemberEntities(member, club));
         club.setCategories(getClubCategoryEntities(requestDto.getCategories(), club));
@@ -252,5 +252,9 @@ public class ClubService {
         Optional<Heart> heart = heartRepository.findByClubAndMember(club, member);
         each.setIsHeart(heart.isPresent() ? heart.get().getStatus() : HeartStatus.NO);
         return each;
+    }
+
+    public void setUuid(Club club) {
+        club.setUuid(club.getId() + String.valueOf(club.getTitle().charAt(0)));
     }
 }
