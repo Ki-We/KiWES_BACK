@@ -27,7 +27,7 @@ public class Category {
     private CategoryType name;
 
     @OneToMany(mappedBy = "category")
-    private List<ClubCategory> clubCategories;
+    private List<ClubCategory> clubCategory;
 
     @OneToMany(mappedBy = "category")
     private List<MemberCategory> memberCategories;

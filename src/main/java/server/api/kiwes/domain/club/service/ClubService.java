@@ -78,11 +78,12 @@ public class ClubService {
                 .locationsKeyword(requestDto.getLocationsKeyword())
                 .location(requestDto.getLocation())
                 .uuid(member.getId()+requestDto.getTitle())
+                .thumbnailUrl("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/clubThumbnail/club_2.jpg")
                 .build();
         clubRepository.save(club);
         club.setLanguages(getClubLanguageEntities(requestDto.getLanguages(), club));
         club.setMembers(getClubMemberEntities(member, club));
-        club.setCategories(getClubCategoryEntities(requestDto.getCategories(), club));
+        club.setCategory(getClubCategoryEntities(requestDto.getCategory(), club));
 
         return ClubCreatedResponseDto.builder()
                 .clubId(club.getId())
@@ -121,9 +122,7 @@ public class ClubService {
     /**
      * 요청으로부터 넘어온 카테고리코드를 토대로 ClubCategory 리스트를 만들어 반환
      */
-    private List<ClubCategory> getClubCategoryEntities(List<String> categoryStrings, Club club){
-        List<ClubCategory> clubCategories = new ArrayList<>();
-        for(String categoryString : categoryStrings){
+    private ClubCategory getClubCategoryEntities(String categoryString, Club club){
             CategoryType type = CategoryType.valueOf(categoryString);
             Category category = categoryRepository.findByName(type);
             ClubCategory clubCategory = ClubCategory.builder()
@@ -131,12 +130,23 @@ public class ClubService {
                     .category(category)
                     .build();
             clubCategoryRepository.save(clubCategory);
-            clubCategories.add(clubCategory);
-        }
-
-        return clubCategories;
+        return clubCategory;
     }
-
+//    private List<ClubCategory> getClubCategoryEntities(String categoryString, Club club){
+//        List<ClubCategory> clubCategories = new ArrayList<>();
+//        for(String categoryString : categoryStrings){
+//            CategoryType type = CategoryType.valueOf(categoryString);
+//            Category category = categoryRepository.findByName(type);
+//            ClubCategory clubCategory = ClubCategory.builder()
+//                    .club(club)
+//                    .category(category)
+//                    .build();
+//            clubCategoryRepository.save(clubCategory);
+//            clubCategories.add(clubCategory);
+//        }
+//
+//        return clubCategories;
+//    }
     /**
      * Club을 처음 생성할 때, 현재 멤버는 호스트 한명 뿐이므로, 호스트 한명만 담는 ClubMember 리스트를 반환
      */

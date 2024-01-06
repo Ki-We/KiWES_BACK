@@ -48,7 +48,7 @@ public class ClubApprovalController {
             "\"date\": \"String\",\n" +
             "\"location\": \"String\",\n" +
             "\"languages\": \"List<String>\",\n" +
-            " HeartStatus\": \"enum{YES, NO}\",\n "+
+            " HeartStatus\": m\"enum{YES, NO}\",\n "+
             "]")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20109, message = "승인관련 리스트 리턴 성공"),

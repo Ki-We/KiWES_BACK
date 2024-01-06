@@ -111,9 +111,8 @@ public class ClubDetailService {
     private List<String> getTagList(Club club){
         List<String> tags = new ArrayList<>();
 
-        for(ClubCategory clubCategory : club.getCategories()){
-            tags.add(clubCategory.getCategory().getName().getName());
-        }
+        tags.add(club.getCategory().getCategory().getName().getName());
+
 
         for(ClubLanguage clubLanguage : club.getLanguages()){
             tags.add(clubLanguage.getLanguage().getName().getName());

@@ -1,10 +1,12 @@
 package server.api.kiwes.domain.club_category.entity;
 
 import lombok.*;
+import org.hibernate.mapping.ToOne;
 import server.api.kiwes.domain.category.entity.Category;
 import server.api.kiwes.domain.club.entity.Club;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -12,12 +14,12 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClubCategory {
+public class ClubCategory { //TODO 이거 쓸모없는데?
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CLUB_CATEGORY_ID")
     private Long id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "CLUB_ID")
     private Club club;
 

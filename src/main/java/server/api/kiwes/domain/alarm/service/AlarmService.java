@@ -41,7 +41,7 @@ public class AlarmService {
     public void deleteOldAlarm() {
         List<Alarm> allAlarms = alarmRepository.findAll();
         for ( Alarm alarm : allAlarms ){
-            if ( alarm.getCreatedDate().plusDays(3).isBefore(LocalDateTime.now())){
+            if ( alarm.getCreatedDate().plusDays(11).isBefore(LocalDateTime.now())){
                 alarmRepository.delete(alarm);
             }
         }

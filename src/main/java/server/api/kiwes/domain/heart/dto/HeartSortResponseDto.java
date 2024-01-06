@@ -2,6 +2,7 @@ package server.api.kiwes.domain.heart.dto;
 
 import lombok.*;
 import server.api.kiwes.domain.club_language.entity.ClubLanguage;
+import server.api.kiwes.domain.heart.constant.HeartStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,17 +17,17 @@ public class HeartSortResponseDto {
     String title;
     String thumbnailImage;
     String date;
-    String locationsKeyword;
+    String locationKeyword;
     List<String> languages;
     @Builder.Default()
-    boolean isHeart = true;
+    HeartStatus isHeart = HeartStatus.YES;
 
     public HeartSortResponseDto(Long club_id, String title, String thumbnailImage, String date, String LocationsKeyword) {
         this.clubId = club_id;
         this.title = title;
         this.thumbnailImage = thumbnailImage;
         this.date = date;
-        this.locationsKeyword = LocationsKeyword;
+        this.locationKeyword = LocationsKeyword;
 
     }
 
