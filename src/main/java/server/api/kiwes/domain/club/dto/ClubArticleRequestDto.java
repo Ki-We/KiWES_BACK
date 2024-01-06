@@ -20,5 +20,5 @@ public class ClubArticleRequestDto {
     private String locationsKeyword; // 위치 키워드
     private String location;         // 위도, 경도
     private List<String> languages;  // 언어
-    private List<String> categories; // 카테고리
+    private String category; // 카테고리
 }

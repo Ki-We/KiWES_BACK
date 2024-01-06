@@ -58,10 +58,10 @@ public class SearchService {
             if(responseDtos.contains(searchResult)) continue;
 
             // 사용자 카테고리중에 클럽 카테고리와 일치하는게 있으면 새 리스트 삽입
-            List<String> categoryStrings = searchResult.getCategories();
+            String categoryString = searchResult.getCategory();
             for(MemberCategory memberCategory : member.getCategories()){
                 Category category = memberCategory.getCategory();
-                if(categoryStrings.contains(category.getName().getName())){
+                if(categoryString.equals(category.getName().getName())){
                     responseDtos.add(searchResult);
                     break;
                 }

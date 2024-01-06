@@ -15,16 +15,16 @@ public class ClubApprovalWaitingSimpleDto {
     String title;
     String thumbnailImage;
     String date;
-    String location;
+    String locationKeyword;
     List<String> languages;
     HeartStatus isHeart;
 
-    public ClubApprovalWaitingSimpleDto(Long clubId, String title, String thumbnailImage, String date, String location, HeartStatus isHeart) {
+    public ClubApprovalWaitingSimpleDto(Long clubId, String title, String thumbnailImage, String date, String locations_keyword, HeartStatus isHeart) {
         this.clubId = clubId;
         this.title = title;
         this.thumbnailImage = thumbnailImage;
         this.date = date;
-        this.location = location;
+        this.locationKeyword = locations_keyword;
         this.isHeart = isHeart;
     }
 }

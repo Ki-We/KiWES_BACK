@@ -1,6 +1,7 @@
 package server.api.kiwes.domain.club_category.entity;
 
 import lombok.*;
+import org.hibernate.mapping.ToOne;
 import server.api.kiwes.domain.category.entity.Category;
 import server.api.kiwes.domain.club.entity.Club;
 
@@ -17,11 +18,11 @@ public class ClubCategory {
     @Column(name = "CLUB_CATEGORY_ID")
     private Long id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "CLUB_ID")
     private Club club;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "CATEGORY_ID")
     private Category category;
 

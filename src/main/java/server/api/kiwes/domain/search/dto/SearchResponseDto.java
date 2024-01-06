@@ -24,7 +24,7 @@ public class SearchResponseDto {
     private String dueTo;
     private String location;
     private List<String> languages;
-    private List<String> categories;
+    private String category;
     private HeartStatus isHeart;
 
     public static SearchResponseDto of(Club club, Member member){
@@ -49,7 +49,7 @@ public class SearchResponseDto {
                         .stream()
                         .map(clubLanguage -> clubLanguage.getLanguage().getName().getName())
                         .collect(Collectors.toList()))
-                .categories(club.getCategories().stream().map(clubCategory -> clubCategory.getCategory().getName().getName()).collect(Collectors.toList()))
+                .category(club.getCategory().getCategory().getName().getName())
                 .isHeart(isHeart)
                 .build();
     }

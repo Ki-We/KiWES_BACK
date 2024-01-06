@@ -75,8 +75,8 @@ public class Club extends BaseTimeEntity {
     @OneToMany(mappedBy = "club",  fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Qna> qnas;
 
-    @OneToMany(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<ClubCategory> categories;
+    @OneToOne(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private ClubCategory category;
 
     public void addCurrentPeople(){
         this.currentPeople++;

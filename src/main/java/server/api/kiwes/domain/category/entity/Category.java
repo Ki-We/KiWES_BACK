@@ -26,8 +26,8 @@ public class Category {
     @Column(unique = true)
     private CategoryType name;
 
-    @OneToMany(mappedBy = "category")
-    private List<ClubCategory> clubCategories;
+    @OneToOne(mappedBy = "category")
+    private ClubCategory clubCategory;
 
     @OneToMany(mappedBy = "category")
     private List<MemberCategory> memberCategories;
