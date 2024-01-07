@@ -19,13 +19,14 @@ import java.util.stream.Collectors;
 @Builder
 public class SearchResponseDto {
     private Long clubId;
-    private String thumbnailImageUrl;
     private String title;
-    private String dueTo;
-    private String location;
+    private String thumbnailImage;
+    private String date;
+    private String locationKeyword;
     private List<String> languages;
-    private String category;
     private HeartStatus isHeart;
+
+    private String category;
 
     public static SearchResponseDto of(Club club, Member member){
         // 클럽의 하트 수가 그렇게 많지 않을 것이라 판단.
@@ -41,15 +42,14 @@ public class SearchResponseDto {
 
         return SearchResponseDto.builder()
                 .clubId(club.getId())
-                .thumbnailImageUrl(club.getThumbnailUrl())
+                .thumbnailImage(club.getThumbnailUrl())
                 .title(club.getTitle())
-                .dueTo(club.getDueTo())
-                .location(club.getLocationsKeyword())
+                .date(club.getDueTo())
+                .locationKeyword(club.getLocationsKeyword())
                 .languages(club.getLanguages()
                         .stream()
                         .map(clubLanguage -> clubLanguage.getLanguage().getName().getName())
                         .collect(Collectors.toList()))
-                .category(club.getCategory().getCategory().getName().getName())
                 .isHeart(isHeart)
                 .build();
     }
@@ -61,16 +61,16 @@ public class SearchResponseDto {
         if (o == null || getClass() != o.getClass()) return false;
         SearchResponseDto that = (SearchResponseDto) o;
         return Objects.equals(clubId, that.clubId) &&
-                Objects.equals(thumbnailImageUrl, that.thumbnailImageUrl) &&
+                Objects.equals(thumbnailImage, that.thumbnailImage) &&
                 Objects.equals(title, that.title) &&
-                Objects.equals(dueTo, that.dueTo) &&
-                Objects.equals(location, that.location) &&
+                Objects.equals(date, that.date) &&
+                Objects.equals(locationKeyword, that.locationKeyword) &&
                 Objects.equals(languages, that.languages) &&
                 isHeart == that.isHeart;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(clubId, thumbnailImageUrl, title, dueTo, location, languages, isHeart);
+        return Objects.hash(clubId, thumbnailImage, title, date, locationKeyword, languages, isHeart);
     }
 }
