@@ -53,12 +53,18 @@ public class ClubApprovalController {
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20109, message = "승인관련 리스트 리턴 성공"),
     })
-    @GetMapping("/simple")
-    public ApiResponse<Object> getSimpleApproval(){
+    @GetMapping("/simple/approval")
+    public ApiResponse<Object> getSimpleApproval(@RequestParam int cursor){
         Member member = memberService.getLoggedInMember();
-        ClubApprovalResponseDto response = clubApprovalService.getSimpleResponse(member);
-
-        return ApiResponse.of(ClubResponseType.APPROVAL_LIST_GET_SUCCEED, response);
+        return ApiResponse.of(ClubResponseType.APPROVAL_LIST_GET_SUCCEED, clubApprovalService.getSimpleApproval(member));
+    }
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 20109, message = "승인관련 리스트 리턴 성공"),
+    })
+    @GetMapping("/simple/wating")
+    public ApiResponse<Object> getSimpleWating(@RequestParam int cursor){
+        Member member = memberService.getLoggedInMember();
+        return ApiResponse.of(ClubResponseType.APPROVAL_LIST_GET_SUCCEED, clubApprovalService.getSimpleWating(member));
     }
 
     @ApiOperation(value = "내가 호스트인 모임 모두 보기", notes = "내가 호스트인 모임 전체 리스트" +
@@ -100,7 +106,11 @@ public class ClubApprovalController {
 
         return ApiResponse.of(ClubResponseType.Club_LIST_GET_SUCCEED, response);
     }
-
+    @GetMapping("/my-club/get-last")
+    public ApiResponse<Long> findFirstByMemberOrderByClubIdDesc(){
+        Member member = memberService.getLoggedInMember();
+        return ApiResponse.of(ClubResponseType.Club_LIST_GET_SUCCEED, clubApprovalService.findFirstByMemberOrderByClubIdDesc(member));
+    }
 
     @ApiOperation(value = "대기 중인 모임 모두 보기", notes = "" +
             "예시 출력 데이터\n" +
@@ -139,7 +149,7 @@ public class ClubApprovalController {
             @io.swagger.annotations.ApiResponse(code = 20109, message = "승인 관련 리스트 리턴 성공"),
     })
     @GetMapping("/my-club/waiting/{clubId}")
-    public ApiResponse<List<ClubWaitingMemberDto>> getWaitingPeople(@PathVariable Long clubId, @RequestParam int cursor){
+    public ApiResponse<List<ClubWaitingMemberDto>> getWaitingPeople(@PathVariable Long clubId){
         Member member = memberService.getLoggedInMember();
         Club club = clubService.findById(clubId);
         ClubMember clubMember = clubMemberService.findByClubAndMember(club, member);
@@ -147,7 +157,7 @@ public class ClubApprovalController {
             throw new BizException(ClubResponseType.NOT_HOST);
         }
 
-        List<ClubWaitingMemberDto> response = clubApprovalService.getClubWaitingPeople(club,cursor);
+        List<ClubWaitingMemberDto> response = clubApprovalService.getClubWaitingPeople(club);
 
         return ApiResponse.of(ClubResponseType.APPROVAL_LIST_GET_SUCCEED, response);
     }

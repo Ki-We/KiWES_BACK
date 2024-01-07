@@ -15,10 +15,11 @@ public class ClubPopularEachResponseDto {
     @Setter
     private String hostProfileImg;
     private String title;
-    private String clubThumbnailImg;
+    private String thumbnailImage;
     private String date;
     private String location;
-    private List<String> language;
+    private String locationsKeyword;
+    private List<String> languages;
     @Setter
     private HeartStatus isHeart;
 
@@ -26,10 +27,11 @@ public class ClubPopularEachResponseDto {
         return ClubPopularEachResponseDto.builder()
                 .hostProfileImg(null)
                 .title(club.getTitle())
-                .clubThumbnailImg(club.getThumbnailUrl())
+                .thumbnailImage(club.getThumbnailUrl())
                 .date(club.getDueTo())
                 .location(club.getLocation())
-                .language(club.getLanguages().stream().map(clubLanguage -> clubLanguage.getLanguage().getName().getName()).collect(Collectors.toList()))
+                .locationsKeyword(club.getLocationsKeyword())
+                .languages(club.getLanguages().stream().map(clubLanguage -> clubLanguage.getLanguage().getName().getName()).collect(Collectors.toList()))
                 .isHeart(null)
                 .build();
     }

@@ -67,7 +67,7 @@ public class HeartController {
             "  \"data\": null\n" +
             "}")
     @GetMapping("/club_list")
-    public ApiResponse<Object> heartClubList(){
+    public ApiResponse<Object> heartClubList(@RequestParam int cursor){
         return ApiResponse.of(HeartResponseType.HEART_RETRIVE_SUCCEED,heartService.getHeartedAll());
     }
 }

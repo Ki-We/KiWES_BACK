@@ -28,17 +28,18 @@ public class ClubApprovalService {
     /**
      * 승인 페이지에서 보여질 승인요청, 승인대기 Top 2개 정보 리턴
      */
-    public ClubApprovalResponseDto getSimpleResponse(Member member) {
+    public List<ClubApprovalRequestSimpleDto> getSimpleApproval(Member member) {
         List<ClubApprovalRequestSimpleInterface> requests;
-        List<ClubApprovalWaitingSimpleInterface> waitings;
-
         requests = clubRepository.findApprovalRequestSimpleLimit2(member, true);
         List<ClubApprovalRequestSimpleDto> requestDTOs =  new ArrayList<>();
         for (ClubApprovalRequestSimpleInterface c : requests) {
             requestDTOs.add(
                     new ClubApprovalRequestSimpleDto(c.getClub_id(),c.getTitle(),c.getCurrent_people()));
         }
-
+        return requestDTOs;
+    }
+    public List<ClubApprovalWaitingSimpleDto> getSimpleWating(Member member) {
+        List<ClubApprovalWaitingSimpleInterface> waitings;
         waitings = clubRepository.findApprovalWaitingSimplelimit2(member, false, false);
         List<ClubApprovalWaitingSimpleDto> waitingDTOs =  new ArrayList<>();
         for (ClubApprovalWaitingSimpleInterface c : waitings) {
@@ -46,11 +47,7 @@ public class ClubApprovalService {
                     new ClubApprovalWaitingSimpleDto(c.getClub_id(),c.getTitle(),c.getThumbnail_url(),c.getDate(),c.getLocations_keyword(),c.getStatus()));
         }
         getWaitingSimpleDto(waitingDTOs);
-
-        return ClubApprovalResponseDto.builder()
-                .requests(requestDTOs)
-                .waitings(waitingDTOs)
-                .build();
+        return waitingDTOs;
     }
 
     /**
@@ -75,9 +72,12 @@ public class ClubApprovalService {
             requestDTOs.add(
                     new ClubApprovalRequestSimpleDto(c.getClub_id(),c.getTitle(),c.getCurrent_people()));
         }
+        clubMemberRepository.findFirstByMemberOrderByClubIdDesc(member);
         return requestDTOs;
     }
-
+    public Long findFirstByMemberOrderByClubIdDesc(Member member) {
+        return  clubMemberRepository.findFirstByMemberOrderByClubIdDesc(member).getClub().getId();
+    }
     public List<ClubApprovalWaitingSimpleDto> getWaitingsResponse(Member member, int cursor) {
         List<ClubApprovalWaitingSimpleInterface> waitings = clubRepository.findApprovalWaitingSimple(member, false, false,cursor);
         List<ClubApprovalWaitingSimpleDto> waitingDTOs =  new ArrayList<>();
@@ -108,10 +108,8 @@ public class ClubApprovalService {
     /**
      * 해당 모임에서 승인 대기중인 사용자들 정보 리턴
      */
-    public List<ClubWaitingMemberDto> getClubWaitingPeople(Club club, int cursor) {
+    public List<ClubWaitingMemberDto> getClubWaitingPeople(Club club) {
 
-        return clubMemberRepository.findClubMembersWaitingFrom(club, false, cursor).stream()
-                .map(ClubWaitingMemberDto::of)
-                .collect(Collectors.toList());
+        return clubMemberRepository.findClubMembersWaitingFrom(club);
     }
 }
