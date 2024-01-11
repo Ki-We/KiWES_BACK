@@ -28,7 +28,6 @@ public class ClubMember extends BaseTimeEntity {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-
     @Builder.Default
     private Boolean isHost = false;
 
@@ -38,5 +37,6 @@ public class ClubMember extends BaseTimeEntity {
     public void setIsApproved(Boolean b){
         this.isApproved = b;
     }
+    public void setMember(Member member){ this.member=member;}
 
 }

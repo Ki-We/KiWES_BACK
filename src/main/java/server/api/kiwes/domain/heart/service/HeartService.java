@@ -68,9 +68,9 @@ public class HeartService {
         club.setHeartCnt(club.getHeartCnt() - 1);
     }
 
-    public List<HeartSortResponseDto> getHeartedAll() {
+    public List<HeartSortResponseDto> getHeartedAll(int cursor) {
         Long memberId = SecurityUtils.getLoggedInUser().getId();
-        List<Long> clubList = heartRepository.findAllHearted(memberId);
+        List<Long> clubList = heartRepository.findAllHearted(memberId,cursor*7);
 
         List<HeartSortResponseDto> heartListDTO =  new ArrayList<>();
         for (Long club_id : clubList) {

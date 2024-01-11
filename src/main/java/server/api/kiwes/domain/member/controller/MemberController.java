@@ -6,10 +6,12 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import server.api.kiwes.domain.member.constant.MemberResponseType;
 import server.api.kiwes.domain.member.constant.SocialLoginType;
 import server.api.kiwes.domain.member.dto.*;
+import server.api.kiwes.domain.member.entity.Member;
 import server.api.kiwes.domain.member.service.MemberService;
 import server.api.kiwes.domain.member.service.auth.MemberAuthenticationService;
 import server.api.kiwes.global.aws.PreSignedUrlService;
@@ -201,7 +203,10 @@ public class MemberController {
     public ApiResponse<Object> quit( ){
         return ApiResponse.of(MemberResponseType.QUIT_SUCCESS,authenticationService.quit());
     }
-
+    @Scheduled(cron = "0 0 0 * * ?") // 매일 0시
+    public void removeDeletedOld(){
+        authenticationService.deleteOld();
+    }
     @ApiOperation(value = "내 아이디 가져오기", notes = "내 id 가져오기." )
             @GetMapping("/myid")
             public ApiResponse<myIdResponse> myId() throws ParseException {

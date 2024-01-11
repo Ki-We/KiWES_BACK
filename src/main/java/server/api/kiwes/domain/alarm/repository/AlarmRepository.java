@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AlarmRepository extends JpaRepository<Alarm, Long> {
-    @Query (
-            value = "select * from alarm where alarm.member_id = :memberId or ( type = 'NOTICE' or type = 'EVENT' ) LIMIT :cursor,7",
-            nativeQuery = true
-    )
-    List<Alarm> findByMemberIdAndType(@Param("memberId") Long memberId,@Param("cursor") int cursor);
+//    @Query (
+//            value = "select * from alarm where alarm.member_id = :memberId or ( type = 'NOTICE' or type = 'EVENT' ) LIMIT :cursor,7",
+//            nativeQuery = true
+//    )
+//    List<Alarm> findByMemberIdAndType(@Param("memberId") Long memberId,@Param("cursor") int cursor);
 
     @Query (
             value = "select * from alarm where alarm.member_id = :memberId or ( type = 'NOTICE' or type = 'EVENT' )",

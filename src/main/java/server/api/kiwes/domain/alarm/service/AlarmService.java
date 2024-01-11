@@ -22,9 +22,9 @@ public class AlarmService {
     private final AlarmRepository alarmRepository;
     private final MemberRepository memberRepository;
 
-    public List<AlarmResponseDto> getAlarmAll(Member member, int cursor) {
+    public List<AlarmResponseDto> getAlarmAll(Member member) {
         List<AlarmResponseDto> response = new ArrayList<>();
-        List<Alarm> alarms = alarmRepository.findByMemberIdAndType((member.getId()),cursor);
+        List<Alarm> alarms = alarmRepository.findByMemberIdAndType(member.getId());
 
         for(Alarm alarm : alarms){
             response.add(AlarmResponseDto.of(alarm));
@@ -35,7 +35,7 @@ public class AlarmService {
     }
 
     public void postAlarm(Member member, Club club, AlarmType type, String content) {
-        Alarm alarm = Alarm.builder().club(club).member(member).type(type).content(content).build();
+        Alarm alarm = Alarm.builder().club(club).member(member).type(type).content(content).imageUrl(member.getProfileImg()).build();
         alarmRepository.save(alarm);
     }
     public void deleteOldAlarm() {

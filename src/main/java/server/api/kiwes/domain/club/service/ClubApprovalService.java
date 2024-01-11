@@ -55,7 +55,7 @@ public class ClubApprovalService {
      */
     public List<ClubApprovalRequestSimpleDto> getRequestsResponse(Member member,int cursor) {
         List<ClubApprovalRequestSimpleInterface> requests;
-        requests = clubRepository.findApprovalRequestSimple(member, true,cursor);
+        requests = clubRepository.findApprovalRequestSimple(member, true,cursor*7);
         List<ClubApprovalRequestSimpleDto> requestDTOs =  new ArrayList<>();
         for (ClubApprovalRequestSimpleInterface c : requests) {
             requestDTOs.add(
@@ -66,7 +66,7 @@ public class ClubApprovalService {
 
     public List<ClubApprovalRequestSimpleDto> getAllMyClub(Member member,int cursor) {
         List<ClubApprovalRequestSimpleInterface> requests;
-        requests = clubRepository.findAllMyClub(member, cursor);
+        requests = clubRepository.findAllMyClub(member, cursor*7);
         List<ClubApprovalRequestSimpleDto> requestDTOs =  new ArrayList<>();
         for (ClubApprovalRequestSimpleInterface c : requests) {
             requestDTOs.add(
@@ -79,7 +79,7 @@ public class ClubApprovalService {
         return  clubMemberRepository.findFirstByMemberOrderByClubIdDesc(member).getClub().getId();
     }
     public List<ClubApprovalWaitingSimpleDto> getWaitingsResponse(Member member, int cursor) {
-        List<ClubApprovalWaitingSimpleInterface> waitings = clubRepository.findApprovalWaitingSimple(member, false, false,cursor);
+        List<ClubApprovalWaitingSimpleInterface> waitings = clubRepository.findApprovalWaitingSimple(member, false, false,cursor*7);
         List<ClubApprovalWaitingSimpleDto> waitingDTOs =  new ArrayList<>();
         for (ClubApprovalWaitingSimpleInterface c : waitings) {
             waitingDTOs.add(
