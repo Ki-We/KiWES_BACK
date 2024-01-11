@@ -36,6 +36,8 @@ public class Alarm extends BaseTimeEntity {
     @Builder.Default
     private AlarmType type = AlarmType.CLUB;
 
+    private String imageUrl;
+    private long noticeId;
     public void setType(AlarmType type){
         this.type = type;
     }

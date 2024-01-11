@@ -3,7 +3,7 @@ package server.api.kiwes.domain.member.entity;
 import io.swagger.annotations.Api;
 import lombok.*;
 import server.api.kiwes.domain.BaseTimeEntity;
-import server.api.kiwes.domain.alarm.constant.AlarmType;
+import server.api.kiwes.domain.club_member.entity.ClubMember;
 import server.api.kiwes.domain.heart.entity.Heart;
 import server.api.kiwes.domain.member.constant.Role;
 import server.api.kiwes.domain.member_category.entity.MemberCategory;
@@ -67,6 +67,9 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "respondent", cascade = CascadeType.ALL)
     private List<Qna> answers;
 
+    @OneToMany(mappedBy = "member",  fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<ClubMember> clubMembers;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<MemberCategory> categories;
 
@@ -93,7 +96,9 @@ public class Member extends BaseTimeEntity {
     public void setIntroduction(String introduction) {
         this.introduction = introduction;
     }
-
+    public void setIsDeleted() {
+        this.isDeleted = true;
+    }
 
 }
 

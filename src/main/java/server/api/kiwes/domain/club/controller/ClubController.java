@@ -135,8 +135,8 @@ public class ClubController {
 
         ClubMember host = clubMemberService.findByClubHost(club);
         String name = member.getNickname() == null ? "익명" : member.getNickname();
-        alarmService.postAlarm(host.getMember(), club, AlarmType.CLUB, name + AlarmContent.QUESTION.getContent());
-
+        alarmService.postAlarm(host.getMember(), club, AlarmType.REQUSET, name + AlarmContent.QUESTION.getContent());
+        // 호스트에게 신청
         clubService.applyClub(member, club);
         return ApiResponse.of(ClubResponseType.APPLICATION_SUCCESS);
     }
@@ -292,7 +292,7 @@ public class ClubController {
     @PostMapping("/category")
     public ApiResponse<Object> sortByCategories(@RequestBody ClubSortRequestDto clubSortRequestDto,@RequestParam int cursor) {
         return ApiResponse.of(ClubResponseType.CLUB_SORT_BY_CATEGORY_SUCCESS,
-                clubSortService.getClubByCategory(clubSortRequestDto.getSortedBy(),cursor));
+                clubSortService.getClubByCategory(clubSortRequestDto.getSortedBy(),cursor*7));
     }
 
     @ApiOperation(value = "언어별 모임", notes = "언어별 모임 조회" +
@@ -311,7 +311,7 @@ public class ClubController {
     @PostMapping("/language")
     public ApiResponse<Object> sortByLanguages(@RequestBody ClubSortRequestDto clubSortRequestDto,@RequestParam int cursor) {
         return ApiResponse.of(ClubResponseType.CLUB_SORT_BY_LANGUAGE_SUCCESS,
-                clubSortService.getClubByLanguages(clubSortRequestDto.getSortedBy(),cursor));
+                clubSortService.getClubByLanguages(clubSortRequestDto.getSortedBy(),cursor*7));
     }
     @ApiOperation(value = "모임 전체 조회", notes = "모임 전체 조회" +
             "\n예시 출력 데이터\n" +
@@ -330,7 +330,7 @@ public class ClubController {
     @GetMapping("/getClubs")
     public ApiResponse<Object> getClubs(@RequestParam int cursor) {
         return ApiResponse.of(ClubResponseType.CLUB_ALL_SUCCESS,
-                clubSortService.getClubsByCursor(cursor));
+                clubSortService.getClubsByCursor(cursor*7));
     }
     @ApiOperation(value = "인기 모임", notes = "인기 모임 조회 5개" +
             "\n예시 출력 데이터\n" +

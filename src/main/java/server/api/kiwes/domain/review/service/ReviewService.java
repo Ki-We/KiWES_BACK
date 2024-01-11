@@ -76,7 +76,7 @@ public class ReviewService {
         return ReviewEntireResponseDto.builder()
                 .isHost(clubMemberService.findByClubAndMember(club, member).getIsHost())
                 .reviews(club.getReviews().stream()
-                        .filter(review -> review.getId() >= cursor)
+                        .filter(review -> review.getId() >= cursor*7)
                         .limit(7)
                         .map(review -> ReviewDetailDto.of(review, member))
                         .collect(Collectors.toList()))

@@ -175,6 +175,7 @@ public class ReviewController {
 
         Review review = reviewService.findById(reviewId);
         reviewService.postReply(member, review, registerDto);
+        alarmService.postAlarm(review.getReviewer(), club, AlarmType.CLUB, AlarmContent.REVIEW_ANSWER.getContent());
 
         return ApiResponse.of(ReviewResponseType.REPLY_SUCCESS);
     }

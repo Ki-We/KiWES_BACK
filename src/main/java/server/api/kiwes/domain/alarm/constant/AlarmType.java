@@ -8,7 +8,10 @@ import lombok.RequiredArgsConstructor;
 public enum AlarmType {
     NOTICE("NOTICE"),
     EVENT("EVENT"),
+//    QNA("QNA"),
+//    REVIEW("REVIEW"),
     CLUB("CLUB"),
+    REQUSET("REQUSET"),
     CHAT("CHAT"),
     ACCESS("ACCESS"),
     ;

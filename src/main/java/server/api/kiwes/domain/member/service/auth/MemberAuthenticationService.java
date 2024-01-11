@@ -15,13 +15,19 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import server.api.kiwes.domain.alarm.entity.Alarm;
+import server.api.kiwes.domain.club_member.entity.ClubMember;
+import server.api.kiwes.domain.club_member.repository.ClubMemberRepository;
+import server.api.kiwes.domain.club_member.service.ClubMemberService;
 import server.api.kiwes.domain.language.entity.Language;
 import server.api.kiwes.domain.language.language.LanguageRepository;
 import server.api.kiwes.domain.language.type.LanguageType;
 import server.api.kiwes.domain.member.constant.SocialLoginType;
 import server.api.kiwes.domain.member.dto.*;
 import server.api.kiwes.domain.member.entity.Member;
+import server.api.kiwes.domain.member.entity.MemberDeleted;
 import server.api.kiwes.domain.member.entity.Nationality;
+import server.api.kiwes.domain.member.repository.MemberDeletedRepository;
 import server.api.kiwes.domain.member.repository.MemberRepository;
 import server.api.kiwes.domain.member.repository.RefreshTokenRepository;
 import server.api.kiwes.domain.member.service.login.MemberLoginService;
@@ -36,10 +42,12 @@ import server.api.kiwes.response.BizException;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static server.api.kiwes.domain.member.constant.MemberResponseType.*;
 import static server.api.kiwes.domain.member.constant.MemberServiceMessage.*;
@@ -54,8 +62,9 @@ public class MemberAuthenticationService {
     private final MemberRepository memberRepository;
     private final LanguageRepository languageRepository;
     private final MemberLanguageRepository memberLanguageRepository;
-
+    private final MemberDeletedRepository memberDeletedRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final ClubMemberRepository clubMemberRepository;
 
     private final List<MemberLoginService> loginServiceList;
 
@@ -68,6 +77,7 @@ public class MemberAuthenticationService {
     private String GOOGLE_TOKEN_URL;
 
     private MemberLoginService loginService;
+
     /**
      * 카카오 연결해서 엑세스 토큰 발급 받기
      */
@@ -223,15 +233,14 @@ public class MemberAuthenticationService {
     }
 
     public Member saveMember(String email,String profileImg, String gender) {
-        Member member = new Member(email,profileImg, Gender.valueOf(gender.toUpperCase()));
         // 가입 여부 확인
-        if (!memberRepository.existsByEmail(member.getEmail())) {
-
+        if (!memberRepository.existsByEmail(email)&&!memberDeletedRepository.existsByEmail(email)) {
+            Member member = new Member(email,profileImg, Gender.valueOf(gender.toUpperCase()));
             member.setMember(member.getEmail().split("@")[0],"NOT SETTING","String", "FOREIGN");
             memberRepository.save(member);
         }
 
-        return memberRepository.findByEmail(email).orElseThrow(()->new IllegalArgumentException("해당 유저가 없습니다."));
+        return memberRepository.findByEmail(email).orElseThrow(()->new IllegalArgumentException("해당 유저는 미가입 혹은 탈퇴 유저입니다."));
 
     }
 
@@ -309,9 +318,26 @@ public class MemberAuthenticationService {
 
     public String quit() {
         Member user = validateService.validateEmail(SecurityUtils.getLoggedInUser().getEmail());
-        memberRepository.delete(user);
+        List<ClubMember> clubMember = clubMemberRepository.findByMemberHost(user);
+        Member hostdummy = memberRepository.findById(0L).get();
+        System.out.println(hostdummy.getId());
+        for(ClubMember cm : clubMember){
+            cm.setMember(hostdummy);
+        }
+        user.setIsDeleted(); //memberRepository.delete(user);
+        memberDeletedRepository.save(MemberDeleted.builder().email(user.getEmail()).build());
+
         return "bye";
     }
+    public void deleteOld() {
+        List<MemberDeleted> allMemberDeleted = memberDeletedRepository.findAll();
+        for ( MemberDeleted MemberDeleted : allMemberDeleted ){
+            if ( MemberDeleted.getCreatedDate().plusDays(30).isBefore(LocalDateTime.now())){
+                memberDeletedRepository.delete(MemberDeleted);
+            }
+        }
+    }
+
     private MemberLoginService findSocialOauthByType(SocialLoginType socialLoginType) {
         return loginServiceList.stream()
                 .filter(x -> x.type() == socialLoginType)
