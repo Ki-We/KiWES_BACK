@@ -29,19 +29,21 @@ public class ClubArticleReviewDto {
         Member reviewer = review.getReviewer();
         Member respondent = review.getRespondent();
 
-        return ClubArticleReviewDto.builder()
+        ClubArticleReviewDtoBuilder builder = ClubArticleReviewDto.builder()
                 .reviewId(review.getId())
                 .reviewerImageUrl(reviewer.getProfileImg())
                 .reviewerNickname(reviewer.getNickname())
                 .reviewContent(review.getReviewContent())
                 .reviewDate(review.getModifiedDate().format(DateTimeFormatter.ofPattern("yy.MM.dd HH:mm")))
+                .isModified(review.getIsModified());
 
-                .respondentImageUrl(respondent.getProfileImg())
-                .respondentNickname(respondent.getNickname())
-                .replyContent(review.getReplyContent())
+        if (respondent != null) {
+            builder = builder.respondentImageUrl(respondent.getProfileImg())
+                    .respondentNickname(respondent.getNickname());
+        }
+
+        return builder.replyContent(review.getReplyContent())
                 .replyDate(review.getReplyDate())
-
-                .isModified(review.getIsModified())
                 .build();
     }
 

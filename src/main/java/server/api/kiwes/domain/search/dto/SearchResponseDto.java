@@ -35,7 +35,7 @@ public class SearchResponseDto {
         HeartStatus isHeart = HeartStatus.NO;
         for(Heart heart : club.getHearts()){
             if(heart.getMember().equals(member)){
-                isHeart = HeartStatus.YES;
+                isHeart = heart.getStatus();
                 break;
             }
         }
