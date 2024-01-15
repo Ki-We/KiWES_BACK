@@ -31,6 +31,4 @@ public interface ClubMemberRepository extends JpaRepository<ClubMember, Long> {
             "where cm.member = :member and cm.isHost = true")
     List<ClubMember> findByMemberHost(@Param("member") Member member);
 
-    ClubMember findFirstByMemberOrderByClubIdDesc(Member member);
-
 }

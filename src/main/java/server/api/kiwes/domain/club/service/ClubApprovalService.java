@@ -72,11 +72,8 @@ public class ClubApprovalService {
             requestDTOs.add(
                     new ClubApprovalRequestSimpleDto(c.getClub_id(),c.getTitle(),c.getCurrent_people()));
         }
-        clubMemberRepository.findFirstByMemberOrderByClubIdDesc(member);
+//        clubMemberRepository.findFirstByMemberOrderByClubIdDesc(member);
         return requestDTOs;
-    }
-    public Long findFirstByMemberOrderByClubIdDesc(Member member) {
-        return  clubMemberRepository.findFirstByMemberOrderByClubIdDesc(member).getClub().getId();
     }
     public List<ClubApprovalWaitingSimpleDto> getWaitingsResponse(Member member, int cursor) {
         List<ClubApprovalWaitingSimpleInterface> waitings = clubRepository.findApprovalWaitingSimple(member, false, false,cursor*7);

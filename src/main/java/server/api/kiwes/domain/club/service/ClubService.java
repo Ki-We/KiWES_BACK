@@ -265,6 +265,6 @@ public class ClubService {
     }
 
     public void setUuid(Club club) {
-        club.setUuid(club.getId() + String.valueOf(club.getTitle().charAt(0)));
+        club.setUuid("club-"+club.getId()+club.getTitle().charAt(0));
     }
 }

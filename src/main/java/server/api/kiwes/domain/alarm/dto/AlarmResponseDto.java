@@ -21,11 +21,13 @@ public class AlarmResponseDto {
     @Setter
     private AlarmType type;
     private String content;
-    private Long club_id;
+    private Long clubId;
     private String createAfterHour;
     private String createAfterDay;
-    private Long member_id;
+    private Long memberId;
     private String imageUrl;
+    private Long noticeId;
+
     public static AlarmResponseDto of(Alarm alarm){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
@@ -52,10 +54,11 @@ public class AlarmResponseDto {
         return AlarmResponseDto.builder()
                 .content(alarm.getContent())
                 .type(alarm.getType())
-                .club_id(alarm.getClub().getId())
+                .clubId(alarm.getClub().getId())
                 .createAfterHour(hours)
                 .createAfterDay(createAfterDay)
-                .member_id(alarm.getMember().getId())
+                .memberId(alarm.getMember().getId())
+                .noticeId(alarm.getNoticeId())
                 .imageUrl(alarm.getImageUrl())
                 .build();
     }

@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Builder
 public class ClubPopularEachResponseDto {
+    private Long clubId;
     @Setter
     private String hostProfileImg;
     private String title;
@@ -25,6 +26,7 @@ public class ClubPopularEachResponseDto {
 
     public static ClubPopularEachResponseDto of(Club club){
         return ClubPopularEachResponseDto.builder()
+                .clubId(club.getId())
                 .hostProfileImg(null)
                 .title(club.getTitle())
                 .thumbnailImage(club.getThumbnailUrl())

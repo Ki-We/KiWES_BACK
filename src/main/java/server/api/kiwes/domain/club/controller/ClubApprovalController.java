@@ -106,11 +106,6 @@ public class ClubApprovalController {
 
         return ApiResponse.of(ClubResponseType.Club_LIST_GET_SUCCEED, response);
     }
-    @GetMapping("/my-club/get-last")
-    public ApiResponse<Long> findFirstByMemberOrderByClubIdDesc(){
-        Member member = memberService.getLoggedInMember();
-        return ApiResponse.of(ClubResponseType.Club_LIST_GET_SUCCEED, clubApprovalService.findFirstByMemberOrderByClubIdDesc(member));
-    }
 
     @ApiOperation(value = "대기 중인 모임 모두 보기", notes = "" +
             "예시 출력 데이터\n" +
