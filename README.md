@@ -36,6 +36,7 @@
 [성유진(프론트)](https://github.com/uuujini),
 [김민수(프론트)](https://github.com/MinsuKim21)
 <br/>
-### Frontend
+<br/>
+## Front Git
 https://github.com/Ki-We/kiwes_front
  
