@@ -35,7 +35,7 @@
 [김혜린(홍보)](ringaring_a@naver.com)
 <br/>
 ### 개발
-[김규리(개발 총괄)](https://github.com/wodnd0131),
+[김규리(개발 총괄)](https://github.com/kyuriiii),
 [황재웅(풀스택&서버)](https://github.com/wodnd0131),
 [성유진(프론트)](https://github.com/uuujini),
 [김민수(프론트)](https://github.com/MinsuKim21)
