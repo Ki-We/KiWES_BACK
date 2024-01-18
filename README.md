@@ -41,6 +41,6 @@
 [김민수(프론트)](https://github.com/MinsuKim21)
 <br/>
 <br/>
-## Front Git
+## Frontend Git
 https://github.com/Ki-We/kiwes_front
  
