@@ -14,6 +14,8 @@ import server.api.kiwes.domain.qna.dto.QnaRequestDto;
 import server.api.kiwes.domain.qna.dto.QnaResponseDto;
 import server.api.kiwes.domain.qna.entity.Qna;
 import server.api.kiwes.domain.qna.repository.QnaRepository;
+import server.api.kiwes.domain.review.dto.ReviewRegisterDto;
+import server.api.kiwes.domain.review.entity.Review;
 import server.api.kiwes.response.BizException;
 
 import java.time.LocalDateTime;
@@ -76,6 +78,9 @@ public class QnaService {
         qna.setIsAnswered(QnaAnsweredStatus.YES);
 
     }
+    public void modifyQna(Qna review, ReviewRegisterDto registerDto) {
+        review.modifyQuestion(registerDto.getContent(), getDateTime());
+    }
 
     /**
      * 질문 작성자와 API 요청자가 일치할 경우,
@@ -110,6 +115,7 @@ public class QnaService {
 
         return QnaResponseDto.builder()
                 .isHost(clubMemberService.findByClubAndMember(club, member).getIsHost())
+                .userId(member.getId())
                 .qnas(club.getQnas().stream()
                         .filter(qna -> qna.getId() >= cursor*7)
                         .limit(7)

@@ -38,6 +38,8 @@ public class Qna extends BaseTimeEntity {
     private String answerContent;
     private String qDate;                 // 질문 등록 시각
     private String aDate;                 // 답변 등록 시각
+    @Builder.Default
+    private Boolean isModified = false;
 
     @Builder.Default
     @Enumerated(EnumType.STRING)
@@ -46,5 +48,14 @@ public class Qna extends BaseTimeEntity {
     @Builder.Default
     @Enumerated(EnumType.STRING)
     private QnaDeletedStatus isDeleted = QnaDeletedStatus.NO;   // 질문 삭제 여부
-
+    public void modifyQuestion(String questionContent, String now){
+        this.questionContent = questionContent;
+        this.isModified = true;
+        this.qDate = now;
+    }
+    public void modifyAnswer(String answerContent, String now){
+        this.answerContent = answerContent;
+        this.isModified = true;
+        this.aDate = now;
+    }
 }

@@ -11,5 +11,6 @@ import java.util.List;
 @Builder
 public class ReviewEntireResponseDto {
     Boolean isHost;
+    Long userId;
     List<ReviewDetailDto> reviews;
 }

@@ -19,8 +19,13 @@ import server.api.kiwes.domain.qna.dto.QnaRequestDto;
 import server.api.kiwes.domain.qna.dto.QnaResponseDto;
 import server.api.kiwes.domain.qna.entity.Qna;
 import server.api.kiwes.domain.qna.service.QnaService;
+import server.api.kiwes.domain.review.constant.ReviewResponseType;
+import server.api.kiwes.domain.review.dto.ReviewRegisterDto;
+import server.api.kiwes.domain.review.entity.Review;
 import server.api.kiwes.response.ApiResponse;
 import server.api.kiwes.response.BizException;
+
+import java.util.Objects;
 
 @Api(tags = "Club - Q&A")
 @RestController
@@ -138,7 +143,30 @@ public class QnaController {
         return ApiResponse.of(QnaResponseType.A_DELETE_SUCCESS);
 
     }
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 21202, message = "후기 수정 완료"),
+            @io.swagger.annotations.ApiResponse(code = 41201, message = "해당 모임에 승인된 멤버가 아님 (400)"),
+            @io.swagger.annotations.ApiResponse(code = 41203, message = "ID와 일치하는 후기 없음 (404)"),
+            @io.swagger.annotations.ApiResponse(code = 41204, message = "후기의 작성자가 아님 (401)"),
+            @io.swagger.annotations.ApiResponse(code = 41205, message = "해당 리뷰는 이 모임의 것이 아님 (400)"),
+    })
+    @PutMapping("/{clubId}/{qnaId}")
+    public ApiResponse<Object> modifyReview(@RequestBody ReviewRegisterDto registerDto, @PathVariable Long clubId, @PathVariable Long qnaId){
+        Member member = memberService.getLoggedInMember();
+        Club club = clubService.findById(clubId);
+        Qna qna = qnaService.findById(qnaId);
+        if(!club.getQnas().contains(qna)){
+            throw new BizException(ReviewResponseType.CHECK_PATH);
+        }
 
+        if(!Objects.equals(qna.getQuestioner().getId(), member.getId())){
+            throw new BizException(ReviewResponseType.NOT_AUTHOR);
+        }
+
+        qnaService.modifyQna(qna, registerDto);
+
+        return ApiResponse.of(ReviewResponseType.MODIFY_SUCCESS);
+    }
     @ApiOperation(value = "모임의 qna 전체 보기", notes = "" +
             "\n예시 출력 데이터" +
             "{\n" +

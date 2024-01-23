@@ -42,19 +42,6 @@ public class Review extends BaseTimeEntity {
 
     @Builder.Default
     private Boolean isModified = false;
-    public void setReviewContent(String content){
-        this.reviewContent = content;
-    }
-    public void setReplyContent(String content){
-        this.replyContent = content;
-    }
-
-    public void setIsModifiedTrue(){
-        this.isModified = true;
-    }
-    public void setReviewDate(String date){
-        this.reviewDate = date;
-    }
 
     public void modifyReview(String reviewContent, String now){
         this.reviewContent = reviewContent;
@@ -66,5 +53,9 @@ public class Review extends BaseTimeEntity {
         this.respondent = member;
         this.replyContent = content;
         this.replyDate = replyDate;
+    }
+
+    public void deleteReply(){
+        this.reviewer = null;
     }
 }

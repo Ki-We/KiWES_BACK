@@ -11,5 +11,6 @@ import java.util.List;
 @Builder
 public class QnaResponseDto {
     Boolean isHost; // 클라이언트에서 '답글 달기'에 쓰라고 주는 값\
+    Long userId;
     List<QnaDetailDto> qnas;
 }

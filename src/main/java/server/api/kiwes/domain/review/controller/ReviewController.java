@@ -123,6 +123,12 @@ public class ReviewController {
         reviewService.deleteReview(review);
         return ApiResponse.of(ReviewResponseType.DELETE_SUCCESS);
     }
+    @DeleteMapping("/{reviewId}")
+    public ApiResponse<Object> deleteReply(@PathVariable Long reviewId){
+        Review review = reviewService.findById(reviewId);
+        reviewService.deleteReply(review);
+        return ApiResponse.of(ReviewResponseType.DELETE_SUCCESS);
+    }
     
     @ApiOperation(value = "후기 모두 보기", notes = "" +
             "\n예시 출력 데이터" +
