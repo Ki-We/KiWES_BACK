@@ -45,7 +45,7 @@ public class SearchResponseDto {
                 .thumbnailImage(club.getThumbnailUrl())
                 .title(club.getTitle())
                 .date(club.getDueTo())
-                .locationKeyword(club.getLocationsKeyword())
+                .locationKeyword(club.getLocationKeyword())
                 .languages(club.getLanguages()
                         .stream()
                         .map(clubLanguage -> clubLanguage.getLanguage().getName().getName())

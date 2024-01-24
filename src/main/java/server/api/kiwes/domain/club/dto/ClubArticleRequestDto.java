@@ -17,8 +17,10 @@ public class ClubArticleRequestDto {
     private String gender;           // 모집 성별 (MALE, FEMALE, ALL)
     private String title;            // 제목
     private String content;          // 모임 소개
-    private String locationsKeyword; // 위치 키워드
+    private String locationKeyword; // 위치 키워드
     private String location;         // 위도, 경도
     private List<String> languages;  // 언어
     private String category; // 카테고리
+    private String latitude; //위도
+    private String longitude; //경도
 }

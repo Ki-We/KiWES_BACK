@@ -75,8 +75,10 @@ public class ClubService {
                 .gender(gender)
                 .title(requestDto.getTitle())
                 .content(requestDto.getContent())
-                .locationsKeyword(requestDto.getLocationsKeyword())
+                .locationKeyword(requestDto.getLocationKeyword())
                 .location(requestDto.getLocation())
+                .latitude(requestDto.getLatitude())
+                .longitude(requestDto.getLongitude())
                 .uuid(member.getId()+requestDto.getTitle())
                 .thumbnailUrl("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/clubThumbnail/club_2.jpg")
                 .build();

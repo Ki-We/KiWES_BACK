@@ -19,12 +19,12 @@ public class ClubApprovalWaitingSimpleDto {
     List<String> languages;
     HeartStatus isHeart;
 
-    public ClubApprovalWaitingSimpleDto(Long clubId, String title, String thumbnailImage, String date, String locations_keyword, HeartStatus isHeart) {
+    public ClubApprovalWaitingSimpleDto(Long clubId, String title, String thumbnailImage, String date, String Location_keyword, HeartStatus isHeart) {
         this.clubId = clubId;
         this.title = title;
         this.thumbnailImage = thumbnailImage;
         this.date = date;
-        this.locationKeyword = locations_keyword;
+        this.locationKeyword = Location_keyword;
         this.isHeart = isHeart;
     }
 }

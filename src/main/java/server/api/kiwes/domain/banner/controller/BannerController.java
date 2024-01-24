@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import server.api.kiwes.domain.banner.constant.BannerResponseType;
@@ -32,6 +33,23 @@ public class BannerController {
     public ApiResponse<Object> getBanners() {
 
         return ApiResponse.of(BannerResponseType.BANNER_LOAD_SUCCESS, bannerService.getBanners());
+
+    }
+
+    @ApiOperation(value = "배너 하나 찾아오기", notes =
+            "예시 출력 데이터\n" +
+                    "\"status\": 20401,\n" +
+                    "\"message\": \"성공\",\n" +
+                    "\"data\": [\n" +
+                    " {type\": \"String\",\n" +
+                    "\"imageUrl\": \"String\",\n" +
+                    "\"Url\": \"String\",\n" +
+                    " \"id\": 0 }"
+    )
+    @GetMapping("/{bannerId}")
+    public ApiResponse<Object> getBanner(@PathVariable Long bannerId) {
+
+        return ApiResponse.of(BannerResponseType.BANNER_LOAD_SUCCESS, bannerService.getBanner(bannerId));
 
     }
 }

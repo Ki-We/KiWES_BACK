@@ -19,7 +19,9 @@ public class ClubArticleBaseInfoDto {
     String dueTo;
     Integer cost;
     String gender;
-    String locationsKeyword;
+    String locationKeyword;
     String content;
     String location;
+    String latitude; //위도
+    String longitude; //경도
 }

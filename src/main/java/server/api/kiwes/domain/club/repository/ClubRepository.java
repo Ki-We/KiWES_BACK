@@ -33,6 +33,15 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
     List<ClubApprovalRequestSimpleInterface> findAllMyClub(@Param("member") Member member,
                                                                        @Param("cursor") int cursor);
     @Query(nativeQuery = true,
+            value = "select c.club_id, c.title, c.thumbnail_url, c.date, c.Location_keyword, h.status " +
+                    "from club c " +
+                    "inner join club_member cm " +
+                    "on c.club_id = cm.club_id and cm.member_id = :member " +
+                    "left join heart h on h.member_id = :member and h.club_id = c.club_id "+
+                    "order by c.club_id asc limit :cursor,7")
+    List<ClubApprovalWaitingSimpleInterface> findAllMyClubDetail(@Param("member") Member member,
+                                                           @Param("cursor") int cursor);
+    @Query(nativeQuery = true,
             value = "select c.club_id, c.title, c.current_people " +
                     "from club c " +
                     "inner join club_member cm " +
@@ -41,14 +50,14 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
     List<ClubApprovalRequestSimpleInterface> findApprovalRequestSimpleLimit2(@Param("member") Member member,
                                                                              @Param("isHost") Boolean isHost);
     @Query(nativeQuery = true,
-            value = "select c.club_id, c.title, c.thumbnail_url, c.date, c.locations_keyword, h.status " +
+            value = "select c.club_id, c.title, c.thumbnail_url, c.date, c.Location_keyword, h.status " +
                     "from club c inner join club_member cm on c.club_id = cm.club_id and cm.member_id = :member and cm.is_host = :isHost and cm.is_approved = :isApproved " +
                     "left join heart h on h.member_id = :member and h.club_id = c.club_id order by c.club_id asc limit 2")
     List<ClubApprovalWaitingSimpleInterface> findApprovalWaitingSimplelimit2(@Param("member") Member member,
                                                                              @Param("isHost") Boolean isHost,
                                                                              @Param("isApproved") Boolean isApproved);
     @Query(nativeQuery = true,
-            value = "select c.club_id, c.title, c.thumbnail_url, c.date, c.locations_keyword, h.status " +
+            value = "select c.club_id, c.title, c.thumbnail_url, c.date, c.Location_keyword, h.status " +
                     "from club c inner join club_member cm on c.club_id = cm.club_id and cm.member_id = :member and cm.is_host = :isHost and cm.is_approved = :isApproved " +
                     "left join heart h on h.member_id = :member and h.club_id = c.club_id order by c.club_id asc limit :cursor,7")
     List<ClubApprovalWaitingSimpleInterface> findApprovalWaitingSimple(@Param("member") Member member,

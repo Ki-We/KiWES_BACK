@@ -51,10 +51,11 @@ public class ClubSortService {
 
     public List<ClubSortResponseDto> getClubsByCursor(int cursor){
         List<Club> clubByPage = clubRepository.findAllbyCursor(cursor);
-        List<ClubSortResponseDto> clubsbyPageDTO =  new ArrayList<>();
+        List<ClubSortResponseDto> clubsbyPageDTO = new ArrayList<>();
         for (Club club : clubByPage) {
             clubsbyPageDTO.add(
-                    new ClubSortResponseDto(club.getId(),club.getTitle(),club.getThumbnailUrl(),club.getDate(),club.getLocation()));
+                    new ClubSortResponseDto(club.getId(),club.getTitle(),
+                            club.getThumbnailUrl(),club.getDate(),club.getLocation(),club.getLatitude(),club.getLongitude()));
         }
         return clubsbyPageDTO;
     }
@@ -92,7 +93,8 @@ public class ClubSortService {
         List<ClubSortResponseDto> clubsbyPageDTOs =  new ArrayList<>();
         for (ClubSortInterface c : allByTypeIds) {
             clubsbyPageDTOs.add(
-                    new ClubSortResponseDto(c.getClub_id(),c.getTitle(),c.getThumbnail_url(),c.getDate(),c.getLocation()));
+                    new ClubSortResponseDto(c.getClub_id(),c.getTitle(),c.getThumbnail_url(),c.getDate(),
+                            c.getLocation(),c.getLatitude(),c.getLongitude()));
         }
         for (ClubSortResponseDto clubsbyPageDTO : clubsbyPageDTOs) {
             Club club = findById(clubsbyPageDTO.getClubId());

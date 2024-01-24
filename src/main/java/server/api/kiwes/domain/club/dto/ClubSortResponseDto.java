@@ -21,13 +21,17 @@ public class ClubSortResponseDto {
     String location;
     List<String> languages;
     HeartStatus isHeart;
+    String latitude; //위도
+    String longitude; //경도
 
-    public ClubSortResponseDto(Long club_id, String title, String thumbnailImage, String date, String location) {
+    public ClubSortResponseDto(Long club_id, String title, String thumbnailImage, String date, String location, String latitude, String longitude) {
         this.clubId = club_id;
         this.title = title;
         this.thumbnailImage = thumbnailImage;
         this.date = date;
         this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
 
     }
 

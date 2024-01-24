@@ -64,6 +64,9 @@ public class ReviewService {
     public void deleteReview(Review review) {
         reviewRepository.deleteById(review.getId());
     }
+    public void deleteReply(Review review) {
+        review.deleteReply();
+    }
 
     /**
      * 후기 모두 보기
@@ -75,6 +78,7 @@ public class ReviewService {
                 .collect(Collectors.toList());
         return ReviewEntireResponseDto.builder()
                 .isHost(clubMemberService.findByClubAndMember(club, member).getIsHost())
+                .userId(member.getId())
                 .reviews(club.getReviews().stream()
                         .filter(review -> review.getId() >= cursor*7)
                         .limit(7)

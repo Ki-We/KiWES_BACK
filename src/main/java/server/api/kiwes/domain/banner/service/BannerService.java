@@ -18,8 +18,6 @@ public class BannerService {
     private final BannerRepository bannerRepository;
 
     public List<BannerResponse> getBanners() {
-
-//        List<Banner> banners = new ArrayList<>();
         List<Banner> banners = bannerRepository.findAllByOrderByPriorityAsc();
 
         List<BannerResponse> bannerResponses = new ArrayList<>();
@@ -33,5 +31,14 @@ public class BannerService {
                     .build());
         }
         return bannerResponses;
+    }
+    public BannerResponse getBanner(Long bannerId) {
+        Banner banner = bannerRepository.findById(bannerId).get();
+        return BannerResponse.builder()
+                .Url(banner.getUrl())
+                .type(banner.getType())
+                .imageUrl(banner.getImageUrl())
+                .id(bannerId)
+                .build();
     }
 }
