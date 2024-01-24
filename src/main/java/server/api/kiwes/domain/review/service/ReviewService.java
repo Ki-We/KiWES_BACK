@@ -3,19 +3,21 @@ package server.api.kiwes.domain.review.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import server.api.kiwes.domain.club.dto.ClubApprovalWaitingSimpleDto;
+import server.api.kiwes.domain.club.dto.ClubApprovalWaitingSimpleInterface;
 import server.api.kiwes.domain.club.entity.Club;
 import server.api.kiwes.domain.club_member.service.ClubMemberService;
 import server.api.kiwes.domain.member.entity.Member;
 import server.api.kiwes.domain.review.constant.ReviewResponseType;
-import server.api.kiwes.domain.review.dto.ReviewDetailDto;
-import server.api.kiwes.domain.review.dto.ReviewEntireResponseDto;
-import server.api.kiwes.domain.review.dto.ReviewRegisterDto;
+import server.api.kiwes.domain.review.dto.*;
 import server.api.kiwes.domain.review.entity.Review;
 import server.api.kiwes.domain.review.repository.ReviewRepository;
 import server.api.kiwes.response.BizException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -99,5 +101,19 @@ public class ReviewService {
      */
     private String getDateTime(){
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy.MM.dd HH:mm"));
+    }
+
+    public List<ReviewMineDto>  findMyReview(Member member) {
+        List<ReviewMineSimpleInterface> myReviews = reviewRepository.findAllMyReview(member);
+        List<ReviewMineDto> reviewMineDtos = new ArrayList<>();
+        for(ReviewMineSimpleInterface r : myReviews){
+            reviewMineDtos.add(new ReviewMineDto(r.getReview_id(),r.getReview_content(),r.getReview_date().split(" ")[0],r.getClub_id(),r.getTitle(),true));
+        }
+        List<ReviewMineSimpleInterface> myClubReview = reviewRepository.findAllHostReview(member);
+        for(ReviewMineSimpleInterface r : myClubReview){
+            reviewMineDtos.add(new ReviewMineDto(r.getReview_id(),r.getReview_content(),r.getReview_date().split(" ")[0],r.getClub_id(),r.getTitle(),false));
+        }
+        reviewMineDtos.sort(Comparator.comparing(ReviewMineDto::getReviewId).reversed());
+        return reviewMineDtos;
     }
 }

@@ -16,12 +16,14 @@ import server.api.kiwes.domain.member.entity.Member;
 import server.api.kiwes.domain.member.service.MemberService;
 import server.api.kiwes.domain.review.constant.ReviewResponseType;
 import server.api.kiwes.domain.review.dto.ReviewEntireResponseDto;
+import server.api.kiwes.domain.review.dto.ReviewMineDto;
 import server.api.kiwes.domain.review.dto.ReviewRegisterDto;
 import server.api.kiwes.domain.review.entity.Review;
 import server.api.kiwes.domain.review.service.ReviewService;
 import server.api.kiwes.response.ApiResponse;
 import server.api.kiwes.response.BizException;
 
+import java.util.List;
 import java.util.Objects;
 
 @Api(tags = "Club - Review")
@@ -184,5 +186,11 @@ public class ReviewController {
         alarmService.postAlarm(review.getReviewer(), club, AlarmType.CLUB, AlarmContent.REVIEW_ANSWER.getContent());
 
         return ApiResponse.of(ReviewResponseType.REPLY_SUCCESS);
+    }
+    @GetMapping("/")
+    public ApiResponse<Object> getMyReviews(){
+        Member member = memberService.getLoggedInMember();
+        List<ReviewMineDto> reviewMine = reviewService.findMyReview(member);
+        return ApiResponse.of(ReviewResponseType.DELETE_SUCCESS,reviewMine);
     }
 }
