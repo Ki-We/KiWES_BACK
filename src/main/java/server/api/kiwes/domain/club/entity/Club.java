@@ -46,8 +46,11 @@ public class Club extends BaseTimeEntity {
 
     @Column(length = 1000)
     private String content;          // 모임 소개
-    private String locationsKeyword; // 위치 키워드
-    private String location;         // 위도, 경도
+    private String locationKeyword; // 위치 키워드
+    private String location;         // 위치명
+    private String latitude; //위도
+    private String longitude; //경도
+
 
     @Setter
     @Builder.Default

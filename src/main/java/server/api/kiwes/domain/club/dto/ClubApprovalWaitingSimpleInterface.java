@@ -9,7 +9,7 @@ public interface ClubApprovalWaitingSimpleInterface {
     String getTitle();
     String getThumbnail_url();
     String getDate();
-    String getLocations_keyword();
+    String getLocation_keyword();
     List<String> getLanguages();
     HeartStatus getStatus();
 }

@@ -44,7 +44,7 @@ public class ClubController {
         return Pattern.matches(DATE_REGEX, dateStr);
     }
 
-    @ApiOperation(value = "모임 글 작성", notes = "날짜 요청 형식 : YYYY-MM-DD\n location : 위도, 경도\nlocationsKeyword : 짧은 위치 키워드\nGender: MALE, FEMALE, ALL" +
+    @ApiOperation(value = "모임 글 작성", notes = "날짜 요청 형식 : YYYY-MM-DD\n location : 위도, 경도\nlocationKeyword : 짧은 위치 키워드\nGender: MALE, FEMALE, ALL" +
             "\n예시 출력 데이터\n" +
             "\"status\": 20101,\n" +
             "\"message\": \"성공\",\n" +

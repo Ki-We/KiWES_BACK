@@ -79,7 +79,7 @@ public class HeartService {
                     .clubId(club.getId())
                     .title(club.getTitle())
                     .thumbnailImage(club.getThumbnailUrl())
-                    .locationKeyword(club.getLocationsKeyword())
+                    .locationKeyword(club.getLocationKeyword())
                     .date(club.getDueTo())
                     .build();
             heartSortResponseDto.setLanguages(club.getLanguages());

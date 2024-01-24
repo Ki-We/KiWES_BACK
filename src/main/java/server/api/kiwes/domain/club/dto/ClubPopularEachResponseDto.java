@@ -19,8 +19,10 @@ public class ClubPopularEachResponseDto {
     private String thumbnailImage;
     private String date;
     private String location;
-    private String locationsKeyword;
+    private String locationKeyword;
     private List<String> languages;
+    private String latitude; //위도
+    private String longitude; //경도
     @Setter
     private HeartStatus isHeart;
 
@@ -32,7 +34,9 @@ public class ClubPopularEachResponseDto {
                 .thumbnailImage(club.getThumbnailUrl())
                 .date(club.getDueTo())
                 .location(club.getLocation())
-                .locationsKeyword(club.getLocationsKeyword())
+                .latitude(club.getLatitude())
+                .longitude(club.getLongitude())
+                .locationKeyword(club.getLocationKeyword())
                 .languages(club.getLanguages().stream().map(clubLanguage -> clubLanguage.getLanguage().getName().getName()).collect(Collectors.toList()))
                 .isHeart(null)
                 .build();

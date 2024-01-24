@@ -6,4 +6,8 @@ public interface ClubSortInterface {
     String getThumbnail_url();
     String getDate();
     String getLocation();
+
+    String getLatitude();
+
+    String getLongitude();
 }

@@ -22,12 +22,12 @@ public class HeartSortResponseDto {
     @Builder.Default()
     HeartStatus isHeart = HeartStatus.YES;
 
-    public HeartSortResponseDto(Long club_id, String title, String thumbnailImage, String date, String LocationsKeyword) {
+    public HeartSortResponseDto(Long club_id, String title, String thumbnailImage, String date, String locationKeyword) {
         this.clubId = club_id;
         this.title = title;
         this.thumbnailImage = thumbnailImage;
         this.date = date;
-        this.locationKeyword = LocationsKeyword;
+        this.locationKeyword = locationKeyword;
 
     }
 

@@ -44,7 +44,7 @@ public class ClubApprovalService {
         List<ClubApprovalWaitingSimpleDto> waitingDTOs =  new ArrayList<>();
         for (ClubApprovalWaitingSimpleInterface c : waitings) {
             waitingDTOs.add(
-                    new ClubApprovalWaitingSimpleDto(c.getClub_id(),c.getTitle(),c.getThumbnail_url(),c.getDate(),c.getLocations_keyword(),c.getStatus()));
+                    new ClubApprovalWaitingSimpleDto(c.getClub_id(),c.getTitle(),c.getThumbnail_url(),c.getDate(),c.getLocation_keyword(),c.getStatus()));
         }
         getWaitingSimpleDto(waitingDTOs);
         return waitingDTOs;
@@ -72,7 +72,18 @@ public class ClubApprovalService {
             requestDTOs.add(
                     new ClubApprovalRequestSimpleDto(c.getClub_id(),c.getTitle(),c.getCurrent_people()));
         }
-//        clubMemberRepository.findFirstByMemberOrderByClubIdDesc(member);
+        return requestDTOs;
+    }
+    public List<ClubApprovalWaitingSimpleDto> getAllMyClubDetail(Member member,int cursor) {
+        List<ClubApprovalWaitingSimpleInterface> requests = clubRepository.findAllMyClubDetail(member, cursor*7);
+        List<ClubApprovalWaitingSimpleDto> requestDTOs =  new ArrayList<>();
+        for (ClubApprovalWaitingSimpleInterface c : requests) {
+            requestDTOs.add(
+                    new ClubApprovalWaitingSimpleDto(c.getClub_id(),c.getTitle(),c.getThumbnail_url(),c.getDate(),c.getLocation_keyword(),c.getStatus()));
+        }
+
+        getWaitingSimpleDto(requestDTOs);
+
         return requestDTOs;
     }
     public List<ClubApprovalWaitingSimpleDto> getWaitingsResponse(Member member, int cursor) {
@@ -80,7 +91,7 @@ public class ClubApprovalService {
         List<ClubApprovalWaitingSimpleDto> waitingDTOs =  new ArrayList<>();
         for (ClubApprovalWaitingSimpleInterface c : waitings) {
             waitingDTOs.add(
-                    new ClubApprovalWaitingSimpleDto(c.getClub_id(),c.getTitle(),c.getThumbnail_url(),c.getDate(),c.getLocations_keyword(),c.getStatus()));
+                    new ClubApprovalWaitingSimpleDto(c.getClub_id(),c.getTitle(),c.getThumbnail_url(),c.getDate(),c.getLocation_keyword(),c.getStatus()));
         }
         getWaitingSimpleDto(waitingDTOs);
 

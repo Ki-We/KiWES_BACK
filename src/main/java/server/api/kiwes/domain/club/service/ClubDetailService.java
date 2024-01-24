@@ -64,9 +64,11 @@ public class ClubDetailService {
                 .dueTo(formateDate(club.getDueTo()))
                 .cost(club.getCost())
                 .gender(club.getGender().getName())
-                .locationsKeyword(club.getLocationsKeyword())
+                .locationKeyword(club.getLocationKeyword())
                 .content(club.getContent())
                 .location(club.getLocation())
+                .latitude(club.getLatitude())
+                .longitude(club.getLongitude())
                 .build();
 
         memberInfoDto = ClubArticleMemberInfoDto.builder()

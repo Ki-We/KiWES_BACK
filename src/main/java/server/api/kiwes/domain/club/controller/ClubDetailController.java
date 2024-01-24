@@ -49,7 +49,7 @@ public class ClubDetailController {
             "      \"dueTo\": \"Sep 30\",\n" +
             "      \"cost\": 1000,\n" +
             "      \"gender\": \"MALE\",\n" +
-            "      \"locationsKeyword\": \"신촌\",\n" +
+            "      \"locationKeyword\": \"신촌\",\n" +
             "      \"content\": \"첫번째 모임입니다.\",\n" +
             "      \"location\": \"신촌\"\n" +
             "    },\n" +
