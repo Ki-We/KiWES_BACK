@@ -74,17 +74,25 @@ public class ClubApprovalService {
         }
         return requestDTOs;
     }
-    public List<ClubApprovalWaitingSimpleDto> getAllMyClubDetail(Member member,int cursor) {
-        List<ClubApprovalWaitingSimpleInterface> requests = clubRepository.findAllMyClubDetail(member, cursor*7);
-        List<ClubApprovalWaitingSimpleDto> requestDTOs =  new ArrayList<>();
-        for (ClubApprovalWaitingSimpleInterface c : requests) {
+    public List<ClubMineImageDto> getAllMyClubImage(Member member) {
+        List<ClubMineImageInterface> requests = clubRepository.findAllMyClubImage(member);
+        List<ClubMineImageDto> requestDTOs =  new ArrayList<>();
+        for (ClubMineImageInterface c : requests) {
             requestDTOs.add(
+                    new ClubMineImageDto(c.getClub_id(),c.getThumbnail_url()));
+        }
+        return requestDTOs;
+    }
+    public List<ClubApprovalWaitingSimpleDto> getAllMyOwnClubDetail(Member member, int cursor) {
+        List<ClubApprovalWaitingSimpleInterface> waitings = clubRepository.findAllHostClubDetail(member, cursor*7);
+        List<ClubApprovalWaitingSimpleDto> waitingDTOs =  new ArrayList<>();
+        for (ClubApprovalWaitingSimpleInterface c : waitings) {
+            waitingDTOs.add(
                     new ClubApprovalWaitingSimpleDto(c.getClub_id(),c.getTitle(),c.getThumbnail_url(),c.getDate(),c.getLocation_keyword(),c.getStatus()));
         }
+        getWaitingSimpleDto(waitingDTOs);
 
-        getWaitingSimpleDto(requestDTOs);
-
-        return requestDTOs;
+        return waitingDTOs;
     }
     public List<ClubApprovalWaitingSimpleDto> getWaitingsResponse(Member member, int cursor) {
         List<ClubApprovalWaitingSimpleInterface> waitings = clubRepository.findApprovalWaitingSimple(member, false, false,cursor*7);

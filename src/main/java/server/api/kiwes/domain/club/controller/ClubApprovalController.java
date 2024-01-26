@@ -6,10 +6,7 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import server.api.kiwes.domain.club.constant.ClubResponseType;
-import server.api.kiwes.domain.club.dto.ClubApprovalRequestSimpleDto;
-import server.api.kiwes.domain.club.dto.ClubApprovalResponseDto;
-import server.api.kiwes.domain.club.dto.ClubApprovalWaitingSimpleDto;
-import server.api.kiwes.domain.club.dto.ClubWaitingMemberDto;
+import server.api.kiwes.domain.club.dto.*;
 import server.api.kiwes.domain.club.entity.Club;
 import server.api.kiwes.domain.club.service.ClubApprovalService;
 import server.api.kiwes.domain.club.service.ClubService;
@@ -106,15 +103,25 @@ public class ClubApprovalController {
 
         return ApiResponse.of(ClubResponseType.Club_LIST_GET_SUCCEED, response);
     }
-
-    @ApiOperation(value = "내 모임 모두 보기", notes = "내 모임 전체 리스트")
+    @ApiOperation(value = "내가 참여한 모임(이미지)", notes = "내 모임 전체 리스트")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20115, message = "내모임 리스트 리턴 성공"),
     })
-    @GetMapping("/my-club-detail")
-    public ApiResponse<List<ClubApprovalWaitingSimpleDto>> getAllMyClubDetail(@RequestParam int cursor){
+    @GetMapping("/my-club-image")
+    public ApiResponse<List<ClubMineImageDto>> getAllMyClubImage(){
         Member member = memberService.getLoggedInMember();
-        List<ClubApprovalWaitingSimpleDto> response = clubApprovalService.getAllMyClubDetail(member,cursor);
+        List<ClubMineImageDto> response = clubApprovalService.getAllMyClubImage(member);
+
+        return ApiResponse.of(ClubResponseType.Club_LIST_GET_SUCCEED, response);
+    }
+    @ApiOperation(value = "내가 호스트인 모임들 자세히 보기", notes = "내가 호스트인 모임 전체 리스트")
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 20115, message = "내가 호스트인 모임 리스트 리턴 성공"),
+    })
+    @GetMapping("/host-club-detail")
+    public ApiResponse<List<ClubApprovalWaitingSimpleDto>> getAllMyOwnClubDetail(@RequestParam int cursor){
+        Member member = memberService.getLoggedInMember();
+        List<ClubApprovalWaitingSimpleDto> response = clubApprovalService.getAllMyOwnClubDetail(member,cursor);
 
         return ApiResponse.of(ClubResponseType.Club_LIST_GET_SUCCEED, response);
     }
