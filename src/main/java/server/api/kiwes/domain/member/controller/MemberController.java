@@ -127,7 +127,7 @@ public class MemberController {
             "}")
     @PostMapping("/nickname")
     public ApiResponse<Object> nickname(
-            @RequestBody String nickname
+            @RequestBody NickNameRequest nickname
     ) {
         return ApiResponse.of(MemberResponseType.NICKNAME_DUPLICATE_SUCCESS, memberService.nicknameDuplicateCheck(nickname));
     }
@@ -141,9 +141,9 @@ public class MemberController {
             "}")
     @PostMapping("/mypage/introduction")
     public ApiResponse<Object> introduction(
-            @RequestBody String introduction
+            @RequestBody MyInfoRequest introduction
     ) {
-        return ApiResponse.of(MemberResponseType.INTRODUCTION_UPDATE_SUCCESS, memberService.updateIntroduction(introduction));
+        return ApiResponse.of(MemberResponseType.INTRODUCTION_UPDATE_SUCCESS, memberService.updateIntroduction(introduction.getIntroduction()));
     }
 
     @ApiOperation(value = "프로필 이미지 수정", notes = "프로필 이미지 변경을 위한 presigned-url 을 받아옵니다." +

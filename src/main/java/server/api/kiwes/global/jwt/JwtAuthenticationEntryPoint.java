@@ -1,6 +1,4 @@
 package server.api.kiwes.global.jwt;
-
-//import com.nimbusds.jose.shaded.json.JSONObject; //todo 망할 충돌점
 import com.nimbusds.oauth2.sdk.util.OrderedJSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;

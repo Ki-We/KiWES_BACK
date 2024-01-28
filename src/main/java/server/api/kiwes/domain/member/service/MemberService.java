@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import server.api.kiwes.domain.member.constant.MemberResponseType;
 import server.api.kiwes.domain.member.dto.MyPageResponse;
+import server.api.kiwes.domain.member.dto.NickNameRequest;
 import server.api.kiwes.domain.member.dto.myIdResponse;
 import server.api.kiwes.domain.member.entity.Member;
 import server.api.kiwes.domain.member.repository.MemberRepository;
@@ -16,6 +17,7 @@ import javax.transaction.Transactional;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 @Service
@@ -54,8 +56,10 @@ public class MemberService {
     /**
      * 닉네임 중복 체크
      */
-    public String nicknameDuplicateCheck(String nickname) {
-        if (memberRepository.findNotDeletedByNickname(nickname).isPresent()) {
+    public String nicknameDuplicateCheck(NickNameRequest nickNameRequest) {
+        System.out.println(nickNameRequest.getNickname());
+        if(nickNameRequest.getNickname().equals("NotSet")){return MemberResponseType.EXISTED_NICKNAME.getMessage();}
+        if (memberRepository.findNotDeletedByNickname(nickNameRequest.getNickname()).isPresent()) {
             return MemberResponseType.EXISTED_NICKNAME.getMessage();
         } else {
             return MemberResponseType.VALID_NICKNAME.getMessage();
@@ -80,18 +84,21 @@ public class MemberService {
         Long memberId = SecurityUtils.getLoggedInUser().getId();
         Member member = memberRepository.findById(memberId).orElseThrow();
         String birth= member.getBirth();
-        if(!birth.equals("NOT SETTING")){
+        int age =0;
+        if(!birth.equals("NotSet")){
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date dueToDate = format.parse(birth);
 
-        Date now = new Date();
-
-        long diffInMillis = now.getTime() -  dueToDate.getTime();
-        long diffInYears = diffInMillis / (1000L * 60L * 60L * 24L * 365L);
-        birth=String.valueOf(diffInYears);
+            Calendar now = Calendar.getInstance();
+            Calendar birthDate = Calendar.getInstance();
+            birthDate.setTime(dueToDate);
+            age = now.get(Calendar.YEAR) - birthDate.get(Calendar.YEAR);
+            if (now.get(Calendar.DAY_OF_YEAR) < birthDate.get(Calendar.DAY_OF_YEAR)) {
+                age--;
+            }
         }
         //프로필 사진, 닉네임, 국적, 나이, 성별, 소개
-        return new MyPageResponse(member.getProfileImg(), member.getNickname(), member.getNationality().getName(), birth, member.getGender().getName(), member.getIntroduction());
+        return new MyPageResponse(member.getProfileImg(), member.getNickname(), member.getNationality().getName(), age, member.getGender().getName(), member.getIntroduction());
 
     }
     public myIdResponse myId() throws ParseException {

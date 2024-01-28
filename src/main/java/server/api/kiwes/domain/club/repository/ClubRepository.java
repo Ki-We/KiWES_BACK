@@ -5,10 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import server.api.kiwes.domain.club.constant.ClubStatus;
-import server.api.kiwes.domain.club.dto.ClubApprovalRequestSimpleDto;
-import server.api.kiwes.domain.club.dto.ClubApprovalRequestSimpleInterface;
-import server.api.kiwes.domain.club.dto.ClubApprovalWaitingSimpleDto;
-import server.api.kiwes.domain.club.dto.ClubApprovalWaitingSimpleInterface;
+import server.api.kiwes.domain.club.dto.*;
 import server.api.kiwes.domain.club.entity.Club;
 import server.api.kiwes.domain.member.entity.Member;
 
@@ -33,14 +30,23 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
     List<ClubApprovalRequestSimpleInterface> findAllMyClub(@Param("member") Member member,
                                                                        @Param("cursor") int cursor);
     @Query(nativeQuery = true,
-            value = "select c.club_id, c.title, c.thumbnail_url, c.date, c.Location_keyword, h.status " +
+            value = "select c.club_id, c.thumbnail_url " +
                     "from club c " +
                     "inner join club_member cm " +
                     "on c.club_id = cm.club_id and cm.member_id = :member " +
                     "left join heart h on h.member_id = :member and h.club_id = c.club_id "+
+                    "order by c.club_id asc")
+    List<ClubMineImageInterface> findAllMyClubImage(@Param("member") Member member);
+
+    @Query(nativeQuery = true,
+            value = "select c.club_id, c.title, c.thumbnail_url, c.date, c.Location_keyword, h.status " +
+                    "from club c " +
+                    "inner join club_member cm " +
+                    "on c.club_id = cm.club_id and cm.member_id = :member and cm.is_host=true " +
+                    "left join heart h on h.member_id = :member and h.club_id = c.club_id "+
                     "order by c.club_id asc limit :cursor,7")
-    List<ClubApprovalWaitingSimpleInterface> findAllMyClubDetail(@Param("member") Member member,
-                                                           @Param("cursor") int cursor);
+    List<ClubApprovalWaitingSimpleInterface> findAllHostClubDetail(@Param("member") Member member,
+                                                                 @Param("cursor") int cursor);
     @Query(nativeQuery = true,
             value = "select c.club_id, c.title, c.current_people " +
                     "from club c " +
