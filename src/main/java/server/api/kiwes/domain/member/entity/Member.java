@@ -82,11 +82,12 @@ public class Member extends BaseTimeEntity {
         this.isDeleted = false;
     }
 
-    public void setMember(String nickname, String birth, String introduction,String nationality) {
+    public void setMember(String nickname, String birth, String introduction,String nationality, Gender gender) {
         this.nickname = nickname;
         this.birth = birth;
         this.introduction = introduction;
         this.nationality = Nationality.valueOf(nationality);
+        this.gender = gender;
     }
 
     public void setProfileImg(String profileImg) {

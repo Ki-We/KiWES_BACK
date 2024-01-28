@@ -191,7 +191,8 @@ public class MemberAuthenticationService {
         Member member = validateService.validateEmail(authentication.getName());
 
         //2. 추가 정보 저장
-        member.setMember(additionInfoRequest.getNickName(), additionInfoRequest.getBirth(), additionInfoRequest.getIntroduction(), additionInfoRequest.getNationality());
+        member.setMember(additionInfoRequest.getNickName(), additionInfoRequest.getBirth(),
+                additionInfoRequest.getIntroduction(), additionInfoRequest.getNationality(),additionInfoRequest.getGender());
 
         //one to many 저장
         member.setLanguages(getMemberLanguageEntities(additionInfoRequest.getLanguages(), member));
@@ -232,7 +233,7 @@ public class MemberAuthenticationService {
         // 가입 여부 확인
         if (!memberRepository.existsByEmail(email)&&!memberDeletedRepository.existsByEmail(email)) {
             Member member = new Member(email,profileImg, Gender.valueOf(gender.toUpperCase()));
-            member.setMember(member.getEmail().split("@")[0],"NOT SETTING","String", "FOREIGN");
+            member.setMember("NotSet","NotSet","NotSet", "FOREIGN",Gender.ALL);
             memberRepository.save(member);
         }
 

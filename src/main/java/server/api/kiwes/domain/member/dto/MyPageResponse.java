@@ -21,7 +21,7 @@ public class MyPageResponse {
     @ApiModelProperty(notes = "국적")
     private String Nationality;
     @ApiModelProperty(notes = "나이")
-    private String age;
+    private int age;
     @ApiModelProperty(notes = "성별")
     private String gender;
     @ApiModelProperty(notes = "자기소개")

@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClubCategory { //TODO 이거 쓸모없는데?
+public class ClubCategory {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CLUB_CATEGORY_ID")
     private Long id;
