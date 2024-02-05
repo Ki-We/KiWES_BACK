@@ -69,10 +69,6 @@ public class MemberAppleService implements  MemberLoginService{
     public JsonObject connect(String reqURL,String code){
         if (code == null) throw new BizException(CONNECT_ERROR);
 
-//        String userId = "";
-//        String email  = "";
-//        String accessToken = "";
-//        String refreshToken = "";
         try {
             String clientSecret = createClientSecret();
             HttpHeaders headers = new HttpHeaders();
@@ -95,26 +91,8 @@ public class MemberAppleService implements  MemberLoginService{
                     String.class
             );
 
-//            JSONParser jsonParser = new JSONParser();
-//            JSONObject jsonObj = (JSONObject) jsonParser.parse(response.getBody());
-//            JsonObject jsonObj = JsonParser.parseString(response.getBody()).getAsJsonObject();
             return JsonParser.parseString(response.getBody()).getAsJsonObject();
 
-
-//            accessToken = String.valueOf(jsonObj.get("access_token"));
-//            System.out.println(accessToken);
-//
-//            refreshToken = String.valueOf(jsonObj.get("refresh_token"));
-//            System.out.println(refreshToken);
-//            //ID TOKEN을 통해 회원 고유 식별자 받기
-//            SignedJWT signedJWT = SignedJWT.parse(String.valueOf(jsonObj.get("id_token")));
-//            ReadOnlyJWTClaimsSet getPayload = signedJWT.getJWTClaimsSet();
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            JSONObject payload = objectMapper.readValue(getPayload.toJSONObject().toJSONString(), JSONObject.class);
-//            System.out.println(payload);
-//
-//            userId = String.valueOf(payload.get("sub"));
-//            email  = String.valueOf(payload.get("email"));
         } catch (IOException | ParseException | org.json.simple.parser.ParseException e) {
             log.info(CONNECT_ERROR.getMessage());
             throw new BizException(CONNECT_ERROR);
@@ -123,10 +101,6 @@ public class MemberAppleService implements  MemberLoginService{
             throw new BizException(CANT_CREATE_SECRET);
         }
 
-//        return AppleDTO.builder()
-//                .id(userId)
-//                .token(accessToken)
-//                .email(email).build();
 
     }
 
@@ -209,22 +183,16 @@ public class MemberAppleService implements  MemberLoginService{
     }
     @Override
     public String getGender(JsonObject userInfo) {
-//        if (userInfo.getAsJsonObject(APPLE_ACOUNT.getValue()).has("gender")) {
-//            return userInfo.getAsJsonObject(APPLE_ACOUNT.getValue()).get("gender").getAsString();
-//        }
         return "NOTAGREE";
     }
 
     public JSONObject getIdentifier(JsonObject userInfo) {
         try {
-//        String accessToken = String.valueOf(userInfo.get("access_token"));
-//        String refreshToken = String.valueOf(userInfo.get("refresh_token"));
             //ID TOKEN을 통해 회원 고유 식별자 받기
             SignedJWT signedJWT = SignedJWT.parse(String.valueOf(userInfo.get("id_token")));
             ReadOnlyJWTClaimsSet getPayload = signedJWT.getJWTClaimsSet();
             ObjectMapper objectMapper = new ObjectMapper(){};
             JSONObject payload = objectMapper.readValue(getPayload.toJSONObject().toJSONString(), JSONObject.class);
-            System.out.println(payload);
             return payload;
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -232,33 +200,4 @@ public class MemberAppleService implements  MemberLoginService{
             throw new RuntimeException(e);
         }
     }
-
-    //    public JsonObject connect(String reqURL, String token) {
-//        try {
-//            URL url = new URL(reqURL);
-//            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//
-//            conn.setRequestMethod("POST");
-//            conn.setRequestProperty("Authorization", "Bearer " + token); //전송할 header 작성, access_token전송
-//
-//            int responseCode = conn.getResponseCode();
-//            System.out.println("responseCode : " + responseCode);
-//
-//            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-//            String inputLine;
-//
-//            StringBuffer response = new StringBuffer();
-//            while ((inputLine = in.readLine()) != null) {
-//                response.append(inputLine);
-//            }
-//
-//            in.close();
-//            JsonObject json = JsonParser.parseString(response.toString()).getAsJsonObject();
-//            return json;
-//        } catch (IOException e) {
-//            log.info(CONNECT_ERROR.getMessage());
-//            throw new BizException(CONNECT_ERROR);
-//        }
-//
-//    }
 }

@@ -25,6 +25,7 @@ public class ClubPopularEachResponseDto {
     private String longitude; //경도
     @Setter
     private HeartStatus isHeart;
+    private String current_max;
 
     public static ClubPopularEachResponseDto of(Club club){
         return ClubPopularEachResponseDto.builder()
@@ -39,6 +40,7 @@ public class ClubPopularEachResponseDto {
                 .locationKeyword(club.getLocationKeyword())
                 .languages(club.getLanguages().stream().map(clubLanguage -> clubLanguage.getLanguage().getName().getName()).collect(Collectors.toList()))
                 .isHeart(null)
+                .current_max(club.getCurrentPeople()+" / " +club.getMaxPeople())
                 .build();
     }
 }

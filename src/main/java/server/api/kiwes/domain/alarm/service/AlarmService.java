@@ -34,8 +34,9 @@ public class AlarmService {
         return response;
     }
 
-    public void postAlarm(Member member, Club club, AlarmType type, String content) {
-        Alarm alarm = Alarm.builder().club(club).member(member).type(type).content(content).imageUrl(member.getProfileImg()).build();
+    public void postAlarm(Member member,Member sender, Club club, AlarmType type, String content) {
+        Alarm alarm = Alarm.builder().club(club).member(member).sender(sender)
+                .type(type).content(content).imageUrl(member.getProfileImg()).build();
         alarmRepository.save(alarm);
     }
     public void deleteOldAlarm() {

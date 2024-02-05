@@ -57,7 +57,7 @@ public class QnaController {
 
         ClubMember host = clubMemberService.findByClubHost(club);
         String name = member.getNickname() == null ? "익명" : member.getNickname();
-        alarmService.postAlarm(host.getMember(), club, AlarmType.CLUB, name + AlarmContent.QUESTION.getContent());
+        alarmService.postAlarm(host.getMember(),member, club, AlarmType.CLUB, name + AlarmContent.QUESTION.getContent());
 
         return ApiResponse.of(QnaResponseType.Q_POST_SUCCESS);
     }
@@ -90,7 +90,7 @@ public class QnaController {
         Qna qna = qnaService.findById(qnaId);
         qnaService.postAnswer(member, qna, requestDto);
 
-        alarmService.postAlarm(qna.getQuestioner(), club, AlarmType.CLUB, AlarmContent.ANSWER.getContent());
+        alarmService.postAlarm(qna.getQuestioner(),member, club, AlarmType.CLUB, AlarmContent.ANSWER.getContent());
 
         return ApiResponse.of(QnaResponseType.A_POST_SUCCESS);
     }

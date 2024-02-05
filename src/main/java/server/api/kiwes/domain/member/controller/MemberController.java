@@ -15,6 +15,7 @@ import server.api.kiwes.domain.member.entity.Member;
 import server.api.kiwes.domain.member.service.MemberService;
 import server.api.kiwes.domain.member.service.auth.MemberAuthenticationService;
 import server.api.kiwes.global.aws.PreSignedUrlService;
+import server.api.kiwes.global.security.util.SecurityUtils;
 import server.api.kiwes.response.BizException;
 import server.api.kiwes.response.ApiResponse;
 import server.api.kiwes.response.foo.FooResponseType;
@@ -132,6 +133,12 @@ public class MemberController {
         return ApiResponse.of(MemberResponseType.NICKNAME_DUPLICATE_SUCCESS, memberService.nicknameDuplicateCheck(nickname));
     }
 
+    @ApiOperation(value = "닉네임 가져오기")
+    @GetMapping("/mynick")
+    public ApiResponse<Object> introduction() {
+        return ApiResponse.of(MemberResponseType.LOGIN_SUCCESS, memberService.getLoggedInMember().getNickname());
+    }
+
     @ApiOperation(value = "자기소개 수정", notes = "자기소개를 수정합니다." +
             "\n예시 출력 데이터" +
             "{\n" +
@@ -175,7 +182,19 @@ public class MemberController {
     @GetMapping("/mypage")
     public ApiResponse<Object> myPage(
     ) throws ParseException {
-        return ApiResponse.of(MemberResponseType.MYPAGE_LOAD_SUCCESS, memberService.myPage());
+        Long memberId = SecurityUtils.getLoggedInUser().getId();
+        return ApiResponse.of(MemberResponseType.MYPAGE_LOAD_SUCCESS, memberService.myPage(memberId));
+
+    }
+
+    @ApiOperation(value = "타 고객 마이페이지 정보 ", notes = "자기 페이지 정보는 0, 마이페이지 내 정보 가져오기.")
+    @GetMapping("/mypage/{memberId}")
+    public ApiResponse<Object> otherPage(@RequestParam long memberId
+    ) throws ParseException {
+        if(memberId==0){
+            memberId = SecurityUtils.getLoggedInUser().getId();
+        }
+        return ApiResponse.of(MemberResponseType.MYPAGE_LOAD_SUCCESS, memberService.myPage(memberId));
 
     }
 

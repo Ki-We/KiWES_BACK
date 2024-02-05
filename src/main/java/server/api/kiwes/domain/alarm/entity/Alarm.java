@@ -24,6 +24,9 @@ public class Alarm extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
+    @ManyToOne
+    @JoinColumn(name = "SENDER_ID")
+    private Member sender;
 
     @ManyToOne
     @JoinColumn(name = "CLUB_ID")

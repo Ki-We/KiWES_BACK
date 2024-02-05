@@ -11,6 +11,7 @@ import server.api.kiwes.domain.qna.entity.Qna;
 @Builder
 public class ClubArticleQnaDto {
     Long qnaId;
+    Long questionerId;
     String questionerImageUrl;
     String questionerNickname;
     String questionContent;
@@ -20,6 +21,7 @@ public class ClubArticleQnaDto {
         Member questioner = qna.getQuestioner();
         return ClubArticleQnaDto.builder()
                 .qnaId(qna.getId())
+                .questionerId(questioner.getId())
                 .questionerImageUrl(questioner.getProfileImg())
                 .questionerNickname(questioner.getNickname())
                 .questionContent(qna.getQuestionContent())
