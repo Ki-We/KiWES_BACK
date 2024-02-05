@@ -25,6 +25,7 @@ public class AlarmResponseDto {
     private String createAfterHour;
     private String createAfterDay;
     private Long memberId;
+    private Long senderId;
     private String imageUrl;
     private Long noticeId;
 
@@ -58,6 +59,7 @@ public class AlarmResponseDto {
                 .createAfterHour(hours)
                 .createAfterDay(createAfterDay)
                 .memberId(alarm.getMember().getId())
+                .senderId(alarm.getSender().getId())
                 .noticeId(alarm.getNoticeId())
                 .imageUrl(alarm.getImageUrl())
                 .build();

@@ -62,7 +62,7 @@ public class ReviewController {
 
         ClubMember host = clubMemberService.findByClubHost(club);
         String name = member.getNickname() == null ? "익명" : member.getNickname();
-        alarmService.postAlarm(host.getMember(), club, AlarmType.CLUB, name + AlarmContent.REVIEW.getContent());
+        alarmService.postAlarm(host.getMember(),member, club, AlarmType.CLUB, name + AlarmContent.REVIEW.getContent());
 
         return ApiResponse.of(ReviewResponseType.POST_SUCCESS);
     }
@@ -132,31 +132,18 @@ public class ReviewController {
         return ApiResponse.of(ReviewResponseType.DELETE_SUCCESS);
     }
     
-    @ApiOperation(value = "후기 모두 보기", notes = "" +
-            "\n예시 출력 데이터" +
-            "{\n" +
-            "  \"status\": 21105,\n" +
-            "  \"message\": \"qna 리스트 응답 성공\",\n" +
-            "  \"data\": isHost : Boolean ,\n" +
-            " ReviewDetailDto : { \n" +
-            "reviewerProfileImg : String\n" +
-            "reviewerNickname : String\n" +
-            "reviewContent : String\n" +
-            "reviewDate : String\n" +
-            "respondentProfileImg : String\n" +
-            "respondentNickname : String\n" +
-            "replyContent : String\n" +
-            "replyDate : String\n" +
-            "isAuthorOfReview : Boolean\n" +
-            "isAuthorOfReply : Boolean\n" +
-            "isModified : Boolean\n" +
-            "}")
+    @ApiOperation(value = "후기 모두 보기", notes = "")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 21204, message = "후기 모두 보기 성공"),
     })
     @GetMapping("/entire/{clubId}")
-    public ApiResponse<ReviewEntireResponseDto> getEntireReview(@PathVariable Long clubId, @RequestParam int cursor){
-        Member member = memberService.getLoggedInMember();
+    public ApiResponse<ReviewEntireResponseDto> getEntireReview(@PathVariable Long clubId,@RequestParam Long memberId,@RequestParam int cursor){
+        Member member;
+        if(memberId == 0){
+            member = memberService.getLoggedInMember();
+        }else{
+            member = memberService.findById(memberId);
+        }
         Club club = clubService.findById(clubId);
 
         return ApiResponse.of(ReviewResponseType.ENTIRE_LIST, reviewService.getEntire(club, member, cursor));
@@ -183,7 +170,7 @@ public class ReviewController {
 
         Review review = reviewService.findById(reviewId);
         reviewService.postReply(member, review, registerDto);
-        alarmService.postAlarm(review.getReviewer(), club, AlarmType.CLUB, AlarmContent.REVIEW_ANSWER.getContent());
+        alarmService.postAlarm(review.getReviewer(),member, club, AlarmType.CLUB, AlarmContent.REVIEW_ANSWER.getContent());
 
         return ApiResponse.of(ReviewResponseType.REPLY_SUCCESS);
     }

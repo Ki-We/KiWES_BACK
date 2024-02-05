@@ -13,11 +13,14 @@ import java.time.format.DateTimeFormatter;
 @Builder
 public class ClubArticleReviewDto {
     Long reviewId;
+
+    long reviewerId;
     String reviewerImageUrl;
     String reviewerNickname;
     String reviewContent;
     String reviewDate;
 
+    long respondentId;
     String respondentImageUrl;
     String respondentNickname;
     String replyContent;
@@ -31,6 +34,7 @@ public class ClubArticleReviewDto {
 
         ClubArticleReviewDtoBuilder builder = ClubArticleReviewDto.builder()
                 .reviewId(review.getId())
+                .reviewerId(reviewer.getId())
                 .reviewerImageUrl(reviewer.getProfileImg())
                 .reviewerNickname(reviewer.getNickname())
                 .reviewContent(review.getReviewContent())
@@ -39,7 +43,8 @@ public class ClubArticleReviewDto {
 
         if (respondent != null) {
             builder = builder.respondentImageUrl(respondent.getProfileImg())
-                    .respondentNickname(respondent.getNickname());
+                    .respondentNickname(respondent.getNickname())
+                    .respondentId(respondent.getId());
         }
 
         return builder.replyContent(review.getReplyContent())

@@ -80,8 +80,7 @@ public class MemberService {
     /**
      * 마이페이지 GET
      */
-    public MyPageResponse myPage() throws ParseException {
-        Long memberId = SecurityUtils.getLoggedInUser().getId();
+    public MyPageResponse myPage(long memberId) throws ParseException {
         Member member = memberRepository.findById(memberId).orElseThrow();
         String birth= member.getBirth();
         int age =0;
