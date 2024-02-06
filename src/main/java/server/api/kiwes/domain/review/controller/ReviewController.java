@@ -137,13 +137,8 @@ public class ReviewController {
             @io.swagger.annotations.ApiResponse(code = 21204, message = "후기 모두 보기 성공"),
     })
     @GetMapping("/entire/{clubId}")
-    public ApiResponse<ReviewEntireResponseDto> getEntireReview(@PathVariable Long clubId,@RequestParam Long memberId,@RequestParam int cursor){
-        Member member;
-        if(memberId == 0){
-            member = memberService.getLoggedInMember();
-        }else{
-            member = memberService.findById(memberId);
-        }
+    public ApiResponse<ReviewEntireResponseDto> getEntireReview(@PathVariable Long clubId,@RequestParam int cursor){
+        Member member= memberService.getLoggedInMember();
         Club club = clubService.findById(clubId);
 
         return ApiResponse.of(ReviewResponseType.ENTIRE_LIST, reviewService.getEntire(club, member, cursor));
@@ -174,10 +169,17 @@ public class ReviewController {
 
         return ApiResponse.of(ReviewResponseType.REPLY_SUCCESS);
     }
-    @GetMapping("/")
-    public ApiResponse<Object> getMyReviews(){
-        Member member = memberService.getLoggedInMember();
+
+    @ApiOperation(value = "나 관련 리뷰 보기", notes = "마이페이지 리뷰 보기 / 0이면 자신")
+    @GetMapping("/{memberId}")
+    public ApiResponse<Object> getMyReviews(@PathVariable Long memberId){
+        Member member;
+        if(memberId == 0){
+            member = memberService.getLoggedInMember();
+        }else{
+            member = memberService.findById(memberId);
+        }
         List<ReviewMineDto> reviewMine = reviewService.findMyReview(member);
-        return ApiResponse.of(ReviewResponseType.DELETE_SUCCESS,reviewMine);
+        return ApiResponse.of(ReviewResponseType.ENTIRE_LIST,reviewMine);
     }
 }

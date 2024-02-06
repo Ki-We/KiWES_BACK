@@ -33,7 +33,7 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
             value = "select c.club_id, c.thumbnail_url " +
                     "from club c " +
                     "inner join club_member cm " +
-                    "on c.club_id = cm.club_id and cm.member_id = :member " +
+                    "on c.club_id = cm.club_id and cm.member_id = :member and cm.is_approved = true " +
                     "left join heart h on h.member_id = :member and h.club_id = c.club_id "+
                     "order by c.club_id asc")
     List<ClubMineImageInterface> findAllMyClubImage(@Param("member") Member member);
