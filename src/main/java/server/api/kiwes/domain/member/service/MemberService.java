@@ -7,14 +7,13 @@ import org.springframework.stereotype.Service;
 import server.api.kiwes.domain.member.constant.MemberResponseType;
 import server.api.kiwes.domain.member.dto.MyPageResponse;
 import server.api.kiwes.domain.member.dto.NickNameRequest;
-import server.api.kiwes.domain.member.dto.myIdResponse;
+import server.api.kiwes.domain.member.dto.MyIdResponse;
 import server.api.kiwes.domain.member.entity.Member;
 import server.api.kiwes.domain.member.repository.MemberRepository;
 import server.api.kiwes.global.security.util.SecurityUtils;
 import server.api.kiwes.response.BizException;
 
 import javax.transaction.Transactional;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -97,14 +96,14 @@ public class MemberService {
             }
         }
         //프로필 사진, 닉네임, 국적, 나이, 성별, 소개
-        return new MyPageResponse(member.getProfileImg(), member.getNickname(), member.getNationality().getName(), age, member.getGender().getName(), member.getIntroduction());
+        return new MyPageResponse(member.getId(),member.getProfileImg(), member.getNickname(), member.getNationality().getName(), age, member.getGender().getName(), member.getIntroduction());
 
     }
-    public myIdResponse myId() throws ParseException {
+    public MyIdResponse myId() throws ParseException {
         Long memberId = SecurityUtils.getLoggedInUser().getId();
         Member member = memberRepository.findById(memberId).orElseThrow();
 
-        return myIdResponse.builder()
+        return MyIdResponse.builder()
                 .id(member.getId())
                 .nickName(member.getNickname())
                 .email(member.getEmail())

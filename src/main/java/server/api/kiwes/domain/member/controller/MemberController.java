@@ -135,17 +135,15 @@ public class MemberController {
 
     @ApiOperation(value = "닉네임 가져오기")
     @GetMapping("/mynick")
-    public ApiResponse<Object> introduction() {
-        return ApiResponse.of(MemberResponseType.LOGIN_SUCCESS, memberService.getLoggedInMember().getNickname());
+    public ApiResponse<MyNickResponse> introduction() {
+        Member member=memberService.getLoggedInMember();
+
+        return ApiResponse.of(MemberResponseType.LOGIN_SUCCESS, MyNickResponse.builder()
+                .nickName(member.getNickname())
+                .id(member.getId()).build());
     }
 
-    @ApiOperation(value = "자기소개 수정", notes = "자기소개를 수정합니다." +
-            "\n예시 출력 데이터" +
-            "{\n" +
-            "  \"status\": 20006,\n" +
-            "  \"message\": \"자기소개 수정 완료\",\n" +
-            "  \"data\": {nickname : String}\n" +
-            "}")
+    @ApiOperation(value = "자기소개 수정", notes = "자기소개를 수정합니다.")
     @PostMapping("/mypage/introduction")
     public ApiResponse<Object> introduction(
             @RequestBody MyInfoRequest introduction
@@ -166,19 +164,7 @@ public class MemberController {
         return ApiResponse.of(MemberResponseType.PROFILE_IMG_SUCCESS, preSignedUrlService.getPreSignedUrl("profileimg/", fileName));
     }
 
-    @ApiOperation(value = "마이페이지 정보 ", notes = "마이페이지 내 정보 가져오기." +
-            "\n예시 출력 데이터" +
-            "{\n" +
-            "  \"status\": 20007,\n" +
-            "  \"message\": \"마이페이지 정보 조회 완료\",\n" +
-            "  \"data\": " +
-            "{profileImage : String\n" +
-            "nickname : String\n" +
-            "Nationality : String\n" +
-            "age : String\n" +
-            "gender : String\n" +
-            "introduction : String\n" +
-            "}")
+    @ApiOperation(value = "마이페이지 정보 ", notes = "마이페이지 내 정보 가져오기.")
     @GetMapping("/mypage")
     public ApiResponse<Object> myPage(
     ) throws ParseException {
@@ -189,7 +175,7 @@ public class MemberController {
 
     @ApiOperation(value = "타 고객 마이페이지 정보 ", notes = "자기 페이지 정보는 0, 마이페이지 내 정보 가져오기.")
     @GetMapping("/mypage/{memberId}")
-    public ApiResponse<Object> otherPage(@RequestParam long memberId
+    public ApiResponse<Object> otherPage(@PathVariable long memberId
     ) throws ParseException {
         if(memberId==0){
             memberId = SecurityUtils.getLoggedInUser().getId();
@@ -228,7 +214,7 @@ public class MemberController {
     }
     @ApiOperation(value = "내 아이디 가져오기", notes = "내 id 가져오기." )
             @GetMapping("/myid")
-            public ApiResponse<myIdResponse> myId() throws ParseException {
+            public ApiResponse<MyIdResponse> myId() throws ParseException {
             return ApiResponse.of(MemberResponseType.MYPAGE_LOAD_SUCCESS, memberService.myId());
 
 }

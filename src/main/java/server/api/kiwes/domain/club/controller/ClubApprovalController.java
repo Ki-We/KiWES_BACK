@@ -51,7 +51,7 @@ public class ClubApprovalController {
             @io.swagger.annotations.ApiResponse(code = 20109, message = "승인관련 리스트 리턴 성공"),
     })
     @GetMapping("/simple/approval")
-    public ApiResponse<Object> getSimpleApproval(@RequestParam int cursor){
+    public ApiResponse<Object> getSimpleApproval(){
         Member member = memberService.getLoggedInMember();
         return ApiResponse.of(ClubResponseType.APPROVAL_LIST_GET_SUCCEED, clubApprovalService.getSimpleApproval(member));
     }
@@ -59,7 +59,7 @@ public class ClubApprovalController {
             @io.swagger.annotations.ApiResponse(code = 20109, message = "승인관련 리스트 리턴 성공"),
     })
     @GetMapping("/simple/wating")
-    public ApiResponse<Object> getSimpleWating(@RequestParam int cursor){
+    public ApiResponse<Object> getSimpleWating(){
         Member member = memberService.getLoggedInMember();
         return ApiResponse.of(ClubResponseType.APPROVAL_LIST_GET_SUCCEED, clubApprovalService.getSimpleWating(member));
     }
@@ -77,13 +77,8 @@ public class ClubApprovalController {
             @io.swagger.annotations.ApiResponse(code = 20109, message = "승인 관련 리스트 리턴 성공"),
     })
     @GetMapping("/my-own-club")
-    public ApiResponse<List<ClubApprovalRequestSimpleDto>> getRequestsApproval(@RequestParam long memberId, @RequestParam int cursor){
-        Member member;
-        if(memberId == 0){
-            member = memberService.getLoggedInMember();
-        }else{
-            member = memberService.findById(memberId);
-        }
+    public ApiResponse<List<ClubApprovalRequestSimpleDto>> getRequestsApproval(@RequestParam int cursor){
+        Member member= memberService.getLoggedInMember();
         List<ClubApprovalRequestSimpleDto> response = clubApprovalService.getRequestsResponse(member,cursor);
 
         return ApiResponse.of(ClubResponseType.APPROVAL_LIST_GET_SUCCEED, response);
@@ -102,13 +97,8 @@ public class ClubApprovalController {
             @io.swagger.annotations.ApiResponse(code = 20115, message = "내모임 리스트 리턴 성공"),
     })
     @GetMapping("/my-club")
-    public ApiResponse<List<ClubApprovalRequestSimpleDto>> getAllMyClub(@RequestParam long memberId, @RequestParam int cursor){
-        Member member;
-        if(memberId == 0){
-            member = memberService.getLoggedInMember();
-        }else{
-            member = memberService.findById(memberId);
-        }
+    public ApiResponse<List<ClubApprovalRequestSimpleDto>> getAllMyClub(@RequestParam int cursor){
+        Member member = memberService.getLoggedInMember();;
         List<ClubApprovalRequestSimpleDto> response = clubApprovalService.getAllMyClub(member,cursor);
 
         return ApiResponse.of(ClubResponseType.Club_LIST_GET_SUCCEED, response);
@@ -117,9 +107,14 @@ public class ClubApprovalController {
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20115, message = "내모임 리스트 리턴 성공"),
     })
-    @GetMapping("/my-club-image")
-    public ApiResponse<List<ClubMineImageDto>> getAllMyClubImage(){
-        Member member = memberService.getLoggedInMember();
+    @GetMapping("/my-club-image/{memberId}")
+    public ApiResponse<List<ClubMineImageDto>> getAllMyClubImage(@PathVariable Long memberId){
+        Member member;
+        if(memberId == 0){
+            member = memberService.getLoggedInMember();
+        }else{
+            member = memberService.findById(memberId);
+        }
         List<ClubMineImageDto> response = clubApprovalService.getAllMyClubImage(member);
 
         return ApiResponse.of(ClubResponseType.Club_LIST_GET_SUCCEED, response);
@@ -128,9 +123,14 @@ public class ClubApprovalController {
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 20115, message = "내가 호스트인 모임 리스트 리턴 성공"),
     })
-    @GetMapping("/host-club-detail")
-    public ApiResponse<List<ClubApprovalWaitingSimpleDto>> getAllMyOwnClubDetail(@RequestParam int cursor){
-        Member member = memberService.getLoggedInMember();
+    @GetMapping("/host-club-detail/{memberId}")
+    public ApiResponse<List<ClubApprovalWaitingSimpleDto>> getAllMyOwnClubDetail(@PathVariable Long memberId, @RequestParam int cursor){
+        Member member;
+        if(memberId == 0){
+            member = memberService.getLoggedInMember();
+        }else{
+            member = memberService.findById(memberId);
+        }
         List<ClubApprovalWaitingSimpleDto> response = clubApprovalService.getAllMyOwnClubDetail(member,cursor);
 
         return ApiResponse.of(ClubResponseType.Club_LIST_GET_SUCCEED, response);
