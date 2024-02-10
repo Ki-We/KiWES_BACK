@@ -56,6 +56,9 @@ public class QnaController {
         qnaService.postQuestion(club, member, requestDto);
 
         ClubMember host = clubMemberService.findByClubHost(club);
+        if(host.getId()==member.getId()){
+            throw new BizException(QnaResponseType.Q_NOT_HOST_POST);
+        }
         String name = member.getNickname() == null ? "익명" : member.getNickname();
         alarmService.postAlarm(host.getMember(),member, club, AlarmType.CLUB, name + AlarmContent.QUESTION.getContent());
 

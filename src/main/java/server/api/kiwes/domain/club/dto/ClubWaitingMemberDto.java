@@ -16,7 +16,8 @@ public class ClubWaitingMemberDto {
     public static ClubWaitingMemberDto of(Member member){
         return ClubWaitingMemberDto.builder()
                 .memberId(member.getId())
-                .profileImg(member.getProfileImg())
+                .profileImg("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/profileimg/"+
+                        member.getProfileImg()+".jpg")
                 .nickname(member.getNickname())
                 .build();
     }

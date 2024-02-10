@@ -32,9 +32,6 @@ public class OAuth2Attribute {
 
     private static OAuth2Attribute ofKakao(String attributeKey,
                                            Map<String, Object> attributes) {
-//        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
-//        Map<String, Object> kakaoProfile = (Map<String, Object>) kakaoAccount.get("profile");
-
         return OAuth2Attribute.builder()
                 .email((String) attributes.get("email"))
                 .picture((String)attributes.get("profile_image_url"))
@@ -49,14 +46,6 @@ public class OAuth2Attribute {
                 .picture((String)attributes.get("profile_image_url"))
                 .attributes(attributes)
                 .attributeKey(attributeKey)
-                .build();
-    }
-
-    public Member toEntity() {
-        return Member.builder()
-                .email(email)
-                .profileImg(picture)
-                .role(ROLE_USER)
                 .build();
     }
 

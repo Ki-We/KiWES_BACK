@@ -32,7 +32,8 @@ public class ClubPopularEachResponseDto {
                 .clubId(club.getId())
                 .hostProfileImg(null)
                 .title(club.getTitle())
-                .thumbnailImage(club.getThumbnailUrl())
+                .thumbnailImage("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/clubThumbnail/"+
+                        club.getThumbnailUrl()+".jpg")
                 .date(club.getDueTo())
                 .location(club.getLocation())
                 .latitude(club.getLatitude())

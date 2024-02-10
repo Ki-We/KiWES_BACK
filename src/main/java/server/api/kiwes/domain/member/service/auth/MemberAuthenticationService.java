@@ -163,7 +163,7 @@ public class MemberAuthenticationService {
         }
 
         System.out.println(memberInfo.toString());
-        Member member = saveMember(loginService.getEmail(memberInfo), loginService.getProfileUrl(memberInfo),loginService.getGender(memberInfo));
+        Member member = saveMember(loginService.getEmail(memberInfo),loginService.getGender(memberInfo));
         boolean isSignedUp = member.getEmail() != null;
 
         //2. 스프링 시큐리티 처리
@@ -229,7 +229,8 @@ public class MemberAuthenticationService {
         return RefreshTokenResponse.from(tokenInfoResponse);
     }
 
-    public Member saveMember(String email,String profileImg, String gender) {
+    public Member saveMember(String email, String gender) {
+        String profileImg="profile";
         // 가입 여부 확인
         if (!memberRepository.existsByEmail(email)&&!memberDeletedRepository.existsByEmail(email)) {
             Member member = new Member(email,profileImg, Gender.valueOf(gender.toUpperCase()));

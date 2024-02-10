@@ -22,7 +22,8 @@ public class ClubArticleQnaDto {
         return ClubArticleQnaDto.builder()
                 .qnaId(qna.getId())
                 .questionerId(questioner.getId())
-                .questionerImageUrl(questioner.getProfileImg())
+                .questionerImageUrl("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/profileimg/"+
+                        questioner.getProfileImg()+".jpg")
                 .questionerNickname(questioner.getNickname())
                 .questionContent(qna.getQuestionContent())
                 .questionDate(qna.getQDate())

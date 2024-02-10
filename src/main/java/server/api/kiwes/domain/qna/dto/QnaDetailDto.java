@@ -40,7 +40,8 @@ public class QnaDetailDto {
             return QnaDetailDto.builder()
                     .qnaId(qna.getId())
                     .questionerId(qna.getQuestioner().getId())
-                    .questionerProfileImg(qna.getQuestioner().getProfileImg())
+                    .questionerProfileImg("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/profileimg/"+
+                            qna.getQuestioner().getProfileImg()+".jpg")
                     .questionerNickname(qna.getQuestioner().getNickname())
                     .questionContent(qna.getQuestionContent())
                     .qDate(qna.getQDate())
@@ -53,13 +54,15 @@ public class QnaDetailDto {
         return QnaDetailDto.builder()
                 .qnaId(qna.getId())
                 .questionerId(qna.getQuestioner().getId())
-                .questionerProfileImg(qna.getQuestioner().getProfileImg())
+                .questionerProfileImg("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/profileimg/"+
+                        qna.getQuestioner().getProfileImg()+".jpg")
                 .questionerNickname(qna.getQuestioner().getNickname())
                 .questionContent(qna.getQuestionContent())
                 .qDate(qna.getQDate())
                 .isDeleted(qna.getIsDeleted())
                 .isAuthorOfQuestion(qna.getQuestioner().getId().equals(member.getId()))
-                .respondentProfileImg(qna.getRespondent().getProfileImg())
+                .respondentProfileImg("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/profileimg/"+
+                        qna.getRespondent().getProfileImg()+".jpg")
                 .respondentNickname(qna.getRespondent().getNickname())
                 .answerContent(qna.getAnswerContent())
                 .isAnswered(qna.getIsAnswered())
