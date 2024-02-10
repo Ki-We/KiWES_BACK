@@ -35,14 +35,16 @@ public class ClubArticleReviewDto {
         ClubArticleReviewDtoBuilder builder = ClubArticleReviewDto.builder()
                 .reviewId(review.getId())
                 .reviewerId(reviewer.getId())
-                .reviewerImageUrl(reviewer.getProfileImg())
+                .reviewerImageUrl("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/profileimg/"+
+                        reviewer.getProfileImg()+".jpg")
                 .reviewerNickname(reviewer.getNickname())
                 .reviewContent(review.getReviewContent())
                 .reviewDate(review.getModifiedDate().format(DateTimeFormatter.ofPattern("yy.MM.dd HH:mm")))
                 .isModified(review.getIsModified());
 
         if (respondent != null) {
-            builder = builder.respondentImageUrl(respondent.getProfileImg())
+            builder = builder.respondentImageUrl("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/profileimg/"+
+                            respondent.getProfileImg()+".jpg")
                     .respondentNickname(respondent.getNickname())
                     .respondentId(respondent.getId());
         }

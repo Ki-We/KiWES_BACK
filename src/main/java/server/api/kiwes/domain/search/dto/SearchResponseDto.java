@@ -42,7 +42,8 @@ public class SearchResponseDto {
 
         return SearchResponseDto.builder()
                 .clubId(club.getId())
-                .thumbnailImage(club.getThumbnailUrl())
+                .thumbnailImage("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/clubThumbnail/"+
+                        club.getThumbnailUrl()+".jpg")
                 .title(club.getTitle())
                 .date(club.getDueTo())
                 .locationKeyword(club.getLocationKeyword())

@@ -1,5 +1,6 @@
 package server.api.kiwes.domain.member.controller;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponses;
@@ -20,7 +21,11 @@ import server.api.kiwes.response.BizException;
 import server.api.kiwes.response.ApiResponse;
 import server.api.kiwes.response.foo.FooResponseType;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.ParseException;
+import java.util.UUID;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY;
 
@@ -160,9 +165,12 @@ public class MemberController {
             "}")
     @GetMapping("mypage/profileImg")
     public ApiResponse<Object> profileImg() {
+        preSignedUrlService.DeleteImage("profileimg/"+memberService.getPreProfileImg()+".jpg");
         String fileName = memberService.changeProfileImg() + ".jpg";
-        return ApiResponse.of(MemberResponseType.PROFILE_IMG_SUCCESS, preSignedUrlService.getPreSignedUrl("profileimg/", fileName));
+        return ApiResponse.of(MemberResponseType.PROFILE_IMG_SUCCESS,
+                preSignedUrlService.getPreSignedUrl("profileimg/", fileName));
     }
+
 
     @ApiOperation(value = "마이페이지 정보 ", notes = "마이페이지 내 정보 가져오기.")
     @GetMapping("/mypage")

@@ -33,6 +33,7 @@ import server.api.kiwes.response.BizException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -79,8 +80,7 @@ public class ClubService {
                 .location(requestDto.getLocation())
                 .latitude(requestDto.getLatitude())
                 .longitude(requestDto.getLongitude())
-                .uuid(member.getId()+requestDto.getTitle())
-                .thumbnailUrl("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/clubThumbnail/club_2.jpg")
+                .thumbnailUrl("club_2")
                 .build();
         clubRepository.save(club);
         club.setLanguages(getClubLanguageEntities(requestDto.getLanguages(), club));
@@ -249,24 +249,16 @@ public class ClubService {
      * 썸네일이미지 수정
      */
     public void setClubThumbnailImageUrl(Club club){
-        String url = "https://" +
-                bucket +
-                ".s3." +
-                region +
-                ".amazonaws.com/clubThumbnail/" +
-                club.getUuid();
-        club.setThumbnailUrl(url);
+        club.setThumbnailUrl(String.valueOf(UUID.randomUUID()));
     }
     private ClubPopularEachResponseDto eachPopularClub(Club club,Member member) {
         ClubPopularEachResponseDto each = ClubPopularEachResponseDto.of(club);
-        each.setHostProfileImg(member.getProfileImg());
+        each.setHostProfileImg("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/profileimg/"+
+                member.getProfileImg()+".jpg");
 
         Optional<Heart> heart = heartRepository.findByClubAndMember(club, member);
         each.setIsHeart(heart.isPresent() ? heart.get().getStatus() : HeartStatus.NO);
         return each;
     }
 
-    public void setUuid(Club club) {
-        club.setUuid("club-"+club.getId()+club.getTitle().charAt(0));
-    }
 }

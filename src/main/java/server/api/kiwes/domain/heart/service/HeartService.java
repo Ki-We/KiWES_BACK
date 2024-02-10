@@ -78,7 +78,8 @@ public class HeartService {
             HeartSortResponseDto heartSortResponseDto = HeartSortResponseDto.builder()
                     .clubId(club.getId())
                     .title(club.getTitle())
-                    .thumbnailImage(club.getThumbnailUrl())
+                    .thumbnailImage("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/clubThumbnail/"+
+                            club.getThumbnailUrl()+".jpg")
                     .locationKeyword(club.getLocationKeyword())
                     .date(club.getDueTo())
                     .build();

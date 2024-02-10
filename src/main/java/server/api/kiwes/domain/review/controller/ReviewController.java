@@ -61,6 +61,9 @@ public class ReviewController {
         reviewService.postReview(club, member, registerDto);
 
         ClubMember host = clubMemberService.findByClubHost(club);
+        if(host.getId()==member.getId()){
+            throw new BizException(ReviewResponseType.NOT_WRITTER_HOST);
+        }
         String name = member.getNickname() == null ? "익명" : member.getNickname();
         alarmService.postAlarm(host.getMember(),member, club, AlarmType.CLUB, name + AlarmContent.REVIEW.getContent());
 

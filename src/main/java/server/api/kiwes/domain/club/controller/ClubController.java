@@ -84,10 +84,11 @@ public class ClubController {
     @GetMapping("/article/presigned-url")
     public ApiResponse<String> getUploadClubThumbnailImagePresignedUrl(@RequestParam Long clubId){
         Club club = clubService.findById(clubId);
-        clubService.setUuid(club);
-        String url = preSignedUrlService.getPreSignedUrl("clubThumbnail/", club.getUuid());
+        if(!club.getThumbnailUrl().equals("club_2")){
+            preSignedUrlService.DeleteImage("clubThumbnail/"+club.getThumbnailUrl()+".jpg");
+        }
         clubService.setClubThumbnailImageUrl(club);
-
+        String url = preSignedUrlService.getPreSignedUrl("clubThumbnail/", club.getThumbnailUrl());
         return ApiResponse.of(ClubResponseType.CLUB_THUMBNAIL_IMG_PRESIGNED_URL, url);
     }
     

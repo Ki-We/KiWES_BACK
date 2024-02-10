@@ -40,9 +40,8 @@ public class Club extends BaseTimeEntity {
     private Gender gender;           // 모집 성별 (남, 여, 누구나)
     private String title;            // 제목
 
-    @Builder.Default
     @Column(length = 1000)
-    private String thumbnailUrl = "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FlXdug%2Fbtsl9NySlW1%2FrxaVigq7yGuv7JDhlk5kH0%2Fimg.png";     // 썸네일 이미지 주소
+    private String thumbnailUrl;     // 썸네일 이미지 주소
 
     @Column(length = 1000)
     private String content;          // 모임 소개
@@ -55,9 +54,6 @@ public class Club extends BaseTimeEntity {
     @Setter
     @Builder.Default
     private Integer heartCnt = 0;
-
-    @Builder.Default
-    private String uuid = UUID.randomUUID().toString();
 
     @Builder.Default
     @Enumerated(EnumType.STRING)

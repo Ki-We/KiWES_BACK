@@ -36,7 +36,9 @@ public class AlarmService {
 
     public void postAlarm(Member member,Member sender, Club club, AlarmType type, String content) {
         Alarm alarm = Alarm.builder().club(club).member(member).sender(sender)
-                .type(type).content(content).imageUrl(member.getProfileImg()).build();
+                .type(type).content(content)
+                .imageUrl("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/profileimg/"
+                        +member.getProfileImg()+".jpg").build();
         alarmRepository.save(alarm);
     }
     public void deleteOldAlarm() {

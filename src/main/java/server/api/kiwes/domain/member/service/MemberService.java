@@ -18,6 +18,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -47,10 +48,16 @@ public class MemberService {
     public String changeProfileImg() {
         Long memberId = SecurityUtils.getLoggedInUser().getId();
         Member member = memberRepository.findById(memberId).orElseThrow();
-        member.setProfileImg("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/profileimg/" + member.getEmail() + ".jpg");
+        member.setProfileImg(String.valueOf(UUID.randomUUID()));
         memberRepository.save(member);
 
-        return member.getEmail();
+        return member.getProfileImg();
+    }
+
+    public String getPreProfileImg() {
+        Long memberId = SecurityUtils.getLoggedInUser().getId();
+        Member member = memberRepository.findById(memberId).orElseThrow();
+        return member.getProfileImg();
     }
     /**
      * 닉네임 중복 체크
@@ -96,7 +103,8 @@ public class MemberService {
             }
         }
         //프로필 사진, 닉네임, 국적, 나이, 성별, 소개
-        return new MyPageResponse(member.getId(),member.getProfileImg(), member.getNickname(), member.getNationality().getName(), age, member.getGender().getName(), member.getIntroduction());
+        return new MyPageResponse(member.getId(),"https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/profileimg/"+
+                member.getProfileImg()+".jpg", member.getNickname(), member.getNationality().getName(), age, member.getGender().getName(), member.getIntroduction());
 
     }
     public MyIdResponse myId() throws ParseException {

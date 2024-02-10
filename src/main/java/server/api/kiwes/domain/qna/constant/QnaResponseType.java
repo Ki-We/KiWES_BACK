@@ -20,6 +20,7 @@ public enum QnaResponseType implements BaseResponseType {
     NOT_HOST(41103, "로그인한 사용자가 호스트가 아닙니다.", HttpStatus.BAD_REQUEST),
     UNAUTHORIZED(41104, "권한이 없습니다.", HttpStatus.UNAUTHORIZED),
     QUESTION_DELETED(41105, "삭제된 질문입니다. ", HttpStatus.BAD_REQUEST),
+    Q_NOT_HOST_POST(41106, "호스트는 질문할 수 없습니다. ", HttpStatus.BAD_REQUEST),
     ;
 
     private final Integer code;

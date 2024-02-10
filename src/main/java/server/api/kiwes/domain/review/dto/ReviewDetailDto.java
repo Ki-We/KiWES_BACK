@@ -37,7 +37,8 @@ public class ReviewDetailDto {
             return ReviewDetailDto.builder()
                     .reviewId(review.getId())
                     .reviewerId(review.getReviewer().getId())
-                    .reviewerProfileImg(review.getReviewer().getProfileImg())
+                    .reviewerProfileImg("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/profileimg/"+
+                            review.getReviewer().getProfileImg()+".jpg")
                     .reviewerNickname(review.getReviewer().getNickname())
                     .reviewContent(review.getReviewContent())
                     .reviewDate(review.getReviewDate())
@@ -49,13 +50,15 @@ public class ReviewDetailDto {
         return ReviewDetailDto.builder()
                 .reviewId(review.getId())
                 .reviewerId(review.getReviewer().getId())
-                .reviewerProfileImg(review.getReviewer().getProfileImg())
+                .reviewerProfileImg("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/profileimg/"+
+                        review.getReviewer().getProfileImg()+".jpg")
                 .reviewerNickname(review.getReviewer().getNickname())
                 .reviewContent(review.getReviewContent())
                 .reviewDate(review.getReviewDate())
                 .isAuthorOfReview(review.getReviewer().getId().equals(member.getId()))
                 .respondentId(review.getRespondent().getId())
-                .respondentProfileImg(review.getRespondent().getProfileImg())
+                .respondentProfileImg("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/profileimg/"+
+                        review.getRespondent().getProfileImg()+".jpg")
                 .respondentNickname(review.getRespondent().getNickname())
                 .replyContent(review.getReplyContent())
                 .replyDate(review.getReplyDate())

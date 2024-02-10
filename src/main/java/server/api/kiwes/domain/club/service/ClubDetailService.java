@@ -33,7 +33,8 @@ public class ClubDetailService {
         Member host = getHostFrom(club);
         ClubMemberInfoDto memberInfoDto = ClubMemberInfoDto.builder()
                 .hostId(host.getId())
-                .hostThumbnailImage(host.getProfileImg())
+                .hostThumbnailImage("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/profileimg/"+
+                        host.getProfileImg()+".jpg")
                 .hostNickname(host.getNickname())
                 .currentPeople(club.getCurrentPeople())
                 .title(club.getTitle())
@@ -57,7 +58,8 @@ public class ClubDetailService {
         baseInfoDto = ClubArticleBaseInfoDto.builder()
                 .clubId(club.getId())
                 .title(club.getTitle())
-                .thumbnailImageUrl(club.getThumbnailUrl())
+                .thumbnailImageUrl("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/clubThumbnail/"+
+                        club.getThumbnailUrl()+".jpg")
                 .heartCount(club.getHearts().size())
                 .tags(getTagList(club))
                 .date(formateDate(club.getDate()))
@@ -72,7 +74,8 @@ public class ClubDetailService {
                 .build();
 
         memberInfoDto = ClubArticleMemberInfoDto.builder()
-                .hostThumbnailImage(host.getProfileImg())
+                .hostThumbnailImage("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/profileimg/"+
+                        host.getProfileImg()+".jpg")
                 .hostNickname(host.getNickname())
                 .koreanCount(memberNationCountMap.get(Nationality.KOREA))
                 .foreignerCount(memberNationCountMap.get(Nationality.FOREIGN))
