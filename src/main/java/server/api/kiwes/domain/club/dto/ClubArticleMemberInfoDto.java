@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class ClubArticleMemberInfoDto {
+    Long hostId;
     String hostThumbnailImage;
     String hostNickname;
     Integer koreanCount;

@@ -74,6 +74,7 @@ public class ClubDetailService {
                 .build();
 
         memberInfoDto = ClubArticleMemberInfoDto.builder()
+                .hostId(host.getId())
                 .hostThumbnailImage("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/profileimg/"+
                         host.getProfileImg()+".jpg")
                 .hostNickname(host.getNickname())

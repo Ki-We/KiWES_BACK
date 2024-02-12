@@ -20,7 +20,7 @@ public class ClubMemberService {
      */
     public ClubMember findByClubAndMember(Club club, Member member){
         return clubMemberRepository.findByClubAndMember(club, member)
-                .orElse(null);
+                .orElse(ClubMember.builder().isHost(false).build());
     }
 
     /**
