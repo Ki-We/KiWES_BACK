@@ -79,7 +79,9 @@ public class ClubApprovalService {
         List<ClubMineImageDto> requestDTOs =  new ArrayList<>();
         for (ClubMineImageInterface c : requests) {
             requestDTOs.add(
-                    new ClubMineImageDto(c.getClub_id(),c.getThumbnail_url()));
+                    new ClubMineImageDto(c.getClub_id(),
+                            "https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/clubThumbnail/"+
+                                    c.getThumbnail_url()+".jpg"));
         }
         return requestDTOs;
     }

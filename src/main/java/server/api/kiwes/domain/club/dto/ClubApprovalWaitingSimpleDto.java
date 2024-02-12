@@ -22,7 +22,8 @@ public class ClubApprovalWaitingSimpleDto {
     public ClubApprovalWaitingSimpleDto(Long clubId, String title, String thumbnailImage, String date, String Location_keyword, HeartStatus isHeart) {
         this.clubId = clubId;
         this.title = title;
-        this.thumbnailImage = thumbnailImage;
+        this.thumbnailImage = "https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/clubThumbnail/"+
+                thumbnailImage+".jpg";
         this.date = date;
         this.locationKeyword = Location_keyword;
         this.isHeart = isHeart;
