@@ -56,7 +56,7 @@ public class ClubSortService {
             clubsbyPageDTO.add(
                     new ClubSortResponseDto(club.getId(),club.getTitle(),
                             "https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/clubThumbnail/"+
-                                    club.getThumbnailUrl()+".jpg",club.getDate(),club.getLocation(),club.getLatitude(),club.getLongitude()));
+                                    club.getThumbnailUrl(),club.getDate(),club.getLocation(),club.getLatitude(),club.getLongitude()));
         }
         return clubsbyPageDTO;
     }

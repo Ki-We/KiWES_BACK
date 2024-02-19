@@ -27,4 +27,6 @@ public interface ClubLanguageRepository extends JpaRepository<ClubLanguage, Long
                     "WHERE cl.language_id IN (:languageIds) " +
                     "ORDER BY c.club_id DESC LIMIT :cursor,7")
     List<ClubSortInterface> findAllByTypeIds(@Param("languageIds") List<Long> languageIds, @Param("cursor") int cursor);
+
+    void deleteAllByClubId(Long id);
 }

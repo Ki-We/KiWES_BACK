@@ -71,7 +71,20 @@ public class ClubController {
 
         return ApiResponse.of(ClubResponseType.POST_SUCCESS, response);
     }
-    
+    @ApiOperation(value = "모임 글 수정", notes = "")
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 20101, message = "모임 모집 작성글 업로드 성공"),
+            @io.swagger.annotations.ApiResponse(code = 40108, message = "날짜 요청 형식이 잘못 되었습니다. (400)"),
+    })
+    @PutMapping("/article/{clubId}")
+    public ApiResponse<ClubCreatedResponseDto> putClubRecruitmentArticles(@PathVariable Long clubId, @RequestBody ClubArticleRequestDto requestDto){
+        if(!isValidDateFormat(requestDto.getDate()) || !isValidDateFormat(requestDto.getDueTo()))
+            throw new BizException(ClubResponseType.INVALID_DATE_FORMAT);
+        Member member = memberService.getLoggedInMember();
+        ClubCreatedResponseDto response =  clubService.updateClub(requestDto, clubId, member);
+
+        return ApiResponse.of(ClubResponseType.POST_SUCCESS, response);
+    }
     @ApiOperation(value = "모임 글 작성 시 썸네일 이미지 업로드 링크 반환", notes = "응답받은 링크에 파일과 함께 PUT요청. 파일명 상관없음.\n POST /article 요청 먼저 하고, clubId 반환 받은 후에 요청" +
             "\n예시 출력 데이터\n" +
             "\"status\": 20113,\n" +
@@ -85,7 +98,7 @@ public class ClubController {
     public ApiResponse<String> getUploadClubThumbnailImagePresignedUrl(@RequestParam Long clubId){
         Club club = clubService.findById(clubId);
         if(!club.getThumbnailUrl().equals("club_2")){
-            preSignedUrlService.DeleteImage("clubThumbnail/"+club.getThumbnailUrl()+".jpg");
+            preSignedUrlService.DeleteImage("clubThumbnail/"+club.getThumbnailUrl());
         }
         clubService.setClubThumbnailImageUrl(club);
         String url = preSignedUrlService.getPreSignedUrl("clubThumbnail/", club.getThumbnailUrl());
@@ -110,7 +123,7 @@ public class ClubController {
             throw new BizException(QnaResponseType.NOT_HOST);
         }
 
-        clubService.deleteClub(club);
+        clubService.deleteClub(club,memberService.getDummy());
 
         return ApiResponse.of(ClubResponseType.DELETE_SUCCESS);
     }
@@ -130,7 +143,7 @@ public class ClubController {
         Club club = clubService.findById(clubId);
 
         ClubMember clubMember = clubMemberService.findByClubAndMember(club, member);
-        if(clubMember != null){
+        if(clubMember.getMember() != null){
             throw new BizException(ClubResponseType.ALREADY_APPLIED);
         }
 
@@ -223,7 +236,7 @@ public class ClubController {
         Member member = memberService.getLoggedInMember();
         Club club = clubService.findById(clubId);
         ClubMember clubMember = clubMemberService.findByClubAndMember(club, member);
-        if(clubMember == null){
+        if(clubMember.getMember() == null){
             throw new BizException(ClubResponseType.NOT_APPLIED);
         }
 

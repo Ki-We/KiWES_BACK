@@ -119,4 +119,7 @@ public class MemberService {
 
     }
 
+    public Member getDummy() {
+        return memberRepository.findById(0L).get();
+    }
 }

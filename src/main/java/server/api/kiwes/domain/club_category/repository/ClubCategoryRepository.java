@@ -24,6 +24,7 @@ public interface ClubCategoryRepository extends JpaRepository<ClubCategory, Long
     List<ClubSortInterface> findAllByTypeIds(@Param("categoryIds") List<Long> categoryIds, @Param("cursor") int cursor);
 
 
+    ClubCategory findByClubId(Long id);
 }
 
 

@@ -1,6 +1,7 @@
 package server.api.kiwes.domain.club.entity;
 
 import lombok.*;
+import net.bytebuddy.implementation.bind.annotation.Default;
 import server.api.kiwes.domain.BaseTimeEntity;
 import server.api.kiwes.domain.club.constant.ClubStatus;
 import server.api.kiwes.domain.club_category.entity.ClubCategory;
@@ -47,8 +48,12 @@ public class Club extends BaseTimeEntity {
     private String content;          // 모임 소개
     private String locationKeyword; // 위치 키워드
     private String location;         // 위치명
-    private String latitude; //위도
-    private String longitude; //경도
+    @Column(length = 1000)
+    @Builder.Default
+    private String latitude = "0"; //위도
+    @Column(length = 1000)
+    @Builder.Default
+    private String longitude = "0"; //경도
 
 
     @Setter

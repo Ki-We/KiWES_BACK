@@ -23,7 +23,7 @@ public class ClubApprovalWaitingSimpleDto {
         this.clubId = clubId;
         this.title = title;
         this.thumbnailImage = "https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/clubThumbnail/"+
-                thumbnailImage+".jpg";
+                thumbnailImage;
         this.date = date;
         this.locationKeyword = Location_keyword;
         this.isHeart = isHeart;
