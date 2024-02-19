@@ -1,5 +1,6 @@
 package server.api.kiwes.domain.club.service;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ import server.api.kiwes.domain.language.entity.Language;
 import server.api.kiwes.domain.language.language.LanguageRepository;
 import server.api.kiwes.domain.language.type.LanguageType;
 import server.api.kiwes.domain.member.entity.Member;
+import server.api.kiwes.domain.member.repository.MemberRepository;
 import server.api.kiwes.global.entity.Gender;
 import server.api.kiwes.response.BizException;
 
@@ -95,12 +97,40 @@ public class ClubService {
                 .clubMaxPeople(club.getMaxPeople())
                 .build();
     }
+    public ClubCreatedResponseDto updateClub(ClubArticleRequestDto requestDto, long clubId, Member member) {
+        Gender gender = Gender.valueOf(requestDto.getGender());
 
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new NotFoundException("Club not found"));
+        club.setDate(requestDto.getDate());
+        club.setDueTo(requestDto.getDueTo());
+        club.setCost(requestDto.getCost());
+        club.setMaxPeople(requestDto.getMaxPeople());
+        club.setGender(gender);
+        club.setTitle(requestDto.getTitle());
+        club.setContent(requestDto.getContent());
+        club.setLocationKeyword(requestDto.getLocationKeyword());
+        club.setLocation(requestDto.getLocation());
+        club.setLatitude(requestDto.getLatitude());
+        club.setLongitude(requestDto.getLongitude());
+        clubLanguageRepository.deleteAllByClubId(club.getId());
+        club.setLanguages(getClubLanguageEntities(requestDto.getLanguages(), club));
+        updateClubCategoryEntities(requestDto.getCategory(), club);
+
+        return ClubCreatedResponseDto.builder()
+                .clubId(club.getId())
+                .clubTitle(club.getTitle())
+                .hostId(member.getId())
+                .hostNickname(member.getNickname())
+                .clubMaxPeople(club.getMaxPeople())
+                .build();
+    }
     /**
      * 모임 글 삭제
      */
-    public void deleteClub(Club club) {
-        clubRepository.delete(club);
+    public void deleteClub(Club club, Member member) {
+        ClubMember clubMember = clubMemberRepository.findByClub(club);
+        clubMember.setMember(member);
+//        clubRepository.delete(club);
     }
 
     /**
@@ -134,21 +164,16 @@ public class ClubService {
             clubCategoryRepository.save(clubCategory);
         return clubCategory;
     }
-//    private List<ClubCategory> getClubCategoryEntities(String categoryString, Club club){
-//        List<ClubCategory> clubCategories = new ArrayList<>();
-//        for(String categoryString : categoryStrings){
-//            CategoryType type = CategoryType.valueOf(categoryString);
-//            Category category = categoryRepository.findByName(type);
-//            ClubCategory clubCategory = ClubCategory.builder()
-//                    .club(club)
-//                    .category(category)
-//                    .build();
-//            clubCategoryRepository.save(clubCategory);
-//            clubCategories.add(clubCategory);
-//        }
-//
-//        return clubCategories;
-//    }
+
+    private ClubCategory updateClubCategoryEntities(String categoryString, Club club){
+        CategoryType type = CategoryType.valueOf(categoryString);
+        Category category = categoryRepository.findByName(type);
+        ClubCategory clubCategory = clubCategoryRepository.findByClubId(club.getId());
+        clubCategory.setCategory(category);
+        clubCategoryRepository.save(clubCategory);
+        return clubCategory;
+    }
+
     /**
      * Club을 처음 생성할 때, 현재 멤버는 호스트 한명 뿐이므로, 호스트 한명만 담는 ClubMember 리스트를 반환
      */

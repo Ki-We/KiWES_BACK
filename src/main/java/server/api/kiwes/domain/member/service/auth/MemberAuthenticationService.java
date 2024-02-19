@@ -318,11 +318,10 @@ public class MemberAuthenticationService {
         Member user = validateService.validateEmail(SecurityUtils.getLoggedInUser().getEmail());
         List<ClubMember> clubMember = clubMemberRepository.findByMemberHost(user);
         Member hostdummy = memberRepository.findById(0L).get();
-        System.out.println(hostdummy.getId());
         for(ClubMember cm : clubMember){
             cm.setMember(hostdummy);
         }
-        user.setIsDeleted(); //memberRepository.delete(user);
+        user.setIsDeleted();
         memberDeletedRepository.save(MemberDeleted.builder().email(user.getEmail()).build());
 
         return "bye";

@@ -31,6 +31,12 @@ public class ClubDetailService {
 
     public ClubMemberInfoDto getClubSimple(Club club) {
         Member host = getHostFrom(club);
+        List<ClubMembersInfoDto> members = clubMemberRepository.findAllMembersInClub(club);
+        for (ClubMembersInfoDto member : members) {
+            String thumbnail = member.getThumbnail();
+            thumbnail = "https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/profileimg/" + thumbnail + ".jpg";
+            member.setThumbnail(thumbnail);
+        }
         ClubMemberInfoDto memberInfoDto = ClubMemberInfoDto.builder()
                 .hostId(host.getId())
                 .hostThumbnailImage("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/profileimg/"+
@@ -38,7 +44,7 @@ public class ClubDetailService {
                 .hostNickname(host.getNickname())
                 .currentPeople(club.getCurrentPeople())
                 .title(club.getTitle())
-                .Members(clubMemberRepository.findAllMembersInClub(club))
+                .Members(members)
                 .build();
         return memberInfoDto;
     }
@@ -58,8 +64,9 @@ public class ClubDetailService {
         baseInfoDto = ClubArticleBaseInfoDto.builder()
                 .clubId(club.getId())
                 .title(club.getTitle())
+                .maxPeople(club.getMaxPeople())
                 .thumbnailImageUrl("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/clubThumbnail/"+
-                        club.getThumbnailUrl()+".jpg")
+                        club.getThumbnailUrl())
                 .heartCount(club.getHearts().size())
                 .tags(getTagList(club))
                 .date(formateDate(club.getDate()))
@@ -71,8 +78,8 @@ public class ClubDetailService {
                 .location(club.getLocation())
                 .latitude(club.getLatitude())
                 .longitude(club.getLongitude())
+                .dateInfo(new String[]{club.getDate(), club.getDueTo()})
                 .build();
-
         memberInfoDto = ClubArticleMemberInfoDto.builder()
                 .hostId(host.getId())
                 .hostThumbnailImage("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/profileimg/"+
@@ -149,9 +156,11 @@ public class ClubDetailService {
         Integer foreigner = 0;
         List<ClubMember> clubMembers = club.getMembers();
         for(ClubMember clubMember : clubMembers){
-            Nationality nationality = clubMember.getMember().getNationality();
-            if(nationality == Nationality.KOREA) korean++;
-            else if(nationality == Nationality.FOREIGN) foreigner++;
+            if(clubMember.getIsApproved()){
+                Nationality nationality = clubMember.getMember().getNationality();
+                if(nationality == Nationality.KOREA) korean++;
+                else if(nationality == Nationality.FOREIGN) foreigner++;
+            }
         }
 
         Map<Nationality, Integer> result = new HashMap<>();

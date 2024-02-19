@@ -14,6 +14,7 @@ public class ClubArticleBaseInfoDto {
     String title;
     String thumbnailImageUrl;
     Integer heartCount;
+    Integer maxPeople;
     List<String> tags;
     String date;
     String dueTo;
@@ -24,4 +25,5 @@ public class ClubArticleBaseInfoDto {
     String location;
     String latitude; //위도
     String longitude; //경도
+    String[] dateInfo;
 }

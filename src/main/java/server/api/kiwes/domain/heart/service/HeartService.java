@@ -79,7 +79,7 @@ public class HeartService {
                     .clubId(club.getId())
                     .title(club.getTitle())
                     .thumbnailImage("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/clubThumbnail/"+
-                            club.getThumbnailUrl()+".jpg")
+                            club.getThumbnailUrl())
                     .locationKeyword(club.getLocationKeyword())
                     .date(club.getDueTo())
                     .build();

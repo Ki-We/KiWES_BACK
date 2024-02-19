@@ -1,7 +1,6 @@
 package server.api.kiwes.domain.club_member.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import server.api.kiwes.domain.club.dto.ClubMembersInfoDto;
@@ -31,4 +30,5 @@ public interface ClubMemberRepository extends JpaRepository<ClubMember, Long> {
             "where cm.member = :member and cm.isHost = true")
     List<ClubMember> findByMemberHost(@Param("member") Member member);
 
+    ClubMember findByClub(Club club);
 }

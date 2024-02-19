@@ -23,4 +23,5 @@ public class ClubArticleRequestDto {
     private String category; // 카테고리
     private String latitude; //위도
     private String longitude; //경도
+    private String imageSource;
 }
