@@ -6,9 +6,9 @@
 <br/>
 
 
-![앱첫페이지_메인](https://github.com/wodnd0131/KiWES_BACK/assets/62841992/d3901f6d-676e-4c5d-9bf9-e523be6b2ebf)
-![image](https://github.com/Ki-We/KiWES_BACK/assets/62841992/3ac53ada-e590-4b52-a056-b9d94dfe9c64)
-![image](https://github.com/Ki-We/KiWES_BACK/assets/62841992/d366a8c6-e71c-4b8b-8c49-6befbd2ee3aa)
+![KakaoTalk_20240222_053039020_02](https://github.com/wodnd0131/kiwes_front/assets/62841992/2a0a926f-79e1-415f-939d-4763b3ff6f0d)
+![KakaoTalk_20240222_053039020_05](https://github.com/wodnd0131/kiwes_front/assets/62841992/0e7d0031-b0a3-4910-8e03-e2b74b8fc673)
+![KakaoTalk_20240222_053039020_10](https://github.com/wodnd0131/kiwes_front/assets/62841992/e89e7494-fc15-47d8-91a2-9d50d38c33ed)
 
 
 <br/>
