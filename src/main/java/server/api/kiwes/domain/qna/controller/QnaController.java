@@ -60,7 +60,7 @@ public class QnaController {
             throw new BizException(QnaResponseType.Q_NOT_HOST_POST);
         }
         String name = member.getNickname() == null ? "익명" : member.getNickname();
-        alarmService.postAlarm(host.getMember(),member, club, AlarmType.CLUB, name + AlarmContent.QUESTION.getContent());
+        alarmService.postAlarm(host.getMember(),member, club, AlarmType.CLUB, name, AlarmContent.QUESTION);
 
         return ApiResponse.of(QnaResponseType.Q_POST_SUCCESS);
     }
@@ -93,8 +93,7 @@ public class QnaController {
         Qna qna = qnaService.findById(qnaId);
         qnaService.postAnswer(member, qna, requestDto);
 
-        alarmService.postAlarm(qna.getQuestioner(),member, club, AlarmType.CLUB, AlarmContent.ANSWER.getContent());
-
+        alarmService.postAlarm(qna.getQuestioner(),member, club, AlarmType.CLUB, null ,AlarmContent.ANSWER);
         return ApiResponse.of(QnaResponseType.A_POST_SUCCESS);
     }
     

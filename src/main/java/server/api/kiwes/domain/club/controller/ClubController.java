@@ -149,7 +149,7 @@ public class ClubController {
 
         ClubMember host = clubMemberService.findByClubHost(club);
         String name = member.getNickname() == null ? "익명" : member.getNickname();
-        alarmService.postAlarm(host.getMember(),member ,club, AlarmType.ACCESS, name + AlarmContent.PARTICIPATE.getContent());
+        alarmService.postAlarm(host.getMember(),member ,club, AlarmType.ACCESS, name,AlarmContent.PARTICIPATE);
         // 호스트에게 신청
         clubService.applyClub(member, club);
         return ApiResponse.of(ClubResponseType.APPLICATION_SUCCESS);
@@ -185,7 +185,7 @@ public class ClubController {
 
         ClubJoinedResponseDto response = clubService.approveMember(clubMember, club);
 
-        alarmService.postAlarm(applicant,member, club, AlarmType.CHAT, AlarmContent.APPROVE.getContent());
+        alarmService.postAlarm(applicant,member, club, AlarmType.CHAT, null ,AlarmContent.APPROVE);
 
         return ApiResponse.of(ClubResponseType.APPROVE_SUCCESS, response);
     }
@@ -216,7 +216,7 @@ public class ClubController {
 
         clubService.denyMember(clubMember);
 
-        alarmService.postAlarm(applicant,member, club, AlarmType.CLUB, AlarmContent.DENY.getContent());
+        alarmService.postAlarm(applicant,member, club, AlarmType.CLUB, null ,AlarmContent.DENY);
 
         return ApiResponse.of(ClubResponseType.DENY_SUCCESS);
     }
@@ -282,7 +282,7 @@ public class ClubController {
 
         clubService.kickMember(clubApplicant, club);
 
-        alarmService.postAlarm(applicant,member, club, AlarmType.CLUB,  AlarmContent.KICKOUT.getContent());
+        alarmService.postAlarm(applicant,member, club, AlarmType.CLUB,  null,AlarmContent.KICKOUT);
         return ApiResponse.of(ClubResponseType.KICK_OUT_SUCCESS);
     }
 

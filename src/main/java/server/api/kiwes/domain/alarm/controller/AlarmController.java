@@ -35,9 +35,9 @@ public class AlarmController {
             " \"club_id\": 0 }"
     )
     @GetMapping("/")
-    public ApiResponse<Object> alarmList(){
+    public ApiResponse<Object> alarmList(@RequestParam String lang){
         Member member = memberService.getLoggedInMember();
-        return ApiResponse.of(AlarmResponseType.ALARMS, alarmService.getAlarmAll(member));
+        return ApiResponse.of(AlarmResponseType.ALARMS, alarmService.getAlarmAll(member,lang));
     }
 
 

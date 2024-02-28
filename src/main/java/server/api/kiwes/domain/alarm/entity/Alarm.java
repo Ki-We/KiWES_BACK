@@ -2,6 +2,7 @@ package server.api.kiwes.domain.alarm.entity;
 
 import lombok.*;
 import server.api.kiwes.domain.BaseTimeEntity;
+import server.api.kiwes.domain.alarm.constant.AlarmContent;
 import server.api.kiwes.domain.alarm.constant.AlarmType;
 import server.api.kiwes.domain.club.entity.Club;
 import server.api.kiwes.domain.heart.constant.HeartStatus;
@@ -32,13 +33,15 @@ public class Alarm extends BaseTimeEntity {
     @JoinColumn(name = "CLUB_ID")
     private Club club;
 
-    @Column(length = 100)
-    private String content;
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private AlarmContent content= AlarmContent.QUESTION;
 
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private AlarmType type = AlarmType.CLUB;
 
+    private String name;
     private String imageUrl;
     private long noticeId;
     public void setType(AlarmType type){

@@ -12,6 +12,7 @@ import server.api.kiwes.domain.club_member.repository.ClubMemberRepository;
 import server.api.kiwes.domain.heart.service.HeartService;
 import server.api.kiwes.domain.member.entity.Member;
 import server.api.kiwes.domain.member.entity.Nationality;
+import server.api.kiwes.domain.member.repository.MemberRepository;
 import server.api.kiwes.domain.qna.constant.QnaDeletedStatus;
 import server.api.kiwes.domain.qna.entity.Qna;
 import server.api.kiwes.domain.review.entity.Review;
@@ -66,8 +67,8 @@ public class ClubDetailService {
                 .title(club.getTitle())
                 .maxPeople(club.getMaxPeople())
                 .thumbnailImageUrl("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/clubThumbnail/"+
-                        club.getThumbnailUrl())
-                .heartCount(club.getHearts().size())
+                 club.getThumbnailUrl())
+                .heartCount(club.getHeartCnt())
                 .tags(getTagList(club))
                 .date(formateDate(club.getDate()))
                 .dueTo(formateDate(club.getDueTo()))
@@ -105,7 +106,7 @@ public class ClubDetailService {
 
             if(reviews.size() > 2) break;
         }
-
+        boolean isApproval= !clubMemberRepository.findByClubAndMember(club,member).isEmpty();
 
         return ClubArticleResponseDto.builder()
                 .baseInfo(baseInfoDto)
@@ -113,6 +114,7 @@ public class ClubDetailService {
                 .qnas(qnas)
                 .reviews(reviews)
                 .isHost(host.getId().equals(member.getId()))
+                .isApproval(isApproval)
                 .isHeart(heartService.getHearted(club, member))
                 .isActivated(club.getIsActivated())
                 .build();

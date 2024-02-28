@@ -65,7 +65,7 @@ public class ReviewController {
             throw new BizException(ReviewResponseType.NOT_WRITTER_HOST);
         }
         String name = member.getNickname() == null ? "익명" : member.getNickname();
-        alarmService.postAlarm(host.getMember(),member, club, AlarmType.CLUB, name + AlarmContent.REVIEW.getContent());
+        alarmService.postAlarm(host.getMember(),member, club, AlarmType.CLUB, name, AlarmContent.REVIEW);
 
         return ApiResponse.of(ReviewResponseType.POST_SUCCESS);
     }
@@ -168,7 +168,7 @@ public class ReviewController {
 
         Review review = reviewService.findById(reviewId);
         reviewService.postReply(member, review, registerDto);
-        alarmService.postAlarm(review.getReviewer(),member, club, AlarmType.CLUB, AlarmContent.REVIEW_ANSWER.getContent());
+        alarmService.postAlarm(review.getReviewer(),member, club, AlarmType.CLUB, null,AlarmContent.REVIEW_ANSWER);
 
         return ApiResponse.of(ReviewResponseType.REPLY_SUCCESS);
     }
