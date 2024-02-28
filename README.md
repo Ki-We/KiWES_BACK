@@ -7,6 +7,8 @@
 
 
 ![앱첫페이지_메인](https://github.com/wodnd0131/KiWES_BACK/assets/62841992/d3901f6d-676e-4c5d-9bf9-e523be6b2ebf)
+![image](https://github.com/Ki-We/KiWES_BACK/assets/62841992/3ac53ada-e590-4b52-a056-b9d94dfe9c64)
+![image](https://github.com/Ki-We/KiWES_BACK/assets/62841992/d366a8c6-e71c-4b8b-8c49-6befbd2ee3aa)
 
 
 <br/>
@@ -30,9 +32,9 @@
 ## 프로젝트 팀원
 ### 기획 팀
 [한이준(기획 총괄)](https://www.linkedin.com/in/yijun-han-6a0771230/)
-[김연지(디자인)](yeonji9892@gmail.com),
+[김연지(홍보)](yeonji9892@gmail.com),
 [인효진(홍보)](hyojin.in.mkt@gmail.com),
-[김혜린(홍보)](ringaring_a@naver.com)
+[김혜린(디자인)](ringaring_a@naver.com)
 <br/>
 ### 개발
 [김규리(개발 총괄)](https://github.com/kyuriiii),
@@ -44,15 +46,16 @@
 
 ## 수상 내역
 1. 2023년도 학생 창업유망팀 300 성장트랙(일반) 최종 선발 - 교육부장관 인증서 수여 <br/>
-팀명: 키위즈
+팀명: 키위즈  <br/>
 주최: 교육부 <br/>
-날짜: 2023.08.17
-결과 링크: http://www.u300.kr/cms/process/notice/view.asp?c_show_no=15&c_check_no=5&c_relation=115&c_relation2=115&c_relation3=&s_field=c_title&s_text=%EC%84%B1%EC%9E%A5&c_no=1054
+날짜: 2023.08.17  <br/>
+결과 링크: https://drive.google.com/file/d/1FrNpUccQuzY-4_OXiWtQ2D3sHvF2FX_S/view?usp=drive_link  <br/>
 
 3. 제 8회 공간정보 활용 창업 아이디어 공모전 - 우수상(공간정보산업진흥원장상) <br/>
-팀명: 키위즈
+팀명: 키위즈  <br/>
 주최: 국토교통부 및 한국국토정보공사 <br/>
-날짜: 2023.12.20
+날짜: 2023.12.20  <br/>
+계획서 및 결과 링크 : https://drive.google.com/drive/folders/1LZ1ceWzzz5OxDSlHWGRx03SyJZlA4Ss6?usp=sharing  <br/>
 
 ## Frontend Git
 https://github.com/Ki-We/kiwes_front
