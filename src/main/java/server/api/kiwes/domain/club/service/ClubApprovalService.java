@@ -64,9 +64,9 @@ public class ClubApprovalService {
         return requestDTOs;
     }
 
-    public List<ClubApprovalRequestSimpleDto> getAllMyClub(Member member,int cursor) {
+    public List<ClubApprovalRequestSimpleDto> getAllMyClub(Member member){
         List<ClubApprovalRequestSimpleInterface> requests;
-        requests = clubRepository.findAllMyClub(member, cursor*7);
+        requests = clubRepository.findAllMyClub(member);
         List<ClubApprovalRequestSimpleDto> requestDTOs =  new ArrayList<>();
         for (ClubApprovalRequestSimpleInterface c : requests) {
             requestDTOs.add(

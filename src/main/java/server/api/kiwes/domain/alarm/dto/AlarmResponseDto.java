@@ -1,6 +1,7 @@
 package server.api.kiwes.domain.alarm.dto;
 
 import lombok.*;
+import org.springframework.security.core.parameters.P;
 import server.api.kiwes.domain.alarm.constant.AlarmType;
 import server.api.kiwes.domain.alarm.entity.Alarm;
 import server.api.kiwes.domain.club.entity.Club;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 public class AlarmResponseDto {
     @Setter
     private AlarmType type;
+    @Setter
     private String content;
     private Long clubId;
     private String createAfterHour;
@@ -29,7 +31,7 @@ public class AlarmResponseDto {
     private String imageUrl;
     private Long noticeId;
 
-    public static AlarmResponseDto of(Alarm alarm){
+    public static AlarmResponseDto of(Alarm alarm,String lang){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime createdDate = LocalDateTime.parse(alarm.getCreatedDate().format(formatter), formatter);
@@ -39,21 +41,20 @@ public class AlarmResponseDto {
         String createAfterDay;
         if (days == 0) {
             createAfterDay = "오늘";
-            hours=hours+"시간";
+            hours=hours+" Hours";
         } else if (days == 1) {
             createAfterDay = "어제";
-            hours=days+"일";
+            hours=days+" Days";
 
         } else if (days <= 7) {
             createAfterDay = "이번 주";
-            hours=days+"일";
+            hours=days+" Days";
         } else {
             createAfterDay = "이전 활동";
-            hours=days+"일";
-
+            hours=days+" Days";
         }
-        return AlarmResponseDto.builder()
-                .content(alarm.getContent())
+        AlarmResponseDto alarmResponseDto=AlarmResponseDto.builder()
+                .content(alarm.getContent().getContent(lang))
                 .type(alarm.getType())
                 .clubId(alarm.getClub().getId())
                 .createAfterHour(hours)
@@ -63,7 +64,9 @@ public class AlarmResponseDto {
                 .noticeId(alarm.getNoticeId())
                 .imageUrl(alarm.getImageUrl())
                 .build();
+        if(!alarm.getName().isEmpty()){
+            alarmResponseDto.setContent(alarm.getName()+alarmResponseDto.content);
+        }
+        return alarmResponseDto;
     }
-
-
 }

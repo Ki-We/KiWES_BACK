@@ -25,10 +25,9 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
             value = "select c.club_id, c.title, c.current_people " +
                     "from club c " +
                     "inner join club_member cm " +
-                    "on c.club_id = cm.club_id and cm.member_id = :member " +
-                    "order by c.club_id asc limit :cursor,7")
-    List<ClubApprovalRequestSimpleInterface> findAllMyClub(@Param("member") Member member,
-                                                                       @Param("cursor") int cursor);
+                    "on c.club_id = cm.club_id and cm.member_id = :member and cm.is_approved = true " +
+                    "order by c.club_id")
+    List<ClubApprovalRequestSimpleInterface> findAllMyClub(@Param("member") Member member);
     @Query(nativeQuery = true,
             value = "select c.club_id, c.thumbnail_url " +
                     "from club c " +

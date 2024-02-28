@@ -19,6 +19,8 @@ public class ClubArticleResponseDto {
 
     @Builder.Default
     Boolean isHost = false;
+    @Builder.Default
+    Boolean isApproval = false;
     Boolean isHeart;
     ClubStatus isActivated;
 

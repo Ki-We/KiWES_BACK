@@ -52,7 +52,7 @@ public class HeartService {
         }
 
         heart.setStatus(HeartStatus.YES);
-        club.setHeartCnt(club.getHeartCnt() + 1);
+        clubRepository.findById(club.getId()).get().setHeartCnt(club.getHeartCnt() + 1);
     }
 
     /**
@@ -65,7 +65,7 @@ public class HeartService {
         if(heart == null) return;
 
         heart.setStatus(HeartStatus.NO);
-        club.setHeartCnt(club.getHeartCnt() - 1);
+        clubRepository.findById(club.getId()).get().setHeartCnt(club.getHeartCnt() - 1);
     }
 
     public List<HeartSortResponseDto> getHeartedAll(int cursor) {

@@ -97,9 +97,9 @@ public class ClubApprovalController {
             @io.swagger.annotations.ApiResponse(code = 20115, message = "내모임 리스트 리턴 성공"),
     })
     @GetMapping("/my-club")
-    public ApiResponse<List<ClubApprovalRequestSimpleDto>> getAllMyClub(@RequestParam int cursor){
+    public ApiResponse<List<ClubApprovalRequestSimpleDto>> getAllMyClub(){
         Member member = memberService.getLoggedInMember();;
-        List<ClubApprovalRequestSimpleDto> response = clubApprovalService.getAllMyClub(member,cursor);
+        List<ClubApprovalRequestSimpleDto> response = clubApprovalService.getAllMyClub(member);
 
         return ApiResponse.of(ClubResponseType.Club_LIST_GET_SUCCEED, response);
     }
@@ -180,9 +180,7 @@ public class ClubApprovalController {
         if(clubMember == null || !clubMember.getIsHost()){
             throw new BizException(ClubResponseType.NOT_HOST);
         }
-
         List<ClubWaitingMemberDto> response = clubApprovalService.getClubWaitingPeople(club);
-
         return ApiResponse.of(ClubResponseType.APPROVAL_LIST_GET_SUCCEED, response);
     }
 }

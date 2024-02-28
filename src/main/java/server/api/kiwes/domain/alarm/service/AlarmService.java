@@ -3,6 +3,7 @@ package server.api.kiwes.domain.alarm.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import server.api.kiwes.domain.alarm.constant.AlarmContent;
 import server.api.kiwes.domain.alarm.constant.AlarmType;
 import server.api.kiwes.domain.alarm.dto.AlarmResponseDto;
 import server.api.kiwes.domain.alarm.entity.Alarm;
@@ -22,20 +23,20 @@ public class AlarmService {
     private final AlarmRepository alarmRepository;
     private final MemberRepository memberRepository;
 
-    public List<AlarmResponseDto> getAlarmAll(Member member) {
+    public List<AlarmResponseDto> getAlarmAll(Member member,String lang) {
         List<AlarmResponseDto> response = new ArrayList<>();
         List<Alarm> alarms = alarmRepository.findByMemberIdAndType(member.getId());
 
         for(Alarm alarm : alarms){
-            response.add(AlarmResponseDto.of(alarm));
+            response.add(AlarmResponseDto.of(alarm,lang));
             member.setChecked(LocalDateTime.now());
             memberRepository.save(member);
         }
         return response;
     }
 
-    public void postAlarm(Member member,Member sender, Club club, AlarmType type, String content) {
-        Alarm alarm = Alarm.builder().club(club).member(member).sender(sender)
+    public void postAlarm(Member member,Member sender, Club club, AlarmType type, String name, AlarmContent content) {
+        Alarm alarm = Alarm.builder().club(club).member(member).sender(sender).name(name)
                 .type(type).content(content)
                 .imageUrl("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/profileimg/"
                         +member.getProfileImg()+".jpg").build();
