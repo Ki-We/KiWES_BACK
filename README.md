@@ -24,8 +24,7 @@
 <br/>
 
 ## 앱 다운로드
-### 플레이스토어 : ! 3월 출시 예정 
-### 앱 스토어 : !3 월 출시 예정
+### 플레이스토어 : https://play.google.com/store/apps/details?id=com.kiwes&pcampaignid=web_share
 <br/>
 <br/>
 
