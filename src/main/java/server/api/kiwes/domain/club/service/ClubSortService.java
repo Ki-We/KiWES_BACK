@@ -16,6 +16,8 @@ import server.api.kiwes.domain.club_category.entity.ClubCategory;
 import server.api.kiwes.domain.club_category.repository.ClubCategoryRepository;
 import server.api.kiwes.domain.club_language.entity.ClubLanguage;
 import server.api.kiwes.domain.club_language.repository.ClubLanguageRepository;
+import server.api.kiwes.domain.heart.constant.HeartStatus;
+import server.api.kiwes.domain.heart.entity.Heart;
 import server.api.kiwes.domain.language.entity.Language;
 import server.api.kiwes.domain.language.language.LanguageRepository;
 import server.api.kiwes.domain.language.type.LanguageType;
@@ -49,14 +51,35 @@ public class ClubSortService {
     }
 
 
-    public List<ClubSortResponseDto> getClubsByCursor(int cursor){
+    public List<ClubSortResponseDto> getClubsByCursor(int cursor, Long memberId){
         List<Club> clubByPage = clubRepository.findAllbyCursor(cursor);
         List<ClubSortResponseDto> clubsbyPageDTO = new ArrayList<>();
         for (Club club : clubByPage) {
+            List<String> languages= new ArrayList<>();
+            List<ClubLanguage> clubLanguageList = club.getLanguages();
+            for (ClubLanguage cl : clubLanguageList) {
+                languages.add(cl.getLanguage().getName().getName());
+            }
+            List<Heart> heartLIst = club.getHearts();
+            HeartStatus isHeart = HeartStatus.NO;
+            for (Heart heart : heartLIst) {
+                if(heart.getMember().getId() == memberId){
+                    isHeart = heart.getStatus();
+                }
+            }
             clubsbyPageDTO.add(
-                    new ClubSortResponseDto(club.getId(),club.getTitle(),
-                            "https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/clubThumbnail/"+
-                                    club.getThumbnailUrl(),club.getDate(),club.getLocation(),club.getLatitude(),club.getLongitude()));
+                    ClubSortResponseDto.builder()
+                            .clubId(club.getId())
+                            .title(club.getTitle())
+                            .thumbnailImage("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/clubThumbnail/"+
+                                    club.getThumbnailUrl())
+                            .date(club.getDate())
+                            .location(club.getLocation())
+                            .latitude(club.getLatitude())
+                            .longitude(club.getLongitude())
+                            .languages(languages)
+                            .isHeart(isHeart)
+                            .build());
         }
         return clubsbyPageDTO;
     }
@@ -95,7 +118,7 @@ public class ClubSortService {
         for (ClubSortInterface c : allByTypeIds) {
             clubsbyPageDTOs.add(
                     new ClubSortResponseDto(c.getClub_id(),c.getTitle(),c.getThumbnail_url(),c.getDate(),
-                            c.getLocation(),c.getLatitude(),c.getLongitude()));
+                            c.getLocation(),c.getLatitude(),c.getLongitude(),c.getStatus()));
         }
         for (ClubSortResponseDto clubsbyPageDTO : clubsbyPageDTOs) {
             Club club = findById(clubsbyPageDTO.getClubId());

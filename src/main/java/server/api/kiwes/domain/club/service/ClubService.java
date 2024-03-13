@@ -29,6 +29,7 @@ import server.api.kiwes.domain.language.language.LanguageRepository;
 import server.api.kiwes.domain.language.type.LanguageType;
 import server.api.kiwes.domain.member.entity.Member;
 import server.api.kiwes.domain.member.repository.MemberRepository;
+import server.api.kiwes.domain.member_language.repository.MemberLanguageRepository;
 import server.api.kiwes.global.entity.Gender;
 import server.api.kiwes.response.BizException;
 
@@ -48,6 +49,7 @@ public class ClubService {
     private final ClubLanguageRepository clubLanguageRepository;
     private final ClubCategoryRepository clubCategoryRepository;
     private final HeartRepository heartRepository;
+    private final MemberLanguageRepository memberLanguageRepository;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -127,12 +129,9 @@ public class ClubService {
     /**
      * 모임 글 삭제
      */
-    public void deleteClub(Club club, Member member) {
-        ClubMember clubMember = clubMemberRepository.findByClub(club);
-        clubMember.setMember(member);
-//        clubRepository.delete(club);
+    public void deleteClub(Club club) {
+        clubRepository.delete(club);
     }
-
     /**
      * 요청으로부터 넘어온 언어코드를 토대로 ClubLanguage 리스트를 만들어 반환
      */
@@ -257,6 +256,16 @@ public class ClubService {
         return response;
     }
 
+    public List<ClubPopularEachResponseDto> getRecommandClubs(Member member) {
+        List<ClubPopularEachResponseDto> response = new ArrayList<>();
+
+        List<Long> languageIds = memberLanguageRepository.findLanguageIdsByMemberId(member.getId());
+        for(Club club : clubRepository.findOrderByLanguages(languageIds)){
+            response.add(eachPopularClub(club,member));
+        }
+        return response;
+    }
+
     /**
      * 인기 모임 무작위 조회 (3개)
      */
@@ -279,7 +288,7 @@ public class ClubService {
     private ClubPopularEachResponseDto eachPopularClub(Club club,Member member) {
         ClubPopularEachResponseDto each = ClubPopularEachResponseDto.of(club);
         each.setHostProfileImg("https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/profileimg/"+
-                member.getProfileImg()+".jpg");
+                clubMemberRepository.findByClubHost(club).get().getMember().getProfileImg()+".jpg");
 
         Optional<Heart> heart = heartRepository.findByClubAndMember(club, member);
         each.setIsHeart(heart.isPresent() ? heart.get().getStatus() : HeartStatus.NO);

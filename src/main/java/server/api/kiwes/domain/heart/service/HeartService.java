@@ -50,9 +50,8 @@ public class HeartService {
             heartRepository.save(newHeart);
             return;
         }
-
         heart.setStatus(HeartStatus.YES);
-        clubRepository.findById(club.getId()).get().setHeartCnt(club.getHeartCnt() + 1);
+        clubRepository.increaseHeartCnt(club.getId());
     }
 
     /**
@@ -65,7 +64,9 @@ public class HeartService {
         if(heart == null) return;
 
         heart.setStatus(HeartStatus.NO);
-        clubRepository.findById(club.getId()).get().setHeartCnt(club.getHeartCnt() - 1);
+        if(club.getHeartCnt()>0){
+            clubRepository.decreaseHeartCnt(club.getId());
+        }
     }
 
     public List<HeartSortResponseDto> getHeartedAll(int cursor) {

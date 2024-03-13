@@ -24,7 +24,7 @@ public class ClubSortResponseDto {
     String latitude; //위도
     String longitude; //경도
 
-    public ClubSortResponseDto(Long club_id, String title, String thumbnailImage, String date, String location, String latitude, String longitude) {
+    public ClubSortResponseDto(Long club_id, String title, String thumbnailImage, String date, String location, String latitude, String longitude, HeartStatus status) {
         this.clubId = club_id;
         this.title = title;
         this.thumbnailImage = "https://kiwes2-bucket.s3.ap-northeast-2.amazonaws.com/clubThumbnail/"+
@@ -33,6 +33,7 @@ public class ClubSortResponseDto {
         this.location = location;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.isHeart = status;
 
     }
 
