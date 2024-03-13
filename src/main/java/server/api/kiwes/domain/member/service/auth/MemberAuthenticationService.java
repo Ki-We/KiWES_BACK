@@ -290,7 +290,7 @@ public class MemberAuthenticationService {
     private List<MemberLanguage> getMemberLanguageEntities(List<String> languageStrings, Member member){
         List<MemberLanguage> memberLanguages = new ArrayList<>();
         System.out.println(languageStrings);
-
+        memberLanguageRepository.deleteAllByMemberId(member.getId());
         for(String languageString : languageStrings){
             LanguageType type = LanguageType.valueOf(languageString);
             Language language = languageRepository.findByName(type);

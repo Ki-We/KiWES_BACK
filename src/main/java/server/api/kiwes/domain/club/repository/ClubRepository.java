@@ -2,6 +2,7 @@ package server.api.kiwes.domain.club.repository;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import server.api.kiwes.domain.club.constant.ClubStatus;
@@ -72,18 +73,34 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
 
     @Query("select c from Club c where c.isActivated = :status order by c.dueTo ")
     List<Club> findActivatedClubsOrderByDueTo(@Param("status") ClubStatus status);
-//    @Query( nativeQuery = true,
-//            value = "SELECT * FROM club where club_id > 0  AND content LIKE CONCAT('%',:keyword,'%') ORDER BY club_id DESC limit :cursor,7")
-//    List<Club> findByTitlePage(@Param("keyword") String keyword, @Param("cursor")int cursor);
-    List<Club> findByTitleContaining(String keyword);
+
+    @Query("SELECT c FROM Club c WHERE c.title LIKE %:keyword% OR c.content LIKE %:keyword%")
+    List<Club> findByTitleOrContentContaining(String keyword);
     @Query(nativeQuery = true,
-    value = "select * from club c where club_id >0 order by c.heart_cnt desc limit 5")
+    value = "select * from club c where club_id >0 AND c.due_to > CURDATE() order by c.heart_cnt desc limit 5")
     List<Club> findAllOrderByHeartCnt();
 
     @Query(nativeQuery = true,
-            value = "select * from club c where club_id >0 order by c.heart_cnt desc,RAND() limit 3")
+            value = "select * from club c where club_id >0 AND c.due_to > CURDATE() order by club_id desc,RAND() limit 3")
     List<Club> findOrderByHeartCntRandom();
+
+    @Query(nativeQuery = true,
+            value = "select * from club c left join club_language cl on c.club_id = cl.club_id " +
+                    "where c.club_id >0 AND c.due_to > CURDATE() AND cl.language_id IN (:languageIds) order by c.club_id desc,RAND() limit 5")
+    List<Club> findOrderByLanguages(@Param("languageIds") List<Long> languageIds);
+
+
+
     @Query(nativeQuery = true,
             value = "SELECT * FROM club where club_id > 0 ORDER BY club_id DESC LIMIT :cursor,7")
     List<Club> findAllbyCursor(@Param("cursor") int cursor);
+
+
+    @Modifying
+    @Query("update Club c set c.heartCnt = c.heartCnt + 1 where c.id = :id")
+    int increaseHeartCnt(@Param("id") Long id);
+
+    @Modifying
+    @Query("update Club c set c.heartCnt = c.heartCnt - 1 where c.id = :id")
+    int decreaseHeartCnt(@Param("id") Long id);
 }

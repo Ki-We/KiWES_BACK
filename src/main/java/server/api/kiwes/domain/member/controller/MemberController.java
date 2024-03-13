@@ -13,6 +13,7 @@ import server.api.kiwes.domain.member.constant.MemberResponseType;
 import server.api.kiwes.domain.member.constant.SocialLoginType;
 import server.api.kiwes.domain.member.dto.*;
 import server.api.kiwes.domain.member.entity.Member;
+import server.api.kiwes.domain.member.repository.MemberRepository;
 import server.api.kiwes.domain.member.service.MemberService;
 import server.api.kiwes.domain.member.service.auth.MemberAuthenticationService;
 import server.api.kiwes.global.aws.PreSignedUrlService;
@@ -146,6 +147,14 @@ public class MemberController {
         return ApiResponse.of(MemberResponseType.LOGIN_SUCCESS, MyNickResponse.builder()
                 .nickName(member.getNickname())
                 .id(member.getId()).build());
+    }
+
+    @ApiOperation(value = "디폴트 프로필 전환")
+    @PostMapping("/mypage/defalut")
+    public ApiResponse<MyNickResponse> defalutProfile() {
+        Member member=memberService.getLoggedInMember();
+        memberService.setDefalutProfile(member.getId());
+        return ApiResponse.of(MemberResponseType.LOGIN_SUCCESS);
     }
 
     @ApiOperation(value = "자기소개 수정", notes = "자기소개를 수정합니다.")

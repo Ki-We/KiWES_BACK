@@ -16,13 +16,13 @@ public interface ClubCategoryRepository extends JpaRepository<ClubCategory, Long
 
 
     @Query(nativeQuery = true,
-            value = "SELECT distinct c.club_id, c.title, c.thumbnail_url, c.date, c.location " +
-            "FROM club_category cc INNER JOIN club c ON cc.club_id = c.club_id " +
-            "WHERE cc.category_id IN (:categoryIds) " +
-            "ORDER BY c.club_id DESC LIMIT :cursor,7")
-
-    List<ClubSortInterface> findAllByTypeIds(@Param("categoryIds") List<Long> categoryIds, @Param("cursor") int cursor);
-
+            value = "SELECT distinct c.club_id, c.title, c.thumbnail_url, c.date, c.location, c.latitude, c.longitude " +
+                    "FROM club_category cc " +
+                    "INNER JOIN club c ON cc.club_id = c.club_id " +
+                    "WHERE cc.category_id IN (:categoryIds) " +
+                    "ORDER BY c.club_id DESC LIMIT :cursor,7")
+    List<ClubSortInterface> findAllByTypeIds(@Param("categoryIds") List<Long> categoryIds
+            , @Param("cursor") int cursor);
 
     ClubCategory findByClubId(Long id);
 }

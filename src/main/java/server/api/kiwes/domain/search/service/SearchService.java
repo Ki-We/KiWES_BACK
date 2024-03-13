@@ -31,7 +31,7 @@ public class SearchService {
     private final SearchCountRepository searchCountRepository;
 
     public List<SearchResponseDto> search(String keyword, Member member,int cursor) {
-        List<SearchResponseDto> searchResults = clubRepository.findByTitleContaining(keyword).stream()
+        List<SearchResponseDto> searchResults = clubRepository.findByTitleOrContentContaining(keyword).stream()
                 .filter(sr -> sr.getId() > cursor*7)
                 .limit(7)
                 .map(club -> SearchResponseDto.of(club, member))

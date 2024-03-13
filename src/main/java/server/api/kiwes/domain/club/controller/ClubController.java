@@ -104,7 +104,7 @@ public class ClubController {
         String url = preSignedUrlService.getPreSignedUrl("clubThumbnail/", club.getThumbnailUrl());
         return ApiResponse.of(ClubResponseType.CLUB_THUMBNAIL_IMG_PRESIGNED_URL, url);
     }
-    
+
     @ApiOperation(value = "모임 글 삭제", notes = "" +
             "\n예시 출력 데이터\n" +
             "\"status\": 20102,\n" +
@@ -123,7 +123,7 @@ public class ClubController {
             throw new BizException(QnaResponseType.NOT_HOST);
         }
 
-        clubService.deleteClub(club,memberService.getDummy());
+        clubService.deleteClub(club);
 
         return ApiResponse.of(ClubResponseType.DELETE_SUCCESS);
     }
@@ -343,8 +343,9 @@ public class ClubController {
             "]")
     @GetMapping("/getClubs")
     public ApiResponse<Object> getClubs(@RequestParam int cursor) {
+        Member member = memberService.getLoggedInMember();
         return ApiResponse.of(ClubResponseType.CLUB_ALL_SUCCESS,
-                clubSortService.getClubsByCursor(cursor*7));
+                clubSortService.getClubsByCursor(cursor*7,member.getId()));
     }
     @ApiOperation(value = "인기 모임", notes = "인기 모임 조회 5개" +
             "\n예시 출력 데이터\n" +
@@ -366,6 +367,15 @@ public class ClubController {
     @GetMapping("/popular")
     public ApiResponse<List<ClubPopularEachResponseDto>> getPopularClubs(){
         return ApiResponse.of(ClubResponseType.POPULAR_CLUBS, clubService.getPopularClubs(memberService.getLoggedInMember()));
+    }
+
+    @ApiOperation(value = "내 언어 추천 모임", notes = "언어별 모임")
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 20112, message = "추천 모임 조회 성공"),
+    })
+    @GetMapping("/recommand")
+    public ApiResponse<List<ClubPopularEachResponseDto>> getRecommandClubs(){
+        return ApiResponse.of(ClubResponseType.POPULAR_CLUBS, clubService.getRecommandClubs(memberService.getLoggedInMember()));
     }
 
     @ApiOperation(value = "인기 모임 무작위 3개", notes = "인기 모임 무작위 조회 3개" +
