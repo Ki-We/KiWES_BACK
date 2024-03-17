@@ -48,13 +48,11 @@
 팀명: 키위즈  <br/>
 주최: 교육부 <br/>
 날짜: 2023.08.17  <br/>
-결과 링크: https://drive.google.com/file/d/1FrNpUccQuzY-4_OXiWtQ2D3sHvF2FX_S/view?usp=drive_link  <br/>
 
 3. 제 8회 공간정보 활용 창업 아이디어 공모전 - 우수상(공간정보산업진흥원장상) <br/>
 팀명: 키위즈  <br/>
 주최: 국토교통부 및 한국국토정보공사 <br/>
 날짜: 2023.12.20  <br/>
-계획서 및 결과 링크 : https://drive.google.com/drive/folders/1LZ1ceWzzz5OxDSlHWGRx03SyJZlA4Ss6?usp=sharing  <br/>
 
 ## Frontend Git
 https://github.com/Ki-We/kiwes_front
