@@ -14,7 +14,6 @@ import server.api.kiwes.global.entity.Gender;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.UUID;
 
 import static javax.persistence.GenerationType.IDENTITY;
 

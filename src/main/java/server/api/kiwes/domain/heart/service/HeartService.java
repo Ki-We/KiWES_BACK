@@ -38,6 +38,7 @@ public class HeartService {
      * 모임 찜하기
      */
     public void heart(Member member, Club club) {
+        clubRepository.increaseHeartCnt(club.getId());
         Heart heart = heartRepository.findByClubAndMember(club, member)
                 .orElse(null);
 
@@ -51,7 +52,7 @@ public class HeartService {
             return;
         }
         heart.setStatus(HeartStatus.YES);
-        clubRepository.increaseHeartCnt(club.getId());
+
     }
 
     /**

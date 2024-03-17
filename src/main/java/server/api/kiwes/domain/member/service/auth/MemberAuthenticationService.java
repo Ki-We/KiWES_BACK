@@ -314,17 +314,19 @@ public class MemberAuthenticationService {
         return "hi";
     }
 
-    public String quit() {
+    public List<ClubMember> quit() {
         Member user = validateService.validateEmail(SecurityUtils.getLoggedInUser().getEmail());
         List<ClubMember> clubMember = clubMemberRepository.findByMemberHost(user);
         Member hostdummy = memberRepository.findById(0L).get();
+
         for(ClubMember cm : clubMember){
             cm.setMember(hostdummy);
         }
+
         user.setIsDeleted();
         memberDeletedRepository.save(MemberDeleted.builder().email(user.getEmail()).build());
 
-        return "bye";
+        return clubMember;
     }
     public void deleteOld() {
         List<MemberDeleted> allMemberDeleted = memberDeletedRepository.findAll();

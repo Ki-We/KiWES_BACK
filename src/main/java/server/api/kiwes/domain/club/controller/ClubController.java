@@ -125,6 +125,9 @@ public class ClubController {
 
         clubService.deleteClub(club);
 
+        if(!club.getThumbnailUrl().equals("club_2")){
+            preSignedUrlService.DeleteImage("clubThumbnail/"+club.getThumbnailUrl());
+        }
         return ApiResponse.of(ClubResponseType.DELETE_SUCCESS);
     }
     
@@ -235,17 +238,7 @@ public class ClubController {
     public ApiResponse<Object> cancelApplication(@PathVariable Long clubId){
         Member member = memberService.getLoggedInMember();
         Club club = clubService.findById(clubId);
-        ClubMember clubMember = clubMemberService.findByClubAndMember(club, member);
-        if(clubMember.getMember() == null){
-            throw new BizException(ClubResponseType.NOT_APPLIED);
-        }
-
-        if(clubMember.getIsHost()){
-            throw new BizException(ClubResponseType.HOST_CANNOT_CANCEL);
-        }
-
-        clubService.cancelApplication(clubMember);
-
+        clubMemberService.cancelApplication(club, member);
         return ApiResponse.of(ClubResponseType.WITHDRAWAL_SUCCESS);
     }
 

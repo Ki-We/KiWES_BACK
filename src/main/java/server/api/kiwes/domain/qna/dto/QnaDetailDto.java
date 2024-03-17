@@ -46,6 +46,7 @@ public class QnaDetailDto {
                     .questionContent(qna.getQuestionContent())
                     .qDate(qna.getQDate())
                     .isDeleted(qna.getIsDeleted())
+                    .isAnswered(qna.getIsAnswered())
                     .isAuthorOfQuestion(qna.getQuestioner().getId().equals(member.getId()))
                     .isModified(qna.getIsModified())
                     .build();

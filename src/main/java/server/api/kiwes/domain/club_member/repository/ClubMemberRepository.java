@@ -29,6 +29,4 @@ public interface ClubMemberRepository extends JpaRepository<ClubMember, Long> {
     @Query("select cm from ClubMember cm " +
             "where cm.member = :member and cm.isHost = true")
     List<ClubMember> findByMemberHost(@Param("member") Member member);
-
-    ClubMember findByClub(Club club);
 }
