@@ -130,6 +130,7 @@ public class ClubService {
      * 모임 글 삭제
      */
     public void deleteClub(Club club) {
+
         clubRepository.delete(club);
     }
     /**
@@ -226,13 +227,6 @@ public class ClubService {
         if(clubMember.getIsApproved()){
             throw new BizException(ClubResponseType.ALREADY_APPROVED);
         }
-        clubMemberRepository.delete(clubMember);
-    }
-
-    /**
-     * 참여 취소 (지원자가)
-     */
-    public void cancelApplication(ClubMember clubMember) {
         clubMemberRepository.delete(clubMember);
     }
 

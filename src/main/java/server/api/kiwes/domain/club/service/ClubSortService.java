@@ -96,7 +96,7 @@ public class ClubSortService {
             Category category = categoryRepository.findByName(type);
             clubIds.add(category.getId());
         }
-        return getClubSortResponseDtosAllByTypeIds(member,clubCategoryRepository.findAllByTypeIds(clubIds,cursor));
+        return getClubSortResponseDtosAllByTypeIds(member,clubCategoryRepository.findAllByTypeIds(clubIds,member.getId(),cursor));
 
 
     }
@@ -109,8 +109,7 @@ public class ClubSortService {
             Language language = languageRepository.findByName(type);
             clubIds.add(language.getId());
         }
-        clubLanguageRepository.findAllByTypeIds(clubIds,cursor);
-        return getClubSortResponseDtosAllByTypeIds(member, clubLanguageRepository.findAllByTypeIds(clubIds,cursor));
+        return getClubSortResponseDtosAllByTypeIds(member, clubLanguageRepository.findAllByTypeIds(clubIds,member.getId(),cursor));
     }
     @NotNull
     private List<ClubSortResponseDto> getClubSortResponseDtosAllByTypeIds(Member member,List<ClubSortInterface> allByTypeIds) {

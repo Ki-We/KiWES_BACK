@@ -3,10 +3,16 @@ package server.api.kiwes.domain.club_member.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import server.api.kiwes.domain.club.constant.ClubResponseType;
 import server.api.kiwes.domain.club.entity.Club;
+import server.api.kiwes.domain.club.repository.ClubRepository;
 import server.api.kiwes.domain.club_member.entity.ClubMember;
 import server.api.kiwes.domain.club_member.repository.ClubMemberRepository;
 import server.api.kiwes.domain.member.entity.Member;
+import server.api.kiwes.response.BizException;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -14,7 +20,7 @@ import server.api.kiwes.domain.member.entity.Member;
 @RequiredArgsConstructor
 public class ClubMemberService {
     private final ClubMemberRepository clubMemberRepository;
-
+    private final ClubRepository clubRepository;
     /**
      * 모임과 멤버를 통해 ClubMember 객체 반환. 없으면 null 반환
      */
@@ -49,5 +55,29 @@ public class ClubMemberService {
         if(clubMember == null) return false;
 
         return clubMember.getIsApproved();
+    }
+
+    public void quit(List<ClubMember> clubMemberList) {
+        List<Long> clubIds = clubMemberList.stream()
+                .map(clubMember -> clubMember.getClub().getId())
+                .distinct()
+                .collect(Collectors.toList());
+        clubRepository.setUnActiveClubs(clubIds);
+    }
+
+    public void cancelApplication(Club club, Member member) {
+        ClubMember clubMember = this.findByClubAndMember(club, member);
+        if(clubMember.getMember() == null){
+            throw new BizException(ClubResponseType.NOT_APPLIED);
+        }
+
+        if(clubMember.getIsHost()){
+            throw new BizException(ClubResponseType.HOST_CANNOT_CANCEL);
+        }
+        if(clubMember.getIsApproved()){
+            club.subCurrentPeople();
+        }
+
+        clubMemberRepository.delete(clubMember);
     }
 }

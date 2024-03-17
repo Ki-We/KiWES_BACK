@@ -14,13 +14,13 @@ import java.util.List;
 
 public interface ClubRepository extends JpaRepository<Club, Long> {
     @Query(nativeQuery = true,
-            value = "select c.club_id, c.title, c.current_people " +
+            value = "select c.club_id, c.title, (SELECT COUNT(*)  FROM club_member cm2 " +
+                    "WHERE cm2.club_id = c.club_id AND cm2.is_approved = false) AS approval_count " +
                     "from club c " +
                     "inner join club_member cm " +
-                    "on c.club_id = cm.club_id and cm.member_id = :member and cm.is_host = :isHost " +
+                    "on c.club_id = cm.club_id and cm.member_id = :member and cm.is_host = true " +
                     "order by c.club_id asc limit :cursor,7")
     List<ClubApprovalRequestSimpleInterface> findApprovalRequestSimple(@Param("member") Member member,
-                                                                 @Param("isHost") Boolean isHost,
                                                                  @Param("cursor") int cursor);
     @Query(nativeQuery = true,
             value = "select c.club_id, c.title, c.current_people " +
@@ -28,7 +28,7 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
                     "inner join club_member cm " +
                     "on c.club_id = cm.club_id and cm.member_id = :member and cm.is_approved = true " +
                     "order by c.club_id")
-    List<ClubApprovalRequestSimpleInterface> findAllMyClub(@Param("member") Member member);
+    List<MyClubSimpleInterface> findAllMyClub(@Param("member") Member member);
     @Query(nativeQuery = true,
             value = "select c.club_id, c.thumbnail_url " +
                     "from club c " +
@@ -48,13 +48,13 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
     List<ClubApprovalWaitingSimpleInterface> findAllHostClubDetail(@Param("member") Member member,
                                                                  @Param("cursor") int cursor);
     @Query(nativeQuery = true,
-            value = "select c.club_id, c.title, c.current_people " +
+            value = "select c.club_id, c.title, (SELECT COUNT(*)  FROM club_member cm2 " +
+                    "WHERE cm2.club_id = c.club_id AND cm2.is_approved = false) AS approval_count " +
                     "from club c " +
                     "inner join club_member cm " +
-                    "on c.club_id = cm.club_id and cm.member_id = :member and cm.is_host = :isHost " +
+                    "on c.club_id = cm.club_id and cm.member_id = :member and cm.is_host = true " +
                     "order by c.club_id asc limit 2")
-    List<ClubApprovalRequestSimpleInterface> findApprovalRequestSimpleLimit2(@Param("member") Member member,
-                                                                             @Param("isHost") Boolean isHost);
+    List<ClubApprovalRequestSimpleInterface> findApprovalRequestSimpleLimit2(@Param("member") Member member);
     @Query(nativeQuery = true,
             value = "select c.club_id, c.title, c.thumbnail_url, c.date, c.Location_keyword, h.status " +
                     "from club c inner join club_member cm on c.club_id = cm.club_id and cm.member_id = :member and cm.is_host = :isHost and cm.is_approved = :isApproved " +
@@ -74,8 +74,8 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
     @Query("select c from Club c where c.isActivated = :status order by c.dueTo ")
     List<Club> findActivatedClubsOrderByDueTo(@Param("status") ClubStatus status);
 
-    @Query("SELECT c FROM Club c WHERE c.title LIKE %:keyword% OR c.content LIKE %:keyword%")
-    List<Club> findByTitleOrContentContaining(String keyword);
+    @Query("SELECT c FROM Club c WHERE LOWER(c.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(c.content) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    List<Club> findByTitleOrContentContaining(@Param("keyword") String keyword);
     @Query(nativeQuery = true,
     value = "select * from club c where club_id >0 AND c.due_to > CURDATE() order by c.heart_cnt desc limit 5")
     List<Club> findAllOrderByHeartCnt();
@@ -103,4 +103,8 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
     @Modifying
     @Query("update Club c set c.heartCnt = c.heartCnt - 1 where c.id = :id")
     int decreaseHeartCnt(@Param("id") Long id);
+
+    @Modifying
+    @Query("UPDATE Club c SET c.isActivated = 'NO' WHERE c.id IN :clubIds")
+    void setUnActiveClubs(@Param("clubIds") List<Long> clubIds);
 }

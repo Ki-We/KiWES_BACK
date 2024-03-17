@@ -30,11 +30,11 @@ public class ClubApprovalService {
      */
     public List<ClubApprovalRequestSimpleDto> getSimpleApproval(Member member) {
         List<ClubApprovalRequestSimpleInterface> requests;
-        requests = clubRepository.findApprovalRequestSimpleLimit2(member, true);
+        requests = clubRepository.findApprovalRequestSimpleLimit2(member);
         List<ClubApprovalRequestSimpleDto> requestDTOs =  new ArrayList<>();
         for (ClubApprovalRequestSimpleInterface c : requests) {
             requestDTOs.add(
-                    new ClubApprovalRequestSimpleDto(c.getClub_id(),c.getTitle(),c.getCurrent_people()));
+                    new ClubApprovalRequestSimpleDto(c.getClub_id(),c.getTitle(),c.getApproval_count()));
         }
         return requestDTOs;
     }
@@ -55,20 +55,20 @@ public class ClubApprovalService {
      */
     public List<ClubApprovalRequestSimpleDto> getRequestsResponse(Member member,int cursor) {
         List<ClubApprovalRequestSimpleInterface> requests;
-        requests = clubRepository.findApprovalRequestSimple(member, true,cursor*7);
+        requests = clubRepository.findApprovalRequestSimple(member, cursor*7);
         List<ClubApprovalRequestSimpleDto> requestDTOs =  new ArrayList<>();
         for (ClubApprovalRequestSimpleInterface c : requests) {
             requestDTOs.add(
-                    new ClubApprovalRequestSimpleDto(c.getClub_id(),c.getTitle(),c.getCurrent_people()));
+                    new ClubApprovalRequestSimpleDto(c.getClub_id(),c.getTitle(),c.getApproval_count()));
         }
         return requestDTOs;
     }
 
     public List<ClubApprovalRequestSimpleDto> getAllMyClub(Member member){
-        List<ClubApprovalRequestSimpleInterface> requests;
+        List<MyClubSimpleInterface> requests;
         requests = clubRepository.findAllMyClub(member);
         List<ClubApprovalRequestSimpleDto> requestDTOs =  new ArrayList<>();
-        for (ClubApprovalRequestSimpleInterface c : requests) {
+        for (MyClubSimpleInterface c : requests) {
             requestDTOs.add(
                     new ClubApprovalRequestSimpleDto(c.getClub_id(),c.getTitle(),c.getCurrent_people()));
         }

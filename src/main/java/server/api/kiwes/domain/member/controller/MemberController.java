@@ -1,6 +1,5 @@
 package server.api.kiwes.domain.member.controller;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponses;
@@ -9,11 +8,11 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
+import server.api.kiwes.domain.club_member.service.ClubMemberService;
 import server.api.kiwes.domain.member.constant.MemberResponseType;
 import server.api.kiwes.domain.member.constant.SocialLoginType;
 import server.api.kiwes.domain.member.dto.*;
 import server.api.kiwes.domain.member.entity.Member;
-import server.api.kiwes.domain.member.repository.MemberRepository;
 import server.api.kiwes.domain.member.service.MemberService;
 import server.api.kiwes.domain.member.service.auth.MemberAuthenticationService;
 import server.api.kiwes.global.aws.PreSignedUrlService;
@@ -22,11 +21,7 @@ import server.api.kiwes.response.BizException;
 import server.api.kiwes.response.ApiResponse;
 import server.api.kiwes.response.foo.FooResponseType;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.text.ParseException;
-import java.util.UUID;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY;
 
@@ -39,6 +34,7 @@ public class MemberController {
     private final MemberAuthenticationService authenticationService;
     private final MemberService memberService;
     private final PreSignedUrlService preSignedUrlService;
+    private final ClubMemberService clubMemberService;
 
     @ApiOperation(value = "accessToken 값 위한 API",
             notes = "https://kauth.kakao.com/oauth/authorize?client_id=6f0216bfb31177fe4956e6a1a17bb5c6&redirect_uri=https://api.kiwes.org/oauth/kakao&response_type=code  카카오 요청 ~~~~~~~~~///~~~~" +
@@ -223,7 +219,8 @@ public class MemberController {
             "}")
     @PostMapping("/auth/quit")
     public ApiResponse<Object> quit( ){
-        return ApiResponse.of(MemberResponseType.QUIT_SUCCESS,authenticationService.quit());
+        clubMemberService.quit(authenticationService.quit());
+        return ApiResponse.of(MemberResponseType.QUIT_SUCCESS);
     }
     @Scheduled(cron = "0 0 0 * * ?") // 매일 0시
     public void removeDeletedOld(){
