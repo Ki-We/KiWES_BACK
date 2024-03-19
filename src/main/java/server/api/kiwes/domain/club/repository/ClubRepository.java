@@ -81,14 +81,26 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
     List<Club> findAllOrderByHeartCnt();
 
     @Query(nativeQuery = true,
+            value = "select * from club c where club_id >0 order by c.heart_cnt desc limit 5")
+    List<Club> findAllOrderByHeartCntOutDate();
+
+    @Query(nativeQuery = true,
             value = "select * from club c where club_id >0 AND c.due_to > CURDATE() order by club_id desc,RAND() limit 3")
     List<Club> findOrderByHeartCntRandom();
+
+    @Query(nativeQuery = true,
+            value = "select * from club c where club_id >0 order by club_id desc,RAND() limit 3")
+    List<Club> findOrderByHeartCntRandomOutDate();
 
     @Query(nativeQuery = true,
             value = "select * from club c left join club_language cl on c.club_id = cl.club_id " +
                     "where c.club_id >0 AND c.due_to > CURDATE() AND cl.language_id IN (:languageIds) order by c.club_id desc,RAND() limit 5")
     List<Club> findOrderByLanguages(@Param("languageIds") List<Long> languageIds);
 
+    @Query(nativeQuery = true,
+            value = "select * from club c left join club_language cl on c.club_id = cl.club_id " +
+                    "where c.club_id >0 AND cl.language_id IN (:languageIds) order by c.club_id desc,RAND() limit 5")
+    List<Club> findOrderByLanguagesOutDate(@Param("languageIds") List<Long> languageIds);
 
 
     @Query(nativeQuery = true,
