@@ -130,7 +130,6 @@ public class ClubService {
      * 모임 글 삭제
      */
     public void deleteClub(Club club) {
-
         clubRepository.delete(club);
     }
     /**
@@ -243,8 +242,12 @@ public class ClubService {
      */
     public List<ClubPopularEachResponseDto> getPopularClubs(Member member) {
         List<ClubPopularEachResponseDto> response = new ArrayList<>();
+        List<Club> clubs = clubRepository.findAllOrderByHeartCnt();
 
-        for(Club club : clubRepository.findAllOrderByHeartCnt()){
+        if(clubs.isEmpty()){
+            clubs = clubRepository.findAllOrderByHeartCntOutDate();
+        }
+        for(Club club : clubs){
             response.add(eachPopularClub(club,member));
         }
         return response;
@@ -254,7 +257,12 @@ public class ClubService {
         List<ClubPopularEachResponseDto> response = new ArrayList<>();
 
         List<Long> languageIds = memberLanguageRepository.findLanguageIdsByMemberId(member.getId());
-        for(Club club : clubRepository.findOrderByLanguages(languageIds)){
+
+        List<Club> clubs = clubRepository.findOrderByLanguages(languageIds);
+        if(clubs.isEmpty()){
+            clubs = clubRepository.findOrderByLanguagesOutDate(languageIds);
+        }
+        for(Club club : clubs){
             response.add(eachPopularClub(club,member));
         }
         return response;
@@ -265,8 +273,11 @@ public class ClubService {
      */
     public List<ClubPopularEachResponseDto> getPopularRandomClubs(Member member) {
         List<ClubPopularEachResponseDto> response = new ArrayList<>();
-
-        for(Club club : clubRepository.findOrderByHeartCntRandom()){
+        List<Club> clubs = clubRepository.findOrderByHeartCntRandom();
+        if(clubs.isEmpty()){
+            clubs = clubRepository.findOrderByHeartCntRandomOutDate();
+        }
+        for(Club club : clubs){
             response.add(eachPopularClub(club,member));
         }
         return response;

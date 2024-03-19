@@ -3,6 +3,7 @@ package server.api.kiwes.domain.club.entity;
 import lombok.*;
 import net.bytebuddy.implementation.bind.annotation.Default;
 import server.api.kiwes.domain.BaseTimeEntity;
+import server.api.kiwes.domain.alarm.entity.Alarm;
 import server.api.kiwes.domain.club.constant.ClubStatus;
 import server.api.kiwes.domain.club_category.entity.ClubCategory;
 import server.api.kiwes.domain.club_language.entity.ClubLanguage;
@@ -14,6 +15,7 @@ import server.api.kiwes.global.entity.Gender;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -63,13 +65,13 @@ public class Club extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private ClubStatus isActivated = ClubStatus.YES;     // 활성화, 비활성화 여부
 
-    @OneToMany(mappedBy = "club",  fetch = FetchType.LAZY, cascade = CascadeType.ALL )
+    @OneToMany(mappedBy = "club",  fetch = FetchType.LAZY, cascade = CascadeType.ALL,orphanRemoval = true)
     private List<ClubLanguage> languages;
 
-    @OneToMany(mappedBy = "club",  fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "club",  fetch = FetchType.LAZY, cascade = CascadeType.ALL,orphanRemoval = true)
     private List<ClubMember> members;
 
-    @OneToMany(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Heart> hearts;
 
     @OneToMany(mappedBy = "club",  fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
@@ -78,8 +80,12 @@ public class Club extends BaseTimeEntity {
     @OneToMany(mappedBy = "club",  fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Qna> qnas;
 
-    @OneToOne(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.ALL,orphanRemoval = true)
     private ClubCategory category;
+
+    @OneToMany(mappedBy = "club", cascade = CascadeType.REMOVE,orphanRemoval = true)
+    private List<Alarm> alarms;
+
 
     public void addCurrentPeople(){
         this.currentPeople++;
