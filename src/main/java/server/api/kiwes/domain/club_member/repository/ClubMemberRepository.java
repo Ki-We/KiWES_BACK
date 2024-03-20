@@ -16,7 +16,7 @@ public interface ClubMemberRepository extends JpaRepository<ClubMember, Long> {
     Optional<ClubMember> findByClubAndMember(Club club, Member member);
     @Query("select distinct new server.api.kiwes.domain.club.dto.ClubMembersInfoDto(cm.member.id,cm.member.nickname,cm.member.profileImg) " +
             "from ClubMember cm " +
-            "where cm.club = :club and cm.isHost = false")
+            "where cm.club = :club and cm.isHost = false and cm.isApproved = true")
     List<ClubMembersInfoDto> findAllMembersInClub(@Param("club")Club club);
     @Query("select distinct new server.api.kiwes.domain.club.dto.ClubWaitingMemberDto(cm.member.id, cm.member.nickname, cm.member.profileImg)" +
             " from ClubMember cm " +
