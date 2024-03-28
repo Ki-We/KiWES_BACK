@@ -115,7 +115,9 @@ public class ClubService {
         club.setLatitude(requestDto.getLatitude());
         club.setLongitude(requestDto.getLongitude());
         clubLanguageRepository.deleteAllByClubId(club.getId());
-        club.setLanguages(getClubLanguageEntities(requestDto.getLanguages(), club));
+        club.getLanguages().clear();
+        club.getLanguages().addAll(getClubLanguageEntities(requestDto.getLanguages(), club)); // 새 엔티티를 추가합니다.
+//        club.setLanguages(getClubLanguageEntities(requestDto.getLanguages(), club));
         updateClubCategoryEntities(requestDto.getCategory(), club);
 
         return ClubCreatedResponseDto.builder()
@@ -257,7 +259,6 @@ public class ClubService {
         List<ClubPopularEachResponseDto> response = new ArrayList<>();
 
         List<Long> languageIds = memberLanguageRepository.findLanguageIdsByMemberId(member.getId());
-
         List<Club> clubs = clubRepository.findOrderByLanguages(languageIds);
         if(clubs.isEmpty()){
             clubs = clubRepository.findOrderByLanguagesOutDate(languageIds);
@@ -273,10 +274,11 @@ public class ClubService {
      */
     public List<ClubPopularEachResponseDto> getPopularRandomClubs(Member member) {
         List<ClubPopularEachResponseDto> response = new ArrayList<>();
-        List<Club> clubs = clubRepository.findOrderByHeartCntRandom();
-        if(clubs.isEmpty()){
-            clubs = clubRepository.findOrderByHeartCntRandomOutDate();
-        }
+        List<Club> clubs = clubRepository.findOrderByHeartCntRandomOutDate();
+            // clubRepository.findOrderByHeartCntRandom();
+        // if(clubs.isEmpty()){
+        //     clubs = clubRepository.findOrderByHeartCntRandomOutDate();
+        // }
         for(Club club : clubs){
             response.add(eachPopularClub(club,member));
         }

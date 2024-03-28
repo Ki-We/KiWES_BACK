@@ -10,7 +10,8 @@ import server.api.kiwes.domain.member_language.entity.MemberLanguage;
 import java.util.List;
 
 public interface MemberLanguageRepository extends JpaRepository<MemberLanguage, Long>{
-    @Query("SELECT ml.language.id FROM MemberLanguage ml WHERE ml.member.id = :memberId")
+    @Query(nativeQuery = true,
+        value ="SELECT langauge_id FROM member_language ml WHERE ml.member_id = :memberId")
     List<Long> findLanguageIdsByMemberId(@Param("memberId") Long memberId);
 
     @Modifying

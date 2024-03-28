@@ -64,7 +64,7 @@ public class AlarmResponseDto {
                 .noticeId(alarm.getNoticeId())
                 .imageUrl(alarm.getImageUrl())
                 .build();
-        if(!alarm.getName().isEmpty()){
+        if(alarm.getName() != null){
             alarmResponseDto.setContent(alarm.getName()+alarmResponseDto.content);
         }
         return alarmResponseDto;

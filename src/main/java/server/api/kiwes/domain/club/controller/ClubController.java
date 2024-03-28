@@ -237,8 +237,7 @@ public class ClubController {
     @DeleteMapping("/application/{clubId}")
     public ApiResponse<Object> cancelApplication(@PathVariable Long clubId){
         Member member = memberService.getLoggedInMember();
-        Club club = clubService.findById(clubId);
-        clubMemberService.cancelApplication(club, member);
+        clubMemberService.cancelApplication(clubId, member);
         return ApiResponse.of(ClubResponseType.WITHDRAWAL_SUCCESS);
     }
 
