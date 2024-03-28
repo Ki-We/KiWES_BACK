@@ -77,7 +77,7 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
     @Query("SELECT c FROM Club c WHERE LOWER(c.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(c.content) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<Club> findByTitleOrContentContaining(@Param("keyword") String keyword);
     @Query(nativeQuery = true,
-    value = "select * from club c where club_id >0 AND c.due_to > CURDATE() order by c.heart_cnt desc limit 5")
+    value = "select * from club c where c.due_to > CURDATE() AND c.is_activated='YES' order by c.heart_cnt desc limit 5")
     List<Club> findAllOrderByHeartCnt();
 
     @Query(nativeQuery = true,
@@ -85,7 +85,7 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
     List<Club> findAllOrderByHeartCntOutDate();
 
     @Query(nativeQuery = true,
-            value = "select * from club c where club_id >0 AND c.due_to > CURDATE() order by club_id desc,RAND() limit 3")
+            value = "select * from club c where c.due_to > CURDATE() AND c.is_activated='YES' order by club_id desc,RAND() limit 3")
     List<Club> findOrderByHeartCntRandom();
 
     @Query(nativeQuery = true,
@@ -94,12 +94,12 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
 
     @Query(nativeQuery = true,
             value = "select * from club c left join club_language cl on c.club_id = cl.club_id " +
-                    "where c.club_id >0 AND c.due_to > CURDATE() AND cl.language_id IN (:languageIds) order by c.club_id desc,RAND() limit 5")
+                    "where c.due_to > CURDATE() AND c.is_activated='YES' AND cl.language_id IN (:languageIds) GROUP BY c.club_id order by c.club_id desc,RAND() limit 5")
     List<Club> findOrderByLanguages(@Param("languageIds") List<Long> languageIds);
 
     @Query(nativeQuery = true,
             value = "select * from club c left join club_language cl on c.club_id = cl.club_id " +
-                    "where c.club_id >0 AND cl.language_id IN (:languageIds) order by c.club_id desc,RAND() limit 5")
+                    "where c.club_id >0 GROUP BY c.club_id order by c.club_id desc,RAND() limit 5")
     List<Club> findOrderByLanguagesOutDate(@Param("languageIds") List<Long> languageIds);
 
 

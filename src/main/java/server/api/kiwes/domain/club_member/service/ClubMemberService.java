@@ -65,7 +65,8 @@ public class ClubMemberService {
         clubRepository.setUnActiveClubs(clubIds);
     }
 
-    public void cancelApplication(Club club, Member member) {
+    public void cancelApplication(Long clubId, Member member) {
+        Club club = clubRepository.findById(clubId).get();
         ClubMember clubMember = this.findByClubAndMember(club, member);
         if(clubMember.getMember() == null){
             throw new BizException(ClubResponseType.NOT_APPLIED);
