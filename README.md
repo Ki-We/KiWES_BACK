@@ -7,8 +7,7 @@
 
 
 ![KakaoTalk_20240222_053039020_02](https://github.com/wodnd0131/kiwes_front/assets/62841992/2a0a926f-79e1-415f-939d-4763b3ff6f0d)
-![KakaoTalk_20240222_053039020_05](https://github.com/wodnd0131/kiwes_front/assets/62841992/0e7d0031-b0a3-4910-8e03-e2b74b8fc673)
-![KakaoTalk_20240222_053039020_10](https://github.com/wodnd0131/kiwes_front/assets/62841992/e89e7494-fc15-47d8-91a2-9d50d38c33ed)
+![0_0](https://github.com/user-attachments/assets/c5266ffa-067d-4e6f-8dab-d2fba27bbab2)
 
 
 <br/>
